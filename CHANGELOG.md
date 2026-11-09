@@ -5,6 +5,20 @@ All notable changes to the LeadRescue AI codebase will be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.12.0] - 2026-11-10
+### Added
+- **Billing & Subscription Entitlements (`/app/billing`):**
+  - Authoritative PKR plan tiers: Starter (PKR 2,999), Growth (PKR 6,999), and Advanced (PKR 14,999) originating from `src/config/plans.ts`.
+  - Active subscription hero card displaying tier name, renewal date, and trial countdown badge.
+  - Server-enforced real-time usage meters for Client Workspaces, Monthly Inbound Leads, Team Seats, and AI Drafts.
+  - Pakistan manual IBFT bank transfer review workflow with verified Meezan Bank & HBL corporate account coordinates.
+  - Submit Bank Transfer Receipt modal capturing target plan, exact PKR price validation, bank name, and transaction reference (UTR/RRN).
+  - Auditable Invoices & Payment History ledger with `Pending`, `Approved`, and `Rejected` statuses and receipt review modal.
+  - Plan comparison and tier upgrade modal.
+  - Server Actions in `src/app/actions/billing.ts`: `getBillingOverviewAction`, `submitManualPaymentProofAction`, `reviewPaymentProofAction`, `updateBillingContactAction`.
+- **Automated Tests:**
+  - `tests/billing-entitlements.test.ts` with 5 automated unit tests testing authoritative limits, quota blocking, manual payment submission validation, role-based approval rights, and rejection logging (53/53 tests passing total).
+
 ## [0.11.0] - 2026-11-10
 ### Added
 - **Integrations Centre (`/app/integrations`):**

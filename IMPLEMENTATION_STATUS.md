@@ -23,7 +23,7 @@
 | **Stage 9** | Reports and analytics | **Completed** | Documented metric formulas (Contact rate, Qualification rate, Task completion SLA, Won rate), multi-timeframe cohort filters, client workspace comparison, lost root cause analysis, CSV export, and test suite. |
 | **Stage 10** | Team management and permissions | **Completed** | Agency team directory (`/app/team`), invite flow, role assignments, sole Owner demotion/removal protection, security audit logging, and automated test suite. |
 | **Stage 11** | Integrations | **Completed** | Inbound webhook intake endpoint (`/api/webhooks/lead-intake`), HMAC SHA-256 signature verification, idempotency replay protection, integrations directory (`/app/integrations`), official WhatsApp Cloud API guide, and automated test suite. |
-| **Stage 12** | Billing and subscription entitlements | Pending | PKR pricing tiers, manual bank review workflow, quota enforcement. |
+| **Stage 12** | Billing and subscription entitlements | **Completed** | Authoritative PKR pricing tiers (`src/config/plans.ts`), Pakistan manual IBFT review workflow (`/app/billing`), server-enforced quota meters, payment approval/rejection lifecycle, and automated test suite. |
 | **Stage 13** | Client portal | Pending | Client restricted view (/portal/dashboard, /portal/leads, /portal/reports). |
 | **Stage 14** | Super Admin console | Pending | Platform administration, payment approvals, plan configuration. |
 | **Stage 15** | Urdu, accessibility, and responsive QA | Pending | RTL mirror, Noto font fallbacks, screen-reader semantics. |
@@ -164,4 +164,27 @@
   * `getIntegrationsAction`, `getWebhookCredentialsAction`, `testWebhookConnectionAction`.
 * **Automated Test Suite ([`tests/integrations.test.ts`](file:///Users/dilnawaz/LeadRescue%20AI/tests/integrations.test.ts)):**
   * 4 unit tests covering HMAC SHA-256 signature verification, tamper rejection, payload validation, and idempotency replay defense.
-  * **48 / 48 tests passing across all 9 test suites.**
+
+---
+
+## Stage 12 Deliverables Summary
+
+### Billing & Subscription Entitlements ([`/app/billing`](file:///Users/dilnawaz/LeadRescue%20AI/src/app/app/billing))
+* **Authoritative Tier Definitions ([`src/config/plans.ts`](file:///Users/dilnawaz/LeadRescue%20AI/src/config/plans.ts)):**
+  * `Starter`: PKR 2,999/mo (3 client workspaces, 300 leads/mo, 2 seats, 200 AI drafts/mo).
+  * `Growth`: PKR 6,999/mo (10 client workspaces, 1,200 leads/mo, 6 seats, 1,000 AI drafts/mo).
+  * `Advanced`: PKR 14,999/mo (Unlimited/999 client workspaces, 10,000 leads/mo, 25 seats, 5,000 AI drafts/mo).
+* **Pakistan Manual Bank Transfer Workflow (IBFT):**
+  * Official corporate bank coordinates card for Meezan Bank & HBL (IBAN with one-click copy, branch code, title).
+  * "Submit Bank Transfer Receipt" modal prompting for plan, PKR amount, bank, and transaction ref (UTR/RRN).
+  * Status lifecycle: `Pending` -> `Approved` or `Rejected` with documented reviewer audit log.
+* **Server-Side Quota Enforcement ([`src/lib/billing/entitlements.ts`](file:///Users/dilnawaz/LeadRescue%20AI/src/lib/billing/entitlements.ts)):**
+  * Strict `isResourceQuotaExceeded` checks preventing workspace or lead creation when plan limit is reached.
+  * Discrepant payment amount rejection: Blocks submitting payment if PKR amount does not match authoritative plan pricing.
+* **Invoices & Payment History Table:**
+  * Invoice ID, plan tier, PKR amount, bank method, status badge, date, and text receipt preview modal.
+* **Server Actions ([`src/app/actions/billing.ts`](file:///Users/dilnawaz/LeadRescue%20AI/src/app/actions/billing.ts)):**
+  * `getBillingOverviewAction`, `submitManualPaymentProofAction`, `reviewPaymentProofAction`, `updateBillingContactAction`.
+* **Automated Test Suite ([`tests/billing-entitlements.test.ts`](file:///Users/dilnawaz/LeadRescue%20AI/tests/billing-entitlements.test.ts)):**
+  * 5 unit tests validating authoritative limits, server quota blocking, manual payment submission validation, role-based approval rights, and rejection logging.
+  * **53 / 53 tests passing across all 10 test suites.**

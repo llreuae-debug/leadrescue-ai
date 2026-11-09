@@ -78,3 +78,8 @@
 * **Date:** 2026-11-10
 * **Decision:** Third-party integrations are presented honestly: services without active credentials default strictly to "Not Connected". Unofficial WhatsApp Web scraping is banned; only the official Meta Cloud API is supported, with the user-reviewed `https://wa.me/` link as the safe fallback. Inbound webhooks (`/api/webhooks/lead-intake`) enforce timing-safe HMAC SHA-256 signature verification and `idempotency-key` tracking to guarantee at-most-once processing across network retries.
 * **Rationale:** False connection claims destroy user trust, while unverified webhooks invite spam injection and duplicate lead records that skew performance reporting.
+
+## ADR-015: Pakistan Pilot Manual Bank Verification & Quota Enforcement
+* **Date:** 2026-11-10
+* **Decision:** Given the absence of friction-free recurring B2B card gateways in Pakistan, the pilot deployment adopts a structured manual IBFT payment review lifecycle (`Pending` -> `Approved`/`Rejected`). Submitted payments require transaction reference (UTR/RRN), receiving bank confirmation, and exact PKR amount matching against authoritative tier pricing (`Starter: 2,999`, `Growth: 6,999`, `Advanced: 14,999`). Paid subscription tiers and feature quota allowances are strictly evaluated and enforced server-side.
+* **Rationale:** Card gateway drop-offs and international card declines severely hinder local agency adoption. Structured manual bank reconciliation provides a reliable commercial foundation without compromising entitlement security.

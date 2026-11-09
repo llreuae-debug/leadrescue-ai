@@ -19,25 +19,25 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
   return (
     <div
       className={cn(
-        "flex flex-col gap-3 pb-6 border-b border-slate-200 sm:flex-row sm:items-center sm:justify-between",
+        "flex flex-col gap-4 pb-6 border-b-2 border-[#DCDDDA] sm:flex-row sm:items-center sm:justify-between",
         className
       )}
     >
-      <div className="space-y-1">
-        <div className="flex items-center gap-2.5">
-          <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900">
+      <div className="space-y-1.5">
+        <div className="flex flex-wrap items-center gap-3">
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#101113]">
             {title}
           </h1>
           {badge}
         </div>
         {description && (
-          <p className="text-sm text-slate-500 max-w-2xl">
+          <p className="text-sm font-medium text-[#777D77] max-w-2xl">
             {description}
           </p>
         )}
       </div>
       {children && (
-        <div className="flex flex-wrap items-center gap-2 pt-1 sm:pt-0">
+        <div className="flex flex-wrap items-center gap-3 pt-1 sm:pt-0">
           {children}
         </div>
       )}

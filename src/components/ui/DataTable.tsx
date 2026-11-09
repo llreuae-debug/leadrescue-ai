@@ -40,7 +40,7 @@ export function DataTable<T>({
 }: DataTableProps<T>) {
   if (isLoading) {
     return (
-      <div className={cn("linear-card overflow-hidden", className)}>
+      <div className={cn("rounded-2xl border-2 border-[#DCDDDA] bg-white overflow-hidden p-6", className)}>
         <LoadingState type="skeleton" rows={5} />
       </div>
     );
@@ -48,23 +48,28 @@ export function DataTable<T>({
 
   if (data.length === 0) {
     return (
-      <div className={cn("linear-card p-4", className)}>
+      <div className={cn("rounded-2xl border-2 border-[#DCDDDA] bg-white p-8", className)}>
         <EmptyState title={emptyTitle} description={emptyDescription} />
       </div>
     );
   }
 
   return (
-    <div className={cn("linear-card overflow-hidden flex flex-col justify-between", className)}>
+    <div
+      className={cn(
+        "rounded-2xl border-2 border-[#DCDDDA] bg-white overflow-hidden flex flex-col justify-between shadow-[0_2px_0_0_#DCDDDA]",
+        className
+      )}
+    >
       <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse text-xs">
           <thead>
-            <tr className="border-b border-slate-200 bg-slate-50/75">
+            <tr className="border-b-2 border-[#DCDDDA] bg-[#F3F4F2]">
               {columns.map((col) => (
                 <th
                   key={col.key}
                   className={cn(
-                    "py-3 px-4 font-semibold text-slate-700 tracking-wide uppercase text-[11px]",
+                    "py-3.5 px-4 font-bold text-[#202320] tracking-wider uppercase text-[11px]",
                     col.align === "right" && "text-right",
                     col.align === "center" && "text-center",
                     col.className
@@ -72,31 +77,31 @@ export function DataTable<T>({
                 >
                   <div
                     className={cn(
-                      "inline-flex items-center gap-1",
+                      "inline-flex items-center gap-1.5",
                       col.align === "right" && "justify-end",
                       col.align === "center" && "justify-center"
                     )}
                   >
                     <span>{col.header}</span>
                     {col.sortable && (
-                      <ChevronsUpDown className="w-3 h-3 text-slate-400 hover:text-slate-700 cursor-pointer" />
+                      <ChevronsUpDown className="w-3.5 h-3.5 text-[#777D77] hover:text-[#101113] cursor-pointer" />
                     )}
                   </div>
                 </th>
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100">
+          <tbody className="divide-y divide-[#DCDDDA]/70">
             {data.map((item) => (
               <tr
                 key={keyExtractor(item)}
-                className="hover:bg-slate-50/60 transition-colors"
+                className="hover:bg-[#F3F4F2]/60 transition-colors"
               >
                 {columns.map((col) => (
                   <td
                     key={col.key}
                     className={cn(
-                      "py-3 px-4 text-slate-700 align-middle",
+                      "py-3.5 px-4 text-[#202320] align-middle font-medium",
                       col.align === "right" && "text-right tabular-nums",
                       col.align === "center" && "text-center",
                       col.className
@@ -112,17 +117,17 @@ export function DataTable<T>({
       </div>
 
       {totalPages > 1 && onPageChange && (
-        <div className="flex items-center justify-between px-4 py-3 border-t border-slate-200 bg-slate-50/50 text-xs text-slate-500">
+        <div className="flex items-center justify-between px-5 py-3.5 border-t-2 border-[#DCDDDA] bg-[#F3F4F2]/60 text-xs text-[#777D77]">
           <div>
-            Page <strong className="text-slate-800 font-semibold">{currentPage}</strong> of{" "}
-            <strong className="text-slate-800 font-semibold">{totalPages}</strong>
+            Page <strong className="text-[#101113] font-bold">{currentPage}</strong> of{" "}
+            <strong className="text-[#101113] font-bold">{totalPages}</strong>
           </div>
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1.5">
             <button
               type="button"
               disabled={currentPage <= 1}
               onClick={() => onPageChange(currentPage - 1)}
-              className="p-1 rounded border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed"
+              className="p-1.5 rounded-lg border-1.5 border-[#DCDDDA] bg-white text-[#202320] hover:border-[#101113] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
               aria-label="Previous Page"
             >
               <ChevronLeft className="w-4 h-4" />
@@ -131,7 +136,7 @@ export function DataTable<T>({
               type="button"
               disabled={currentPage >= totalPages}
               onClick={() => onPageChange(currentPage + 1)}
-              className="p-1 rounded border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed"
+              className="p-1.5 rounded-lg border-1.5 border-[#DCDDDA] bg-white text-[#202320] hover:border-[#101113] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
               aria-label="Next Page"
             >
               <ChevronRight className="w-4 h-4" />

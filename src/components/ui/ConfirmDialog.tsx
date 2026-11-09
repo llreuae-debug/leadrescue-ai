@@ -31,26 +31,26 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-50 bg-slate-950/40 backdrop-blur-xs transition-opacity animate-in fade-in" />
-        <Dialog.Content className="fixed left-[50%] top-[50%] z-50 w-full max-w-md translate-x-[-50%] translate-y-[-50%] rounded-xl border border-slate-200 bg-white p-6 shadow-xl transition-all">
-          <div className="flex items-start gap-3.5">
+        <Dialog.Overlay className="fixed inset-0 z-50 bg-[#101113]/60 backdrop-blur-xs transition-opacity animate-in fade-in" />
+        <Dialog.Content className="fixed left-[50%] top-[50%] z-50 w-full max-w-md translate-x-[-50%] translate-y-[-50%] rounded-3xl border-2 border-[#101113] bg-white p-7 shadow-[0_10px_0_0_#101113] transition-all">
+          <div className="flex items-start gap-4">
             {isDestructive && (
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-rose-100 text-rose-600">
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-rose-100 text-rose-700 border border-rose-300">
                 <AlertTriangle className="h-5 w-5" />
               </div>
             )}
             <div className="flex-1">
-              <Dialog.Title className="text-base font-semibold text-slate-900">
+              <Dialog.Title className="text-lg font-extrabold text-[#101113]">
                 {title}
               </Dialog.Title>
-              <Dialog.Description className="mt-1 text-sm text-slate-500 leading-relaxed">
+              <Dialog.Description className="mt-1.5 text-sm text-[#777D77] leading-relaxed font-medium">
                 {description}
               </Dialog.Description>
             </div>
             <Dialog.Close asChild>
               <button
                 type="button"
-                className="rounded-md p-1 text-slate-400 hover:text-slate-600 focus:outline-none"
+                className="rounded-xl p-1.5 text-[#777D77] hover:text-[#101113] hover:bg-[#F3F4F2] focus:outline-none transition-colors"
                 aria-label="Close"
               >
                 <X className="h-4 w-4" />
@@ -58,12 +58,12 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
             </Dialog.Close>
           </div>
 
-          <div className="mt-6 flex items-center justify-end gap-2.5">
+          <div className="mt-7 flex items-center justify-end gap-3">
             <button
               type="button"
               disabled={isLoading}
               onClick={() => onOpenChange(false)}
-              className="btn-base bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 text-xs font-semibold px-4"
+              className="btn-base btn-secondary text-xs font-bold px-4"
             >
               {cancelLabel}
             </button>
@@ -72,10 +72,10 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
               disabled={isLoading}
               onClick={onConfirm}
               className={cn(
-                "btn-base text-xs font-semibold px-4 text-white shadow-xs",
+                "btn-base text-xs font-bold px-5",
                 isDestructive
-                  ? "bg-rose-600 hover:bg-rose-700"
-                  : "bg-blue-600 hover:bg-blue-700"
+                  ? "bg-rose-600 hover:bg-rose-700 text-white border-1.5 border-rose-800 shadow-[0_3px_0_0_#9f1239]"
+                  : "btn-lime"
               )}
             >
               {isLoading ? "Processing..." : confirmLabel}

@@ -18,14 +18,14 @@ export const SearchInput: React.FC<SearchInputProps> = ({
 }) => {
   return (
     <div className={cn("relative flex items-center w-full min-w-[200px]", wrapperClassName)}>
-      <Search className="absolute left-3 w-4 h-4 text-slate-400 pointer-events-none" />
+      <Search className="absolute left-3.5 w-4 h-4 text-[#777D77] pointer-events-none" />
       <input
         type="text"
         value={value}
         onChange={onChange}
         placeholder={placeholder}
         className={cn(
-          "input-base w-full pl-9 pr-8 text-sm placeholder:text-slate-400",
+          "input-base w-full pl-10 pr-9 text-sm placeholder:text-[#777D77] border-1.5 border-[#DCDDDA] rounded-xl focus:border-[#101113] focus:ring-2 focus:ring-[#B7FF3C]/40",
           className
         )}
         {...props}
@@ -35,9 +35,9 @@ export const SearchInput: React.FC<SearchInputProps> = ({
           type="button"
           onClick={onClear}
           aria-label="Clear search"
-          className="absolute right-2.5 p-1 rounded-md text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
+          className="absolute right-2.5 p-1 rounded-md text-[#777D77] hover:text-[#101113] hover:bg-[#F3F4F2] transition-colors"
         >
-          <X className="w-3.5 h-3.5" />
+          <X className="w-4 h-4" />
         </button>
       )}
     </div>

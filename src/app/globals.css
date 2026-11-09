@@ -1,27 +1,55 @@
 @import "tailwindcss";
 
 :root {
-  --primary-blue: #2563eb;
-  --primary-blue-hover: #1d4ed8;
-  --deep-navy: #101827;
-  --deep-navy-surface: #1e293b;
-  --ai-violet: #7c3aed;
-  --ai-violet-hover: #6d28d9;
-  --success: #16a34a;
-  --success-surface: #f0fdf4;
-  --warning: #d97706;
-  --warning-surface: #fffbeb;
-  --danger: #dc2626;
-  --danger-surface: #fef2f2;
-  --background: #f8fafc;
-  --surface: #ffffff;
-  --main-text: #172033;
-  --muted-text: #64748b;
-  --border-color: #e2e8f0;
-  --border-subtle: #f1f5f9;
+  /* Brand Reference Palette: Creative Agency Neo-Minimalism ("Positivus" Aesthetic) */
+  --electric-lime: #B7FF3C;
+  --electric-lime-hover: #9EEA24;
+  --electric-lime-surface: #F3FDE1;
+  --deep-charcoal: #17191C;
+  --deep-charcoal-hover: #1f2227;
+  --almost-black: #101113;
+  --pure-white: #FFFFFF;
+  --soft-grey: #F3F4F2;
+  --border-grey: #DCDDDA;
+  --border-dark: #2A2E33;
+  --text-dark: #202320;
+  --muted-grey: #777D77;
+
+  /* Backward compatible mapped tokens */
+  --primary-blue: #17191C;
+  --primary-blue-hover: #101113;
+  --deep-navy: #17191C;
+  --deep-navy-surface: #101113;
+  --ai-violet: #B7FF3C;
+  --ai-violet-hover: #9EEA24;
+  --success: #16A34A;
+  --success-surface: #F0FDF4;
+  --warning: #D97706;
+  --warning-surface: #FFFBEB;
+  --danger: #DC2626;
+  --danger-surface: #FEF2F2;
+  --background: #FFFFFF;
+  --surface: #FFFFFF;
+  --main-text: #202320;
+  --muted-text: #777D77;
+  --border-color: #DCDDDA;
+  --border-subtle: #F3F4F2;
 }
 
 @theme {
+  --color-electric-lime: var(--electric-lime);
+  --color-electric-lime-hover: var(--electric-lime-hover);
+  --color-electric-lime-surface: var(--electric-lime-surface);
+  --color-deep-charcoal: var(--deep-charcoal);
+  --color-deep-charcoal-hover: var(--deep-charcoal-hover);
+  --color-almost-black: var(--almost-black);
+  --color-pure-white: var(--pure-white);
+  --color-soft-grey: var(--soft-grey);
+  --color-border-grey: var(--border-grey);
+  --color-border-dark: var(--border-dark);
+  --color-text-dark: var(--text-dark);
+  --color-muted-grey: var(--muted-grey);
+
   --color-primary-blue: var(--primary-blue);
   --color-primary-blue-hover: var(--primary-blue-hover);
   --color-deep-navy: var(--deep-navy);
@@ -41,15 +69,15 @@
   --color-border-color: var(--border-color);
   --color-border-subtle: var(--border-subtle);
 
-  --radius-card: 12px;
-  --radius-input: 8px;
-  --radius-button: 8px;
+  --radius-card: 24px;
+  --radius-input: 12px;
+  --radius-button: 12px;
 }
 
 /* Base resets & typography */
 html, body {
   background-color: var(--background);
-  color: var(--main-text);
+  color: var(--text-dark);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -60,37 +88,120 @@ html, body {
   font-variant-numeric: tabular-nums;
 }
 
-/* Restrained Linear-style card */
+/* Reference Card Archetypes */
+.card-white {
+  background-color: #FFFFFF;
+  border: 1.5px solid #101113;
+  border-radius: 28px;
+  box-shadow: 0 5px 0 0 #101113;
+  transition: all 180ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.card-lime {
+  background-color: #B7FF3C;
+  color: #101113;
+  border: 1.5px solid #101113;
+  border-radius: 28px;
+  box-shadow: 0 5px 0 0 #101113;
+  transition: all 180ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.card-charcoal {
+  background-color: #17191C;
+  color: #FFFFFF;
+  border: 1.5px solid #101113;
+  border-radius: 28px;
+  box-shadow: 0 5px 0 0 #101113;
+  transition: all 180ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Elevated Linear Card */
 .linear-card {
   background-color: var(--surface);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.04), 0 1px 2px -1px rgb(0 0 0 / 0.04);
+  border: 1.5px solid var(--border-color);
+  border-radius: 20px;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.02);
 }
 
 .linear-card-interactive {
-  transition: all 150ms cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 180ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 .linear-card-interactive:hover {
-  border-color: #cbd5e1;
-  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.06), 0 2px 4px -2px rgb(0 0 0 / 0.06);
+  border-color: #101113;
+  box-shadow: 0 4px 0 0 #101113;
+  transform: translateY(-2px);
 }
 
-/* Standard button height & focus outline */
-.btn-base {
-  height: 40px;
+/* Editorial Badge Pills from Reference */
+.badge-lime {
+  background-color: #B7FF3C;
+  color: #101113;
+  font-weight: 700;
   border-radius: 8px;
-  font-weight: 500;
+  padding: 4px 10px;
+  display: inline-block;
+  line-height: 1.2;
+}
+
+.badge-dark {
+  background-color: #17191C;
+  color: #B7FF3C;
+  font-weight: 700;
+  border-radius: 8px;
+  padding: 4px 10px;
+  display: inline-block;
+  line-height: 1.2;
+}
+
+/* Circular Arrow Badges from Reference */
+.circle-badge-dark {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background-color: #17191C;
+  color: #B7FF3C;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 150ms ease;
+}
+.circle-badge-dark:hover {
+  transform: rotate(45deg);
+}
+
+.circle-badge-lime {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background-color: #B7FF3C;
+  color: #101113;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 150ms ease;
+}
+.circle-badge-lime:hover {
+  transform: rotate(45deg);
+}
+
+/* Neo-minimalist Button Archetypes */
+.btn-base {
+  height: 44px;
+  border-radius: 14px;
+  font-weight: 600;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 0 16px;
-  transition: all 120ms ease;
+  padding: 0 20px;
+  transition: all 150ms cubic-bezier(0.16, 1, 0.3, 1);
   user-select: none;
+  cursor: pointer;
 }
 .btn-base:focus-visible {
-  outline: 2px solid var(--primary-blue);
+  outline: 2px solid #101113;
   outline-offset: 2px;
 }
 .btn-base:disabled {
@@ -98,24 +209,56 @@ html, body {
   cursor: not-allowed;
 }
 
-/* Inputs */
+.btn-primary {
+  background-color: #17191C;
+  color: #FFFFFF;
+  border: 1.5px solid #101113;
+}
+.btn-primary:hover:not(:disabled) {
+  background-color: #101113;
+  transform: translateY(-1px);
+}
+
+.btn-lime {
+  background-color: #B7FF3C;
+  color: #101113;
+  border: 1.5px solid #101113;
+  box-shadow: 0 3px 0 0 #101113;
+}
+.btn-lime:hover:not(:disabled) {
+  background-color: #A3EE28;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 0 0 #101113;
+}
+
+.btn-secondary {
+  background-color: #FFFFFF;
+  color: #17191C;
+  border: 1.5px solid #DCDDDA;
+}
+.btn-secondary:hover:not(:disabled) {
+  border-color: #101113;
+  background-color: #F3F4F2;
+}
+
+/* Inputs & Forms */
 .input-base {
-  height: 40px;
-  border-radius: 8px;
-  border: 1px solid var(--border-color);
-  background-color: var(--surface);
-  color: var(--main-text);
-  padding: 0 12px;
+  height: 44px;
+  border-radius: 12px;
+  border: 1.5px solid #DCDDDA;
+  background-color: #FFFFFF;
+  color: #202320;
+  padding: 0 14px;
   font-size: 0.875rem;
-  transition: border-color 120ms ease, box-shadow 120ms ease;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
 }
 .input-base:focus {
   outline: none;
-  border-color: var(--primary-blue);
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+  border-color: #101113;
+  box-shadow: 0 0 0 3px rgba(183, 255, 60, 0.45);
 }
 .input-base::placeholder {
-  color: #94a3b8;
+  color: #777D77;
 }
 
 /* RTL direction and Urdu Nastaliq typography fallbacks */
@@ -142,18 +285,19 @@ html, body {
   top: -9999px;
   left: 50%;
   transform: translateX(-50%);
-  background-color: var(--primary-blue);
-  color: white;
-  padding: 8px 16px;
-  border-radius: 8px;
-  font-weight: 600;
+  background-color: #17191C;
+  color: #B7FF3C;
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-weight: 700;
   font-size: 0.875rem;
   z-index: 100;
   text-decoration: none;
+  border: 1.5px solid #B7FF3C;
   transition: top 150ms ease;
 }
 .skip-link:focus {
   top: 16px;
-  outline: 2px solid white;
+  outline: 2px solid #17191C;
   outline-offset: 2px;
 }

@@ -19,13 +19,18 @@ export const ChartCard: React.FC<ChartCardProps> = ({
   className,
 }) => {
   return (
-    <div className={cn("linear-card p-5 flex flex-col justify-between", className)}>
+    <div
+      className={cn(
+        "rounded-3xl border-2 border-[#DCDDDA] hover:border-[#101113] bg-white p-6 flex flex-col justify-between shadow-[0_2px_0_0_#DCDDDA] transition-all duration-180",
+        className
+      )}
+    >
       <div>
-        <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+        <div className="flex items-center justify-between pb-4 border-b-2 border-[#F3F4F2]">
           <div>
-            <h3 className="text-sm font-semibold text-slate-900">{title}</h3>
+            <h3 className="text-base font-extrabold text-[#101113]">{title}</h3>
             {description && (
-              <p className="text-xs text-slate-500 mt-0.5">{description}</p>
+              <p className="text-xs text-[#777D77] mt-0.5 font-medium">{description}</p>
             )}
           </div>
           {action && <div>{action}</div>}
@@ -35,7 +40,7 @@ export const ChartCard: React.FC<ChartCardProps> = ({
       </div>
 
       {footer && (
-        <div className="mt-4 pt-3 border-t border-slate-100 text-xs text-slate-500">
+        <div className="mt-4 pt-3.5 border-t-2 border-[#F3F4F2] text-xs text-[#777D77]">
           {footer}
         </div>
       )}

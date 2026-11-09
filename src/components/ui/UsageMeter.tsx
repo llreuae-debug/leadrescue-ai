@@ -28,21 +28,21 @@ export const UsageMeter: React.FC<UsageMeterProps> = ({
       ? "bg-rose-500"
       : ratio >= warningThreshold
       ? "bg-amber-500"
-      : "bg-blue-600";
+      : "bg-[#B7FF3C]";
 
   return (
-    <div className={cn("space-y-1.5", className)}>
+    <div className={cn("space-y-2", className)}>
       <div className="flex items-center justify-between text-xs">
-        <span className="font-medium text-slate-700">{label}</span>
-        <span className="text-slate-500 tabular-nums">
-          <strong className="text-slate-900 font-semibold">{current}</strong> / {limit} {unit}
+        <span className="font-bold text-[#202320]">{label}</span>
+        <span className="text-[#777D77] tabular-nums font-medium">
+          <strong className="text-[#101113] font-bold">{current}</strong> / {limit} {unit}
           {" "}({percentage}%)
         </span>
       </div>
 
-      <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden border border-slate-200">
+      <div className="w-full h-3 bg-[#F3F4F2] rounded-full overflow-hidden border border-[#DCDDDA] p-0.5">
         <div
-          className={cn("h-full transition-all duration-300 rounded-full", barColor)}
+          className={cn("h-full transition-all duration-300 rounded-full border border-[#101113]/20", barColor)}
           style={{ width: `${percentage}%` }}
           role="progressbar"
           aria-valuenow={current}

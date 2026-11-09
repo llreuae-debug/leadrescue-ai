@@ -13,6 +13,7 @@ interface StatCardProps {
   icon?: LucideIcon;
   description?: string;
   className?: string;
+  highlight?: boolean;
 }
 
 export const StatCard: React.FC<StatCardProps> = ({
@@ -22,38 +23,61 @@ export const StatCard: React.FC<StatCardProps> = ({
   icon: Icon,
   description,
   className,
+  highlight = false,
 }) => {
   return (
     <div
       className={cn(
-        "linear-card p-5 relative overflow-hidden transition-all duration-150 hover:border-slate-300",
+        "rounded-3xl p-6 transition-all duration-180 relative overflow-hidden border-2",
+        highlight
+          ? "bg-[#B7FF3C] border-[#101113] text-[#101113] shadow-[0_4px_0_0_#101113]"
+          : "bg-white border-[#DCDDDA] hover:border-[#101113] text-[#202320] shadow-[0_2px_0_0_#DCDDDA] hover:shadow-[0_4px_0_0_#101113]",
         className
       )}
     >
       <div className="flex items-center justify-between">
-        <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+        <p
+          className={cn(
+            "text-xs font-bold uppercase tracking-wider",
+            highlight ? "text-[#101113]" : "text-[#777D77]"
+          )}
+        >
           {title}
         </p>
         {Icon && (
-          <div className="p-2 rounded-lg bg-slate-50 text-slate-600 border border-slate-100">
-            <Icon className="w-4 h-4" />
+          <div
+            className={cn(
+              "w-10 h-10 rounded-full flex items-center justify-center shrink-0 border-1.5",
+              highlight
+                ? "bg-[#101113] text-[#B7FF3C] border-[#101113]"
+                : "bg-[#F3F4F2] text-[#17191C] border-[#DCDDDA]"
+            )}
+          >
+            <Icon className="w-5 h-5" />
           </div>
         )}
       </div>
 
-      <div className="mt-3 flex items-baseline gap-2">
-        <span className="text-2xl font-bold tracking-tight text-slate-900 tabular-nums">
+      <div className="mt-4 flex items-baseline gap-2.5">
+        <span
+          className={cn(
+            "text-3xl font-extrabold tracking-tight tabular-nums",
+            highlight ? "text-[#101113]" : "text-[#101113]"
+          )}
+        >
           {value}
         </span>
         {change && (
           <span
             className={cn(
-              "inline-flex items-center text-xs font-semibold",
-              change.trend === "up"
-                ? "text-emerald-600"
+              "inline-flex items-center text-xs font-bold px-2 py-0.5 rounded-full border",
+              highlight
+                ? "bg-[#101113] text-[#B7FF3C] border-[#101113]"
+                : change.trend === "up"
+                ? "bg-emerald-50 text-emerald-800 border-emerald-200"
                 : change.trend === "down"
-                ? "text-rose-600"
-                : "text-slate-500"
+                ? "bg-rose-50 text-rose-800 border-rose-200"
+                : "bg-[#F3F4F2] text-[#777D77] border-[#DCDDDA]"
             )}
           >
             {change.trend === "up" && <ArrowUpRight className="w-3.5 h-3.5 mr-0.5" />}
@@ -64,7 +88,12 @@ export const StatCard: React.FC<StatCardProps> = ({
       </div>
 
       {(description || change?.label) && (
-        <p className="mt-1 text-xs text-slate-500">
+        <p
+          className={cn(
+            "mt-2 text-xs font-medium",
+            highlight ? "text-[#101113]/80" : "text-[#777D77]"
+          )}
+        >
           {change?.label || description}
         </p>
       )}

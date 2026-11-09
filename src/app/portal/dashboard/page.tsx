@@ -13,7 +13,8 @@ import {
   ArrowRight,
   TrendingUp,
   Building2,
-  Calendar
+  Calendar,
+  Sparkles,
 } from "lucide-react";
 import { StatCard } from "@/components/ui/StatCard";
 import { StatusBadge } from "@/components/ui/StatusBadge";
@@ -69,21 +70,19 @@ export default function ClientPortalDashboardPage() {
 
   return (
     <div className="space-y-8">
-      {/* Top Banner & Welcome */}
-      <div className="bg-gradient-to-r from-blue-900 to-indigo-900 rounded-2xl p-6 sm:p-8 text-white shadow-md relative overflow-hidden">
-        <div className="relative z-10 max-w-3xl">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/20 text-blue-200 text-xs font-semibold mb-3 border border-blue-400/20">
-            <Building2 className="w-3.5 h-3.5" />
-            <span>{workspace?.name} &bull; Client Portal</span>
-          </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
-            Campaign Performance &amp; Lead Recovery
-          </h1>
-          <p className="mt-2 text-sm sm:text-base text-blue-100/90 leading-relaxed">
-            Real-time status of your inbound marketing inquiries, follow-up SLA coverage, 
-            and confirmed deal conversions managed by <span className="font-semibold text-white">{workspace?.agencyName}</span>.
-          </p>
+      {/* Top Hero Banner in Deep Charcoal */}
+      <div className="card-charcoal p-6 sm:p-8 rounded-3xl border-2 border-[#101113] text-white relative overflow-hidden space-y-3">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#282B30] text-[#B7FF3C] text-xs font-black uppercase tracking-wider border border-[#3A3F47]">
+          <Building2 className="w-3.5 h-3.5" />
+          <span>{workspace?.name} &bull; Client Portal</span>
         </div>
+        <h1 className="text-2xl sm:text-4xl font-black tracking-tight text-white">
+          Campaign Performance &amp; Lead Recovery
+        </h1>
+        <p className="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-3xl font-medium">
+          Real-time visibility into your inbound marketing enquiries, follow-up SLA coverage, 
+          and verified deal conversions managed by <span className="font-bold text-[#B7FF3C]">{workspace?.agencyName}</span>.
+        </p>
       </div>
 
       {/* KPI Stat Cards */}
@@ -107,13 +106,14 @@ export default function ClientPortalDashboardPage() {
           title="Qualified Leads"
           value={metrics?.qualifiedLeads || 0}
           icon={CheckCircle2}
-          change={{ value: "High intent", trend: "up" }}
+          change={{ value: "Verified intent", trend: "up" }}
         />
         <StatCard
           title="Closed Deals"
           value={metrics?.wonLeads || 0}
           icon={Trophy}
           change={{ value: `${metrics?.conversionRate || 0}% conv. rate`, trend: "up" }}
+          highlight={true}
         />
         <StatCard
           title="Won Revenue"
@@ -126,42 +126,42 @@ export default function ClientPortalDashboardPage() {
       {/* Grid: Inbound Channel Performance + Recent Inquiries */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Source Channels Breakdown */}
-        <div className="bg-white rounded-xl border border-slate-200 shadow-xs p-6">
-          <div className="flex items-center justify-between pb-4 border-b border-slate-100">
+        <div className="card-white p-6 space-y-5">
+          <div className="flex items-center justify-between pb-3 border-b-2 border-[#DCDDDA]">
             <div>
-              <h2 className="font-bold text-slate-900 text-base">Inbound Lead Sources</h2>
-              <p className="text-xs text-slate-500">Distribution across active marketing channels</p>
+              <h2 className="font-black text-[#101113] text-sm uppercase tracking-wider">Inbound Channels</h2>
+              <p className="text-xs text-[#777D77] font-medium">Distribution across marketing sources</p>
             </div>
-            <TrendingUp className="w-5 h-5 text-slate-400" />
+            <TrendingUp className="w-5 h-5 text-[#101113]" />
           </div>
 
-          <div className="mt-5 space-y-4">
+          <div className="space-y-4 pt-1">
             {metrics?.sourceBreakdown && metrics.sourceBreakdown.length > 0 ? (
               metrics.sourceBreakdown.map((src) => (
                 <div key={src.source} className="space-y-1.5">
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="font-medium text-slate-700">{src.source}</span>
-                    <span className="text-slate-500 font-semibold">
+                  <div className="flex items-center justify-between text-xs font-bold">
+                    <span className="text-[#101113]">{src.source}</span>
+                    <span className="font-mono text-[#777D77]">
                       {src.count} ({src.percentage}%)
                     </span>
                   </div>
-                  <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+                  <div className="w-full bg-[#F3F4F2] border-2 border-[#101113] rounded-full h-2.5 overflow-hidden">
                     <div
-                      className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                      className="bg-[#B7FF3C] h-full rounded-full transition-all duration-300"
                       style={{ width: `${src.percentage}%` }}
                     />
                   </div>
                 </div>
               ))
             ) : (
-              <p className="text-xs text-slate-400 text-center py-6">No source attribution recorded yet.</p>
+              <p className="text-xs text-[#777D77] text-center py-6 font-medium">No source attribution recorded yet.</p>
             )}
           </div>
 
-          <div className="mt-6 pt-4 border-t border-slate-100">
+          <div className="pt-4 border-t-2 border-[#DCDDDA]">
             <Link
               href="/portal/reports"
-              className="text-xs font-semibold text-blue-600 hover:text-blue-700 flex items-center justify-between"
+              className="text-xs font-black text-[#101113] hover:text-[#777D77] flex items-center justify-between transition-colors"
             >
               <span>View full attribution report</span>
               <ArrowRight className="w-4 h-4" />
@@ -170,22 +170,22 @@ export default function ClientPortalDashboardPage() {
         </div>
 
         {/* Recent Inquiries List */}
-        <div className="lg:col-span-2 bg-white rounded-xl border border-slate-200 shadow-xs p-6">
-          <div className="flex items-center justify-between pb-4 border-b border-slate-100">
+        <div className="lg:col-span-2 card-white p-6 space-y-5">
+          <div className="flex items-center justify-between pb-3 border-b-2 border-[#DCDDDA]">
             <div>
-              <h2 className="font-bold text-slate-900 text-base">Recent Inquiries</h2>
-              <p className="text-xs text-slate-500">Verified customer leads received in your workspace</p>
+              <h2 className="font-black text-[#101113] text-sm uppercase tracking-wider">Recent Inquiries</h2>
+              <p className="text-xs text-[#777D77] font-medium">Verified customer leads received in your workspace</p>
             </div>
             <Link
               href="/portal/leads"
-              className="text-xs font-semibold text-blue-600 hover:text-blue-700 flex items-center gap-1"
+              className="text-xs font-black text-[#101113] hover:text-[#777D77] flex items-center gap-1 transition-colors"
             >
               <span>View all enquiries</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>
 
-          <div className="mt-4">
+          <div>
             {recentLeads.length === 0 ? (
               <EmptyState
                 icon={Users}
@@ -194,9 +194,9 @@ export default function ClientPortalDashboardPage() {
               />
             ) : (
               <div className="overflow-x-auto">
-                <table className="w-full text-left text-sm">
+                <table className="w-full text-left text-xs">
                   <thead>
-                    <tr className="border-b border-slate-100 text-slate-400 text-xs uppercase tracking-wider font-semibold">
+                    <tr className="border-b-2 border-[#101113] text-[#101113] uppercase tracking-wider font-black text-[11px]">
                       <th className="py-2.5 px-3">Customer</th>
                       <th className="py-2.5 px-3">Channel</th>
                       <th className="py-2.5 px-3">Status</th>
@@ -204,27 +204,27 @@ export default function ClientPortalDashboardPage() {
                       <th className="py-2.5 px-3 text-center">Action</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100">
+                  <tbody className="divide-y divide-[#DCDDDA]">
                     {recentLeads.map((lead) => {
                       const cleanPhone = lead.phone ? lead.phone.replace(/[^0-9]/g, "") : null;
                       return (
-                        <tr key={lead.id} className="hover:bg-slate-50/70 transition-colors">
+                        <tr key={lead.id} className="hover:bg-[#F3F4F2] transition-colors">
                           <td className="py-3 px-3">
-                            <p className="font-semibold text-slate-900 text-sm leading-tight">{lead.name}</p>
-                            <p className="text-xs text-slate-400">{lead.company || lead.email || "Individual"}</p>
+                            <p className="font-bold text-[#101113] text-xs leading-tight">{lead.name}</p>
+                            <p className="text-[11px] text-[#777D77] font-medium">{lead.company || lead.email || "Individual"}</p>
                           </td>
                           <td className="py-3 px-3">
-                            <span className="text-xs font-medium text-slate-600 bg-slate-100 px-2 py-0.5 rounded-md">
+                            <span className="badge-dark text-[10px]">
                               {lead.source}
                             </span>
                           </td>
                           <td className="py-3 px-3">
                             <StatusBadge
-                              label={lead.status.replace("_", " ").toUpperCase()}
+                              label={lead.status.replace(/_/g, " ").toUpperCase()}
                               variant={getStatusVariant(lead.status)}
                             />
                           </td>
-                          <td className="py-3 px-3 text-right font-semibold text-slate-900 text-xs">
+                          <td className="py-3 px-3 text-right font-mono font-bold text-[#101113] text-xs">
                             {lead.dealValue > 0 ? formatPKR(lead.dealValue) : "—"}
                           </td>
                           <td className="py-3 px-3 text-center">
@@ -233,14 +233,14 @@ export default function ClientPortalDashboardPage() {
                                 href={`https://wa.me/${cleanPhone}`}
                                 target="_blank"
                                 rel="noreferrer"
-                                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-emerald-50 text-emerald-700 hover:bg-emerald-100 text-xs font-medium transition-colors"
+                                className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-[#17191C] hover:bg-[#101113] text-[#B7FF3C] text-[11px] font-bold border border-[#101113] transition-colors"
                                 title="Open WhatsApp chat"
                               >
                                 <MessageSquare className="w-3.5 h-3.5" />
                                 <span>WhatsApp</span>
                               </a>
                             ) : (
-                              <span className="text-xs text-slate-400">No phone</span>
+                              <span className="text-xs text-[#777D77] font-medium">No phone</span>
                             )}
                           </td>
                         </tr>

@@ -10,6 +10,7 @@ import {
   Users,
   Building2,
   Sparkles,
+  X,
 } from "lucide-react";
 import { getAdminPlansAction, updateAdminPlanAction } from "@/app/actions/admin";
 import { AdminPlanDefinition } from "@/types/admin";
@@ -94,188 +95,208 @@ export default function AdminPlansPage() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-white tracking-tight">Plan Tiers &amp; Quota Limits</h1>
-        <p className="text-sm text-slate-400 mt-1">
+        <div className="flex items-center gap-2 mb-1.5">
+          <span className="badge-lime text-[10px]">Authoritative Limits</span>
+          <span className="badge-dark text-[10px]">Platform Quotas</span>
+        </div>
+        <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">Plan Tiers &amp; Quota Limits</h1>
+        <p className="text-xs sm:text-sm text-slate-400 mt-1 font-medium">
           Configure authoritative platform subscription parameters, PKR pricing, and server-enforced resource limits.
         </p>
       </div>
 
-      {/* Plans Grid */}
+      {/* Plan Cards Grid */}
       {loading ? (
-        <div className="py-20 text-center text-slate-400 text-xs">Loading plans...</div>
+        <div className="py-20 text-center">
+          <div className="w-8 h-8 border-2 border-[#B7FF3C] border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+          <p className="text-xs text-slate-400 font-bold">Loading tier definitions...</p>
+        </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {plans.map((p) => (
+          {plans.map((plan) => (
             <div
-              key={p.id}
-              className="bg-slate-950 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between shadow-xs hover:border-slate-700 transition-colors"
+              key={plan.id}
+              className="bg-[#17191C] rounded-3xl border-2 border-[#282B30] p-6 sm:p-8 flex flex-col justify-between space-y-6 hover:border-[#3A3F47] transition-all"
             >
-              <div>
-                <div className="flex items-center justify-between pb-3 border-b border-slate-800">
-                  <span className="font-bold text-lg text-white capitalize">{p.name}</span>
-                  <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-slate-800 text-slate-300">
-                    {p.id}
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-xl font-black text-white">{plan.name}</h3>
+                  <span className="badge-lime text-[10px]">
+                    PKR / Month
                   </span>
                 </div>
 
-                <div className="mt-4">
-                  <span className="text-3xl font-extrabold text-emerald-400">{formatPKR(p.pricePKR)}</span>
-                  <span className="text-xs text-slate-400"> / month</span>
+                <div className="flex items-baseline gap-1">
+                  <span className="text-3xl font-black text-[#B7FF3C] tabular-nums font-mono">
+                    {formatPKR(plan.pricePKR)}
+                  </span>
+                  <span className="text-xs text-slate-400 font-bold">/ mo</span>
                 </div>
 
-                <div className="mt-6 space-y-3 text-xs text-slate-300">
-                  <div className="flex items-center justify-between">
-                    <span className="flex items-center gap-2 text-slate-400">
-                      <Building2 className="w-4 h-4 text-slate-500" />
-                      Client Workspaces
-                    </span>
-                    <span className="font-bold text-white">{p.maxClients === 999 ? "Unlimited" : p.maxClients}</span>
-                  </div>
+                <p className="text-xs text-slate-400 leading-relaxed font-medium">
+                  Authoritative tier entitlements enforced strictly across all tenant workspaces.
+                </p>
 
+                <div className="space-y-2.5 pt-3 border-t border-[#282B30] text-xs">
                   <div className="flex items-center justify-between">
-                    <span className="flex items-center gap-2 text-slate-400">
-                      <Coins className="w-4 h-4 text-slate-500" />
-                      Monthly Inbound Leads
-                    </span>
-                    <span className="font-bold text-white">{p.maxLeadsPerMonth.toLocaleString()}</span>
+                    <span className="text-slate-400 font-medium">Client Workspaces:</span>
+                    <strong className="text-white font-mono font-bold">{plan.maxClients}</strong>
                   </div>
-
                   <div className="flex items-center justify-between">
-                    <span className="flex items-center gap-2 text-slate-400">
-                      <Users className="w-4 h-4 text-slate-500" />
-                      Team Seats
-                    </span>
-                    <span className="font-bold text-white">{p.maxTeamSeats}</span>
+                    <span className="text-slate-400 font-medium">Monthly Lead Quota:</span>
+                    <strong className="text-white font-mono font-bold">{plan.maxLeadsPerMonth}</strong>
                   </div>
-
                   <div className="flex items-center justify-between">
-                    <span className="flex items-center gap-2 text-slate-400">
-                      <Sparkles className="w-4 h-4 text-slate-500" />
-                      AI Sales Drafts
-                    </span>
-                    <span className="font-bold text-white">{p.maxAiDraftsPerMonth.toLocaleString()} / mo</span>
+                    <span className="text-slate-400 font-medium">Team Member Seats:</span>
+                    <strong className="text-white font-mono font-bold">{plan.maxTeamSeats}</strong>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-slate-400 font-medium">AI Sales Generations:</span>
+                    <strong className="text-[#B7FF3C] font-mono font-bold">{plan.maxAiDraftsPerMonth}</strong>
                   </div>
                 </div>
               </div>
 
-              <div className="mt-6 pt-4 border-t border-slate-800">
-                <button
-                  type="button"
-                  onClick={() => handleOpenEdit(p)}
-                  className="w-full inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-xs font-semibold text-white transition-colors border border-slate-700"
-                >
-                  <Edit className="w-3.5 h-3.5" />
-                  <span>Configure Limits &amp; Price</span>
-                </button>
-              </div>
+              <button
+                type="button"
+                onClick={() => handleOpenEdit(plan)}
+                className="w-full btn-lime text-xs py-2.5 px-4 flex items-center justify-center gap-2"
+              >
+                <Edit className="w-3.5 h-3.5" />
+                <span>Modify Tier Quotas</span>
+              </button>
             </div>
           ))}
         </div>
       )}
 
-      {/* Edit Modal */}
+      {/* Edit Plan Modal */}
       {selectedPlan && (
-        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-slate-950 border border-slate-800 rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-xl">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-red-400">
-                <Sliders className="w-5 h-5" />
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-xs p-4">
+          <div className="bg-[#17191C] rounded-3xl max-w-lg w-full p-6 sm:p-8 space-y-5 border-2 border-[#282B30] text-white shadow-2xl">
+            <div className="flex items-center justify-between pb-3 border-b border-[#282B30]">
+              <div className="flex items-center gap-2">
+                <Sliders className="w-5 h-5 text-[#B7FF3C]" />
+                <h3 className="text-sm font-black uppercase tracking-wider text-white">
+                  Modify {selectedPlan.name} Tier
+                </h3>
               </div>
-              <div>
-                <h3 className="text-base font-bold text-white">Edit Plan: {selectedPlan.name}</h3>
-                <p className="text-xs text-slate-400">ID: {selectedPlan.id}</p>
-              </div>
+              <button
+                type="button"
+                onClick={() => setSelectedPlan(null)}
+                className="w-8 h-8 rounded-full hover:bg-[#101113] flex items-center justify-center text-slate-400 hover:text-white"
+              >
+                <X className="w-4 h-4" />
+              </button>
             </div>
 
             <form onSubmit={handleSavePlan} className="space-y-4 text-xs">
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-slate-400 font-medium mb-1">Price in PKR (monthly)</label>
-                  <input
-                    type="number"
-                    value={priceInput}
-                    onChange={(e) => setPriceInput(Number(e.target.value))}
-                    min={0}
-                    className="w-full px-3 py-2 rounded-lg border border-slate-800 bg-slate-900 text-white"
-                  />
-                </div>
-                <div>
-                  <label className="block text-slate-400 font-medium mb-1">Max Client Workspaces</label>
-                  <input
-                    type="number"
-                    value={clientsInput}
-                    onChange={(e) => setClientsInput(Number(e.target.value))}
-                    min={1}
-                    className="w-full px-3 py-2 rounded-lg border border-slate-800 bg-slate-900 text-white"
-                  />
-                </div>
-                <div>
-                  <label className="block text-slate-400 font-medium mb-1">Max Leads / Month</label>
-                  <input
-                    type="number"
-                    value={leadsInput}
-                    onChange={(e) => setLeadsInput(Number(e.target.value))}
-                    min={10}
-                    className="w-full px-3 py-2 rounded-lg border border-slate-800 bg-slate-900 text-white"
-                  />
-                </div>
-                <div>
-                  <label className="block text-slate-400 font-medium mb-1">Max Team Seats</label>
-                  <input
-                    type="number"
-                    value={seatsInput}
-                    onChange={(e) => setSeatsInput(Number(e.target.value))}
-                    min={1}
-                    className="w-full px-3 py-2 rounded-lg border border-slate-800 bg-slate-900 text-white"
-                  />
-                </div>
-              </div>
-
               <div>
-                <label className="block text-slate-400 font-medium mb-1">Max AI Drafts / Month</label>
+                <label className="block text-xs font-black uppercase tracking-wider text-white mb-1.5">
+                  Monthly Subscription Fee (PKR)
+                </label>
                 <input
                   type="number"
-                  value={aiDraftsInput}
-                  onChange={(e) => setAiDraftsInput(Number(e.target.value))}
-                  min={0}
-                  className="w-full px-3 py-2 rounded-lg border border-slate-800 bg-slate-900 text-white"
+                  min="0"
+                  value={priceInput}
+                  onChange={(e) => setPriceInput(Number(e.target.value))}
+                  className="w-full text-xs font-mono font-bold border-2 border-[#282B30] rounded-xl p-3 bg-[#101113] focus:outline-none focus:border-[#B7FF3C] text-white"
+                  required
                 />
               </div>
 
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-black uppercase tracking-wider text-white mb-1.5">
+                    Max Clients
+                  </label>
+                  <input
+                    type="number"
+                    min="1"
+                    value={clientsInput}
+                    onChange={(e) => setClientsInput(Number(e.target.value))}
+                    className="w-full text-xs font-mono font-bold border-2 border-[#282B30] rounded-xl p-3 bg-[#101113] focus:outline-none focus:border-[#B7FF3C] text-white"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-black uppercase tracking-wider text-white mb-1.5">
+                    Monthly Leads Limit
+                  </label>
+                  <input
+                    type="number"
+                    min="10"
+                    value={leadsInput}
+                    onChange={(e) => setLeadsInput(Number(e.target.value))}
+                    className="w-full text-xs font-mono font-bold border-2 border-[#282B30] rounded-xl p-3 bg-[#101113] focus:outline-none focus:border-[#B7FF3C] text-white"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-black uppercase tracking-wider text-white mb-1.5">
+                    Max Team Seats
+                  </label>
+                  <input
+                    type="number"
+                    min="1"
+                    value={seatsInput}
+                    onChange={(e) => setSeatsInput(Number(e.target.value))}
+                    className="w-full text-xs font-mono font-bold border-2 border-[#282B30] rounded-xl p-3 bg-[#101113] focus:outline-none focus:border-[#B7FF3C] text-white"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-black uppercase tracking-wider text-white mb-1.5">
+                    Max AI Drafts / Mo
+                  </label>
+                  <input
+                    type="number"
+                    min="10"
+                    value={aiDraftsInput}
+                    onChange={(e) => setAiDraftsInput(Number(e.target.value))}
+                    className="w-full text-xs font-mono font-bold border-2 border-[#282B30] rounded-xl p-3 bg-[#101113] focus:outline-none focus:border-[#B7FF3C] text-white"
+                    required
+                  />
+                </div>
+              </div>
+
               <div>
-                <label className="block text-slate-300 font-medium mb-1">
-                  Change Justification / Reason <span className="text-red-400">*</span>
+                <label className="block text-xs font-black uppercase tracking-wider text-white mb-1.5">
+                  Administrative Reason (Audit Log Mandatory)
                 </label>
                 <textarea
+                  rows={2}
                   value={reasonInput}
                   onChange={(e) => setReasonInput(e.target.value)}
-                  placeholder="Document reason for audit logging (e.g. Promotional pilot expansion, inflation index)..."
-                  rows={2}
-                  className="w-full px-3 py-2 rounded-lg border border-slate-800 bg-slate-900 text-white placeholder:text-slate-500"
+                  placeholder="Justification for plan price or quota change..."
+                  className="w-full text-xs font-medium border-2 border-[#282B30] rounded-xl p-3 bg-[#101113] focus:outline-none focus:border-[#B7FF3C] text-white resize-none"
+                  required
                 />
               </div>
 
               {errorMsg && (
-                <p className="text-xs text-red-400 bg-red-950/60 p-2 rounded-lg border border-red-800">
+                <p className="text-xs text-red-400 font-bold bg-red-950/60 border border-red-800 p-3 rounded-xl">
                   {errorMsg}
                 </p>
               )}
 
-              <div className="flex items-center justify-end gap-2 pt-2">
+              <div className="flex justify-end gap-2.5 pt-3 border-t border-[#282B30]">
                 <button
                   type="button"
                   onClick={() => setSelectedPlan(null)}
-                  disabled={saving}
-                  className="px-3.5 py-2 rounded-lg border border-slate-800 text-xs font-medium text-slate-300 hover:bg-slate-900"
+                  className="px-4 py-2 text-xs font-bold text-slate-300 hover:text-white bg-[#101113] rounded-xl border border-[#282B30]"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={saving}
-                  className="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-500 text-white font-bold text-xs shadow-xs"
+                  className="btn-lime text-xs px-5 py-2.5"
                 >
-                  {saving ? "Saving..." : "Update Plan & Sign Audit"}
+                  {saving ? "Signing Changes..." : "Save Tier Changes"}
                 </button>
               </div>
             </form>

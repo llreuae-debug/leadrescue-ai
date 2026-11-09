@@ -18,36 +18,37 @@ function LoginForm() {
   );
 
   return (
-    <div className="linear-card p-6 sm:p-8 space-y-6">
-      <div className="space-y-1 text-center">
-        <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900">
+    <div className="card-white p-6 sm:p-8 space-y-6">
+      <div className="space-y-1.5 text-center">
+        <span className="badge-dark text-[10px] uppercase font-bold">Secure Access</span>
+        <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-[#101113]">
           Sign in to your agency
         </h1>
-        <p className="text-xs text-slate-500">
+        <p className="text-xs text-[#777D77] font-medium">
           Enter your agency email credentials to access your workspace.
         </p>
       </div>
 
       {isReset && (
-        <div className="p-3 rounded-lg bg-emerald-50 border border-emerald-200 text-xs text-emerald-800 flex items-center gap-2">
+        <div className="p-3.5 rounded-2xl bg-emerald-50 border-2 border-emerald-500 text-xs text-emerald-950 flex items-center gap-2 font-bold">
           <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
           <span>Your password has been successfully updated. Please log in.</span>
         </div>
       )}
 
       {redirectedFrom && (
-        <div className="p-3 rounded-lg bg-amber-50 border border-amber-200 text-xs text-amber-800 flex items-center gap-2">
+        <div className="p-3.5 rounded-2xl bg-amber-50 border-2 border-amber-500 text-xs text-amber-950 flex items-center gap-2 font-bold">
           <AlertCircle className="w-4 h-4 text-amber-600 shrink-0" />
           <span>Please sign in to access that protected page.</span>
         </div>
       )}
 
       {state?.error && (
-        <div className="p-3 rounded-lg bg-rose-50 border border-rose-200 text-xs text-rose-800 flex items-start gap-2">
-          <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
-          <div className="space-y-1">
-            <p className="font-semibold">Authentication Error</p>
-            <p className="text-[11px] leading-relaxed">{state.error}</p>
+        <div className="p-3.5 rounded-2xl bg-red-50 border-2 border-red-500 text-xs text-red-950 flex items-start gap-2">
+          <AlertCircle className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
+          <div className="space-y-0.5 font-medium">
+            <p className="font-bold text-red-900">Authentication Error</p>
+            <p className="text-[11px] leading-relaxed text-red-800">{state.error}</p>
           </div>
         </div>
       )}
@@ -60,7 +61,7 @@ function LoginForm() {
             required
             autoComplete="email"
             placeholder="admin@agency.pk"
-            className="input-base w-full"
+            className="w-full text-xs font-bold border-2 border-[#101113] rounded-xl p-3 bg-[#F3F4F2] focus:bg-white focus:outline-none text-[#101113]"
             disabled={isPending}
           />
         </FormField>
@@ -72,19 +73,19 @@ function LoginForm() {
             required
             autoComplete="current-password"
             placeholder="••••••••••••"
-            className="input-base w-full"
+            className="w-full text-xs font-bold border-2 border-[#101113] rounded-xl p-3 bg-[#F3F4F2] focus:bg-white focus:outline-none text-[#101113]"
             disabled={isPending}
           />
         </FormField>
 
-        <div className="flex items-center justify-between text-xs">
-          <label className="flex items-center gap-2 text-slate-600 cursor-pointer">
-            <input type="checkbox" name="remember" className="rounded text-blue-600" />
+        <div className="flex items-center justify-between text-xs font-medium">
+          <label className="flex items-center gap-2 text-[#777D77] cursor-pointer">
+            <input type="checkbox" name="remember" className="rounded border-2 border-[#101113] text-[#101113]" />
             <span>Remember for 30 days</span>
           </label>
           <Link
             href="/forgot-password"
-            className="font-semibold text-blue-600 hover:text-blue-700"
+            className="font-bold text-[#101113] hover:underline"
           >
             Forgot password?
           </Link>
@@ -93,22 +94,22 @@ function LoginForm() {
         <button
           type="submit"
           disabled={isPending}
-          className="btn-base bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold w-full shadow-xs disabled:opacity-50 h-10"
+          className="btn-primary text-xs font-black w-full h-11 flex items-center justify-center gap-2"
         >
           {isPending ? (
             <span>Signing in...</span>
           ) : (
             <>
-              <span>Sign In</span>
-              <ArrowRight className="w-4 h-4 ml-1" />
+              <span>Sign in to Dashboard</span>
+              <ArrowRight className="w-4 h-4 text-[#B7FF3C]" />
             </>
           )}
         </button>
       </form>
 
-      <div className="pt-2 text-center text-xs text-slate-500 border-t border-slate-100">
-        Don&apos;t have an agency account yet?{" "}
-        <Link href="/signup" className="font-bold text-blue-600 hover:text-blue-700">
+      <div className="pt-2 text-center text-xs font-medium text-[#777D77] border-t-2 border-[#DCDDDA]">
+        Don&apos;t have an agency workspace yet?{" "}
+        <Link href="/signup" className="font-black text-[#101113] hover:underline">
           Start 14-day free trial
         </Link>
       </div>
@@ -118,7 +119,7 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <Suspense fallback={<div className="p-8 text-center text-xs text-slate-400">Loading form...</div>}>
+    <Suspense fallback={<div className="card-white p-8 text-center text-xs font-bold">Loading login...</div>}>
       <LoginForm />
     </Suspense>
   );

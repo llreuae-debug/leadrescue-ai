@@ -13,29 +13,30 @@ export default function SignupPage() {
   );
 
   return (
-    <div className="linear-card p-6 sm:p-8 space-y-6">
-      <div className="space-y-1 text-center">
-        <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900">
-          Start your 14-day free trial
+    <div className="card-white p-6 sm:p-8 space-y-6">
+      <div className="space-y-1.5 text-center">
+        <span className="badge-lime text-[10px] uppercase font-bold">14-Day Free Pilot</span>
+        <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-[#101113]">
+          Start your free trial
         </h1>
-        <p className="text-xs text-slate-500">
+        <p className="text-xs text-[#777D77] font-medium">
           Create your agency workspace and begin recovering neglected client leads.
         </p>
       </div>
 
       {state?.success && (
-        <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-900 space-y-2">
-          <div className="flex items-center gap-2 font-bold text-emerald-800">
+        <div className="p-4 rounded-2xl bg-emerald-50 border-2 border-emerald-500 text-xs text-emerald-950 space-y-2">
+          <div className="flex items-center gap-2 font-black text-emerald-900">
             <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
             <span>Registration Submitted Successfully</span>
           </div>
-          <p className="leading-relaxed text-[11px] text-emerald-700">
+          <p className="leading-relaxed text-[11px] text-emerald-800 font-medium">
             {state.message}
           </p>
           <div className="pt-2">
             <Link
               href="/login"
-              className="inline-flex items-center gap-1 font-bold text-emerald-800 hover:underline"
+              className="inline-flex items-center gap-1 font-black text-emerald-900 hover:underline"
             >
               <span>Proceed to Login</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -45,11 +46,11 @@ export default function SignupPage() {
       )}
 
       {state?.error && (
-        <div className="p-3 rounded-lg bg-rose-50 border border-rose-200 text-xs text-rose-800 flex items-start gap-2">
-          <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
-          <div className="space-y-1">
-            <p className="font-semibold">Registration Issue</p>
-            <p className="text-[11px] leading-relaxed">{state.error}</p>
+        <div className="p-3.5 rounded-2xl bg-red-50 border-2 border-red-500 text-xs text-red-950 flex items-start gap-2">
+          <AlertCircle className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
+          <div className="space-y-0.5 font-medium">
+            <p className="font-bold text-red-900">Registration Issue</p>
+            <p className="text-[11px] leading-relaxed text-red-800">{state.error}</p>
           </div>
         </div>
       )}
@@ -62,7 +63,7 @@ export default function SignupPage() {
               name="fullName"
               required
               placeholder="e.g. Tariq Mahmood"
-              className="input-base w-full"
+              className="w-full text-xs font-bold border-2 border-[#101113] rounded-xl p-3 bg-[#F3F4F2] focus:bg-white focus:outline-none text-[#101113]"
               disabled={isPending}
             />
           </FormField>
@@ -73,7 +74,7 @@ export default function SignupPage() {
               name="agencyName"
               required
               placeholder="e.g. Apex Digital PK"
-              className="input-base w-full"
+              className="w-full text-xs font-bold border-2 border-[#101113] rounded-xl p-3 bg-[#F3F4F2] focus:bg-white focus:outline-none text-[#101113]"
               disabled={isPending}
             />
           </FormField>
@@ -85,7 +86,7 @@ export default function SignupPage() {
               required
               autoComplete="email"
               placeholder="admin@apexdigital.pk"
-              className="input-base w-full"
+              className="w-full text-xs font-bold border-2 border-[#101113] rounded-xl p-3 bg-[#F3F4F2] focus:bg-white focus:outline-none text-[#101113]"
               disabled={isPending}
             />
           </FormField>
@@ -102,42 +103,43 @@ export default function SignupPage() {
               minLength={8}
               autoComplete="new-password"
               placeholder="••••••••••••"
-              className="input-base w-full"
+              className="w-full text-xs font-bold border-2 border-[#101113] rounded-xl p-3 bg-[#F3F4F2] focus:bg-white focus:outline-none text-[#101113]"
               disabled={isPending}
             />
           </FormField>
 
-          <div className="text-[11px] text-slate-500 leading-tight">
-            By creating an account, you agree to our{" "}
-            <Link href="/terms" className="text-blue-600 hover:underline">
-              Terms
+          <div className="text-[11px] text-[#777D77] font-medium leading-relaxed">
+            By signing up, you agree to our{" "}
+            <Link href="/terms" className="text-[#101113] font-bold underline">
+              Terms of Service
             </Link>{" "}
             and{" "}
-            <Link href="/privacy" className="text-blue-600 hover:underline">
+            <Link href="/privacy" className="text-[#101113] font-bold underline">
               Privacy Policy
-            </Link>.
+            </Link>
+            . No credit card required.
           </div>
 
           <button
             type="submit"
             disabled={isPending}
-            className="btn-base bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold w-full shadow-xs disabled:opacity-50 h-10"
+            className="btn-lime text-xs font-black w-full h-11 flex items-center justify-center gap-2"
           >
             {isPending ? (
-              <span>Creating your workspace...</span>
+              <span>Creating your agency workspace...</span>
             ) : (
               <>
-                <span>Create Agency Account</span>
-                <ArrowRight className="w-4 h-4 ml-1" />
+                <span>Create Workspace & Start Trial</span>
+                <ArrowRight className="w-4 h-4" />
               </>
             )}
           </button>
         </form>
       )}
 
-      <div className="pt-2 text-center text-xs text-slate-500 border-t border-slate-100">
-        Already have an account?{" "}
-        <Link href="/login" className="font-bold text-blue-600 hover:text-blue-700">
+      <div className="pt-2 text-center text-xs font-medium text-[#777D77] border-t-2 border-[#DCDDDA]">
+        Already registered your agency?{" "}
+        <Link href="/login" className="font-black text-[#101113] hover:underline">
           Sign In
         </Link>
       </div>

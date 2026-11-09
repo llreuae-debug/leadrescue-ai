@@ -13,6 +13,7 @@ import {
   Ban,
   Coins,
   Sliders,
+  Sparkles,
 } from "lucide-react";
 import { getAdminAuditLogsAction } from "@/app/actions/admin";
 import { AdminAuditEvent } from "@/types/admin";
@@ -50,7 +51,7 @@ export default function AdminAuditLogsPage() {
         };
       case "agency_reactivated":
         return {
-          bg: "bg-blue-950 text-blue-400 border-blue-800",
+          bg: "bg-[#17191C] text-[#B7FF3C] border-[#282B30]",
           icon: CheckCircle2,
         };
       case "plan_updated":
@@ -60,7 +61,7 @@ export default function AdminAuditLogsPage() {
         };
       default:
         return {
-          bg: "bg-slate-800 text-slate-300 border-slate-700",
+          bg: "bg-[#101113] text-slate-300 border-[#282B30]",
           icon: History,
         };
     }
@@ -70,14 +71,18 @@ export default function AdminAuditLogsPage() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-white tracking-tight">Security &amp; Operations Audit Trail</h1>
-        <p className="text-sm text-slate-400 mt-1">
+        <div className="flex items-center gap-2 mb-1.5">
+          <span className="badge-lime text-[10px]">Non-Repudiable</span>
+          <span className="badge-dark text-[10px]">Immutable Ledger</span>
+        </div>
+        <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">Security &amp; Operations Audit Trail</h1>
+        <p className="text-xs sm:text-sm text-slate-400 mt-1 font-medium">
           Non-repudiable log of privileged Super Admin operations, manual payment approvals, account suspensions, and pricing updates.
         </p>
       </div>
 
       {/* Filter Tabs */}
-      <div className="flex items-center gap-2 border-b border-slate-800 pb-3 overflow-x-auto">
+      <div className="flex items-center gap-2 border-b-2 border-[#282B30] pb-3 overflow-x-auto">
         {[
           { key: "all", label: "All Audit Events" },
           { key: "payment_approved", label: "Payments Approved" },
@@ -90,10 +95,10 @@ export default function AdminAuditLogsPage() {
             key={tab.key}
             type="button"
             onClick={() => setActionFilter(tab.key)}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors ${
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${
               actionFilter === tab.key
-                ? "bg-slate-800 text-white border border-slate-700"
-                : "text-slate-400 hover:text-white hover:bg-slate-900"
+                ? "bg-[#17191C] text-[#B7FF3C] border-2 border-[#3A3F47] shadow-xs"
+                : "text-slate-400 hover:text-white"
             }`}
           >
             {tab.label}
@@ -101,85 +106,68 @@ export default function AdminAuditLogsPage() {
         ))}
       </div>
 
-      {/* Logs Table */}
-      <div className="bg-slate-950 rounded-xl border border-slate-800 overflow-hidden shadow-xs">
+      {/* Audit Log Table */}
+      <div className="bg-[#17191C] rounded-3xl border-2 border-[#282B30] overflow-hidden">
         {loading ? (
-          <div className="py-20 text-center text-slate-400 text-xs">Loading audit logs...</div>
+          <div className="py-20 text-center">
+            <div className="w-8 h-8 border-2 border-[#B7FF3C] border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+            <p className="text-xs text-slate-400 font-bold">Querying audit trail...</p>
+          </div>
         ) : logs.length === 0 ? (
-          <div className="py-16 text-center text-slate-500 text-xs">
-            No audit records match your selected filter.
+          <div className="p-8 text-center text-xs text-slate-400 font-medium">
+            No audit records found matching selected action.
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm">
-              <thead className="bg-slate-900/80 border-b border-slate-800 text-slate-400 text-xs uppercase tracking-wider font-semibold">
-                <tr>
-                  <th className="py-3 px-4">Timestamp (UTC)</th>
-                  <th className="py-3 px-4">Action</th>
-                  <th className="py-3 px-4">Admin Actor</th>
-                  <th className="py-3 px-4">Target Resource</th>
-                  <th className="py-3 px-4">Documented Reason</th>
-                  <th className="py-3 px-4">Safe Metadata</th>
+            <table className="w-full text-left text-xs">
+              <thead>
+                <tr className="border-b-2 border-[#282B30] text-slate-400 uppercase tracking-wider font-black text-[11px] bg-[#101113]">
+                  <th className="py-3 px-5">Timestamp</th>
+                  <th className="py-3 px-4">Action Type</th>
+                  <th className="py-3 px-4">Super Admin</th>
+                  <th className="py-3 px-4">Target Entity</th>
+                  <th className="py-3 px-5">Compliance Justification / Reason</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800/80 text-xs">
+              <tbody className="divide-y divide-[#282B30]">
                 {logs.map((log) => {
                   const badge = getActionBadge(log.action);
                   const Icon = badge.icon;
                   return (
-                    <tr key={log.id} className="hover:bg-slate-900/60 transition-colors">
-                      {/* Timestamp */}
-                      <td className="py-3.5 px-4 font-mono text-slate-400 whitespace-nowrap">
-                        {new Date(log.timestamp).toLocaleString([], {
-                          year: "numeric",
+                    <tr key={log.id} className="hover:bg-[#101113]/50 transition-colors">
+                      <td className="py-3.5 px-5 font-mono text-[11px] text-slate-400 whitespace-nowrap font-bold">
+                        {new Date(log.timestamp).toLocaleString("en-GB", {
+                          day: "2-digit",
                           month: "short",
-                          day: "numeric",
+                          year: "numeric",
                           hour: "2-digit",
                           minute: "2-digit",
                           second: "2-digit",
                         })}
                       </td>
 
-                      {/* Action */}
                       <td className="py-3.5 px-4 whitespace-nowrap">
                         <span
-                          className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold border ${badge.bg}`}
+                          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border text-[10px] font-mono font-bold uppercase tracking-wider ${badge.bg}`}
                         >
                           <Icon className="w-3 h-3" />
-                          <span>{log.action}</span>
+                          <span>{log.action.replace(/_/g, " ")}</span>
                         </span>
                       </td>
 
-                      {/* Actor */}
-                      <td className="py-3.5 px-4 text-white font-medium">
+                      <td className="py-3.5 px-4 font-mono text-white text-[11px] font-bold">
                         {log.actorEmail}
                       </td>
 
-                      {/* Target */}
-                      <td className="py-3.5 px-4 text-slate-300">
-                        <span className="text-[10px] uppercase font-bold text-slate-500 mr-1.5">
-                          {log.targetType}:
-                        </span>
-                        <code className="text-red-400 font-mono text-[11px]">{log.targetId}</code>
+                      <td className="py-3.5 px-4 font-mono font-bold text-[#B7FF3C] text-[11px]">
+                        {log.targetId}
                       </td>
 
-                      {/* Reason */}
-                      <td className="py-3.5 px-4 text-slate-300 max-w-xs">
+                      <td className="py-3.5 px-5 text-slate-300 font-medium text-xs">
                         {log.reason ? (
-                          <span className="italic">&quot;{log.reason}&quot;</span>
+                          <span>&ldquo;{log.reason}&rdquo;</span>
                         ) : (
-                          <span className="text-slate-600">—</span>
-                        )}
-                      </td>
-
-                      {/* Metadata JSON preview */}
-                      <td className="py-3.5 px-4">
-                        {log.metadata && Object.keys(log.metadata).length > 0 ? (
-                          <pre className="text-[10px] font-mono text-slate-400 bg-slate-900 px-2 py-1 rounded border border-slate-800 max-w-xs overflow-x-auto">
-                            {JSON.stringify(log.metadata)}
-                          </pre>
-                        ) : (
-                          <span className="text-slate-600 text-[11px]">—</span>
+                          <span className="text-slate-500 italic">No note logged</span>
                         )}
                       </td>
                     </tr>
@@ -191,13 +179,15 @@ export default function AdminAuditLogsPage() {
         )}
       </div>
 
-      {/* Security Assurance Banner */}
-      <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 text-slate-400 text-xs flex items-center gap-3">
-        <Lock className="w-4 h-4 text-red-400 shrink-0" />
-        <p className="leading-relaxed">
-          <strong>Immutable Record Integrity:</strong> Platform audit logs are append-only. 
-          All administrative operations automatically purge sensitive keys (passwords, tokens, bearer headers) 
-          via server-side metadata sanitization before persistence.
+      {/* Security Immutable Log Callout */}
+      <div className="p-4 sm:p-5 rounded-2xl bg-[#17191C] border-2 border-[#282B30] text-slate-300 text-xs flex items-start gap-3.5">
+        <div className="w-8 h-8 rounded-xl bg-[#B7FF3C] text-[#101113] flex items-center justify-center shrink-0 mt-0.5 font-bold">
+          <ShieldAlert className="w-4 h-4" />
+        </div>
+        <p className="leading-relaxed font-medium">
+          <strong className="text-white font-bold">Cryptographic Non-Repudiation:</strong> Audit logs are stored in append-only tables
+          with RLS preventing updates or deletions even by Super Admins. Every transaction approval,
+          rejection, suspension, and quota modification is permanently captured.
         </p>
       </div>
     </div>

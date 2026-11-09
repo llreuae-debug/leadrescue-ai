@@ -11,7 +11,8 @@ import {
   Phone, 
   Building2, 
   ShieldAlert,
-  Calendar
+  Calendar,
+  Sparkles,
 } from "lucide-react";
 import { StatusBadge } from "@/components/ui/StatusBadge";
 import { EmptyState } from "@/components/ui/EmptyState";
@@ -102,9 +103,13 @@ export default function ClientPortalLeadsPage() {
       {/* Header & Export Action */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Customer Enquiries</h1>
-          <p className="text-sm text-slate-500 mt-1">
-            Verified inbound enquiries belonging strictly to <strong className="text-slate-700">{workspace?.name}</strong>.
+          <div className="flex items-center gap-2 mb-1.5">
+            <span className="badge-lime text-[10px]">Client Workspace</span>
+            <span className="badge-dark text-[10px]">Verified Leads</span>
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-black text-[#101113] tracking-tight">Customer Enquiries</h1>
+          <p className="text-xs sm:text-sm text-[#777D77] font-medium mt-1">
+            Verified inbound enquiries belonging strictly to <strong className="text-[#101113]">{workspace?.name}</strong>.
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -112,34 +117,34 @@ export default function ClientPortalLeadsPage() {
             type="button"
             onClick={handleExportCsv}
             disabled={exporting || leads.length === 0}
-            className="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg bg-white border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-50 transition-colors shadow-2xs"
+            className="btn-lime text-xs py-2.5 px-4 inline-flex items-center gap-2 disabled:opacity-50"
           >
-            <Download className="w-3.5 h-3.5 text-slate-500" />
+            <Download className="w-3.5 h-3.5" />
             <span>{exporting ? "Generating CSV..." : "Export My Enquiries (CSV)"}</span>
           </button>
         </div>
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs flex flex-col md:flex-row items-center gap-3">
+      <div className="card-white p-4 flex flex-col md:flex-row items-center gap-3">
         <form onSubmit={handleSearchSubmit} className="flex-1 relative w-full">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-[#777D77] absolute left-3.5 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search by customer name, phone, company, or email..."
-            className="w-full pl-9 pr-4 py-2 rounded-lg border border-slate-200 text-xs text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-blue-600 focus:border-transparent placeholder:text-slate-400"
+            className="w-full pl-10 pr-4 py-2.5 rounded-xl border-2 border-[#101113] text-xs font-bold text-[#101113] bg-[#F3F4F2] focus:bg-white focus:outline-none placeholder:text-[#777D77]"
           />
         </form>
 
-        <div className="flex items-center gap-2 w-full md:w-auto">
+        <div className="flex items-center gap-2.5 w-full md:w-auto">
           {/* Status Dropdown */}
           <div className="w-1/2 md:w-44">
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="w-full px-3 py-2 rounded-lg border border-slate-200 text-xs text-slate-700 bg-white focus:outline-hidden focus:ring-2 focus:ring-blue-600"
+              className="w-full px-3.5 py-2.5 rounded-xl border-2 border-[#101113] text-xs font-bold text-[#101113] bg-[#F3F4F2] focus:outline-none"
             >
               <option value="all">All Statuses</option>
               <option value="new">New</option>
@@ -156,7 +161,7 @@ export default function ClientPortalLeadsPage() {
             <select
               value={sourceFilter}
               onChange={(e) => setSourceFilter(e.target.value)}
-              className="w-full px-3 py-2 rounded-lg border border-slate-200 text-xs text-slate-700 bg-white focus:outline-hidden focus:ring-2 focus:ring-blue-600"
+              className="w-full px-3.5 py-2.5 rounded-xl border-2 border-[#101113] text-xs font-bold text-[#101113] bg-[#F3F4F2] focus:outline-none"
             >
               <option value="all">All Sources</option>
               {distinctSources.map((s) => (
@@ -170,7 +175,7 @@ export default function ClientPortalLeadsPage() {
       </div>
 
       {/* Leads Table */}
-      <div className="bg-white rounded-xl border border-slate-200 shadow-xs overflow-hidden">
+      <div className="card-white overflow-hidden space-y-0">
         {loading ? (
           <div className="py-20 flex justify-center">
             <LoadingState message="Filtering inquiries..." />
@@ -185,67 +190,67 @@ export default function ClientPortalLeadsPage() {
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm">
-              <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 text-xs font-semibold uppercase tracking-wider">
-                <tr>
-                  <th className="py-3 px-4">Customer Name</th>
+            <table className="w-full text-left text-xs">
+              <thead>
+                <tr className="border-b-2 border-[#101113] text-[#101113] uppercase tracking-wider font-black text-[11px] bg-[#F3F4F2]">
+                  <th className="py-3 px-5">Customer Name</th>
                   <th className="py-3 px-4">Contact Details</th>
                   <th className="py-3 px-4">Company</th>
                   <th className="py-3 px-4">Marketing Source</th>
                   <th className="py-3 px-4">Pipeline Status</th>
                   <th className="py-3 px-4 text-right">Deal Value</th>
-                  <th className="py-3 px-4 text-center">Direct Action</th>
+                  <th className="py-3 px-5 text-center">Direct Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-[#DCDDDA]">
                 {leads.map((lead) => {
                   const cleanPhone = lead.phone ? lead.phone.replace(/[^0-9]/g, "") : null;
                   return (
-                    <tr key={lead.id} className="hover:bg-slate-50/80 transition-colors">
+                    <tr key={lead.id} className="hover:bg-[#F3F4F2] transition-colors">
                       {/* Name */}
-                      <td className="py-3.5 px-4 font-semibold text-slate-900">
+                      <td className="py-3.5 px-5 font-bold text-[#101113]">
                         {lead.name}
                         {lead.campaign && (
-                          <p className="text-[11px] font-normal text-slate-400 mt-0.5">
+                          <p className="text-[11px] font-medium text-[#777D77] mt-0.5">
                             Camp: {lead.campaign}
                           </p>
                         )}
                       </td>
 
                       {/* Contact */}
-                      <td className="py-3.5 px-4 text-xs text-slate-600">
+                      <td className="py-3.5 px-4 text-xs text-[#101113]">
                         {lead.phone && (
-                          <div className="flex items-center gap-1.5">
-                            <Phone className="w-3.5 h-3.5 text-slate-400" />
+                          <div className="flex items-center gap-1.5 font-mono font-bold">
+                            <Phone className="w-3.5 h-3.5 text-[#777D77]" />
                             <span>{lead.phone}</span>
                           </div>
                         )}
                         {lead.email && (
-                          <div className="flex items-center gap-1.5 mt-0.5 text-slate-500">
-                            <Mail className="w-3.5 h-3.5 text-slate-400" />
+                          <div className="flex items-center gap-1.5 mt-0.5 text-[#777D77] font-medium">
+                            <Mail className="w-3.5 h-3.5 text-[#777D77]" />
                             <span>{lead.email}</span>
                           </div>
                         )}
                         {!lead.phone && !lead.email && (
-                          <span className="text-slate-400 italic">No contact details</span>
+                          <span className="text-[#777D77] italic">No contact details</span>
                         )}
                       </td>
 
                       {/* Company */}
-                      <td className="py-3.5 px-4 text-xs text-slate-600">
+                      <td className="py-3.5 px-4 text-xs text-[#101113]">
                         {lead.company ? (
-                          <div className="flex items-center gap-1.5 font-medium">
-                            <Building2 className="w-3.5 h-3.5 text-slate-400" />
+                          <div className="flex items-center gap-1.5 font-bold">
+                            <Building2 className="w-3.5 h-3.5 text-[#777D77]" />
                             <span>{lead.company}</span>
                           </div>
                         ) : (
-                          <span className="text-slate-400 italic">Individual client</span>
+                          <span className="text-[#777D77] italic font-medium">Individual client</span>
                         )}
                       </td>
 
                       {/* Source */}
                       <td className="py-3.5 px-4">
-                        <span className="inline-flex px-2 py-0.5 rounded-md text-xs font-medium bg-slate-100 text-slate-700">
+                        <span className="badge-dark text-[10px]">
                           {lead.source}
                         </span>
                       </td>
@@ -253,30 +258,30 @@ export default function ClientPortalLeadsPage() {
                       {/* Status */}
                       <td className="py-3.5 px-4">
                         <StatusBadge
-                          label={lead.status.replace("_", " ").toUpperCase()}
+                          label={lead.status.replace(/_/g, " ").toUpperCase()}
                           variant={getStatusVariant(lead.status)}
                         />
                       </td>
 
                       {/* Deal Value */}
-                      <td className="py-3.5 px-4 text-right font-semibold text-slate-900 text-xs">
+                      <td className="py-3.5 px-4 text-right font-mono font-black text-[#101113] text-xs">
                         {lead.dealValue > 0 ? formatPKR(lead.dealValue) : "—"}
                       </td>
 
                       {/* WhatsApp Button */}
-                      <td className="py-3.5 px-4 text-center">
+                      <td className="py-3.5 px-5 text-center">
                         {cleanPhone ? (
                           <a
                             href={`https://wa.me/${cleanPhone}`}
                             target="_blank"
                             rel="noreferrer"
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold transition-colors shadow-2xs"
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#17191C] hover:bg-[#101113] text-[#B7FF3C] text-[11px] font-black border border-[#101113] transition-colors"
                           >
                             <MessageSquare className="w-3.5 h-3.5" />
                             <span>WhatsApp</span>
                           </a>
                         ) : (
-                          <span className="text-xs text-slate-400">—</span>
+                          <span className="text-xs text-[#777D77] font-medium">—</span>
                         )}
                       </td>
                     </tr>
@@ -288,11 +293,13 @@ export default function ClientPortalLeadsPage() {
         )}
       </div>
 
-      {/* Privacy & Redaction Assurance Note */}
-      <div className="p-4 rounded-xl bg-blue-50/70 border border-blue-200 text-blue-900 text-xs flex items-start gap-3">
-        <ShieldAlert className="w-4 h-4 text-blue-600 mt-0.5 shrink-0" />
-        <p className="leading-relaxed">
-          <strong>Privacy Safeguard:</strong> This view is strictly restricted to your authorized workspace (
+      {/* Privacy & Redaction Assurance Note in Deep Charcoal */}
+      <div className="card-charcoal p-4 sm:p-5 rounded-2xl border-2 border-[#101113] text-white flex items-start gap-3.5">
+        <div className="w-8 h-8 rounded-xl bg-[#B7FF3C] text-[#101113] flex items-center justify-center shrink-0 mt-0.5 font-bold">
+          <ShieldAlert className="w-4 h-4" />
+        </div>
+        <p className="text-xs text-slate-300 leading-relaxed font-medium">
+          <strong className="text-white font-bold">Privacy Safeguard:</strong> This view is strictly restricted to your authorized workspace (
           {workspace?.name}). Internal agency margins, private rep notes, and team internal deliberations
           are securely redacted.
         </p>

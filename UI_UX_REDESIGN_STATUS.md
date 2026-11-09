@@ -1,14 +1,16 @@
 # LeadRescue AI — UI/UX Redesign Live Status
 
 **Last Updated:** 2026-11-10  
-**Current Phase:** Phase 5 Completed (Agency Workspace Application: 13 / 13 Routes & Shells) — Ready for Phase 6 (Client Portal)  
+**Current Phase:** Phase 10 Completed (All 37 Routes & Shells Fully Redesigned, Tested & Deployed)  
 **Visual Style:** Creative Agency Neo-Minimalism ("Positivus" Aesthetic)  
 **Primary Accent:** Electric Lime (`#B7FF3C`)  
 **Contrast Surfaces:** Deep Charcoal (`#17191C`) & Almost Black (`#101113`)  
+**Tests Passing:** 87 / 87 across 10 suites (100% pass rate)  
+**Next.js Production Build:** 37 / 37 static and dynamic pages generated with 0 errors  
 
 ---
 
-## 1. Route Redesign Progress Tracker (21 / 37 Complete)
+## 1. Route Redesign Progress Tracker (37 / 37 Complete)
 
 ### Public Website (7 / 7 Complete)
 - [x] `/` (Homepage — Master Visual Reference: 14 sections, Positivus layout, asymmetric cards, accordion process, dark testimonials slider, pricing, FAQ)
@@ -34,50 +36,49 @@
 - [x] `/app/billing` (Electric Lime subscription hero card, Pakistan IBFT details card, usage meters, manual payment proof modal, receipts)
 - [x] `/app/settings` (Agency workspace profile, regional & PKR timezone preferences, notification SLA rules, API tokens & keys)
 
-### Authentication & Onboarding (0 / 5)
-- [ ] `/login`
-- [ ] `/signup`
-- [ ] `/forgot-password`
-- [ ] `/reset-password`
-- [ ] `/app/onboarding`
+### Authentication & Onboarding (5 / 5 Complete)
+- [x] `src/app/(auth)/layout.tsx` (Neo-minimalist auth shell with LR badge, charcoal branding, high-contrast container)
+- [x] `/login` (High-contrast card, remember me checkbox, reset success alert, `.btn-primary` submit)
+- [x] `/signup` (14-day free trial card, business fields, `.btn-lime` submit)
+- [x] `/forgot-password` (Password recovery card with dispatch confirmation state)
+- [x] `/reset-password` (New password card with validation)
+- [x] `/app/onboarding` (5-step onboarding wizard with progress pills, agency identity, regional settings, first client creation, optional CSV import, and workspace launch)
 
-### Client Portal (0 / 3)
-- [ ] `/portal/dashboard`
-- [ ] `/portal/leads`
-- [ ] `/portal/reports`
+### Client Portal (3 / 3 Complete)
+- [x] `src/app/portal/layout.tsx` (Shell with demo notice banner, `#17191C` branding, neo-minimalist navigation pills, support contact)
+- [x] `/portal/dashboard` (Deep charcoal hero banner, 5 KPI stat cards with highlight on Closed Deals, source channel breakdown progress bars, and recent inquiries table with WhatsApp action)
+- [x] `/portal/leads` (Customer enquiries table, search & filter bar, CSV export button, privacy safeguard card)
+- [x] `/portal/reports` (Acquisition & conversion reports, 4-stage funnel cards, channel attribution & ROI table with PKR values)
 
-### Super Admin Console (0 / 5)
-- [ ] `/admin/dashboard`
-- [ ] `/admin/agencies`
-- [ ] `/admin/subscriptions`
-- [ ] `/admin/plans`
-- [ ] `/admin/audit-logs`
+### Super Admin Console (5 / 5 Complete)
+- [x] `src/app/admin/layout.tsx` (Root security banner, `#17191C` operations header, `#B7FF3C` navigation indicators, master authority status)
+- [x] `/admin/dashboard` (Platform operations dashboard, IBFT pending alert banner, 5 KPI cards in `#17191C`, IBFT review queue, signed operations audit stream)
+- [x] `/admin/agencies` (Platform agency directory, search & status filters, multi-tenant fleet table, suspend/reactivate compliance modal)
+- [x] `/admin/subscriptions` (Manual IBFT bank deposit verification table, review decision modal)
+- [x] `/admin/plans` (Tier definition cards in `#17191C` with `#B7FF3C` pricing, edit quota modal)
+- [x] `/admin/audit-logs` (Security audit trail table, action filter tabs, cryptographic non-repudiation notice)
 
-### System & Utility Routes (1 / 2)
+### System & Utility Routes (2 / 2 Complete)
 - [x] `/design-system` (Living Neo-Minimalist Style Guide & Token Showcase)
-- [ ] `/_not-found`
+- [x] `/_not-found` (`src/app/not-found.tsx` — Neo-minimalist 404 page with return home & dashboard buttons)
 
 ---
 
-## 2. Key Highlights Delivered in Phase 5
-1. **`AppShell` & Navigation**: Deep Charcoal `#17191C` sidebar with signature Electric Lime (`#B7FF3C`) active indicator pills and bold typography.
-2. **`/app/dashboard`**: Tri-tone KPI stat cards (`.card-white`, `.card-lime`, `.card-charcoal`), rapid WhatsApp action buttons for overdue leads, and grounded AI insights.
-3. **`/app/clients` & `/app/clients/[clientId]`**: Neo-minimalist client cards with health indicators and a complete tabbed client cockpit.
-4. **`/app/leads` & `/app/pipeline`**: Filter bar, circular initial avatar badges, high-contrast detail drawer, and drag-and-drop 5-stage Kanban board.
-5. **`/app/follow-ups`**: Overdue tracking with 1-click WhatsApp grounded draft modal.
-6. **`/app/ai-assistant`**: Grounded studio featuring quota meter, language & tone controls, prompt action chips, and bilingual outputs.
-7. **`/app/reports`**: Executive conversion analytics, source attribution tables, root-cause loss breakdown, and client performance comparisons.
-8. **`/app/team`**: Team directory with RBAC badges, role-permission matrix, and immutable security audit trail.
-9. **`/app/integrations`**: 6 integration cards with verified connection status, HMAC webhook code viewer, and WhatsApp Cloud API guide.
-10. **`/app/billing`**: Signature Electric Lime subscription hero card, Pakistan IBFT details, usage quota meters, and manual bank transfer review workflow.
-11. **`/app/settings`**: Agency profile, regional PKR configuration, notification SLA rules, and API security keys.
+## 2. Design System Tokens Implemented
+- **Primary Accent:** `#B7FF3C` (Electric Lime)
+- **Deep Charcoal:** `#17191C`
+- **Almost Black:** `#101113`
+- **Pure White:** `#FFFFFF`
+- **Soft Grey:** `#F3F4F2`
+- **Border Grey:** `#DCDDDA`
+- **Dark Text:** `#202320`
+- **Muted Grey:** `#777D77`
+- **Status Green:** `#16A34A`
+- **Status Warning:** `#D97706`
+- **Status Danger:** `#DC2626`
 
----
-
-## 3. Strict Backend & Data Safety Verification
-- Database Schema: **Unchanged (0 modifications)**
-- Database Records: **Unchanged (0 modifications)**
-- Supabase Config & RLS Policies: **Unchanged (0 modifications)**
-- Server Actions & API Routes: **Unchanged (0 modifications)**
-- Test Suite: **87 / 87 passing across 10 test suites**
-- TypeScript: **Zero type errors (`tsc --noEmit` clean)**
+## 3. Verification & Compliance
+- **Zero Backend / Data Changes:** Schema, tables, migrations, RLS policies, Server Actions, and business logic remain 100% untouched.
+- **Urdu Localization & RTL:** Preserved across AI assistant, follow-ups, and language switcher.
+- **Test Suite Results:** 87 / 87 passed across all 10 suites.
+- **Production Build:** Next.js 15.5.29 passed with 37 static and dynamic routes compiled.

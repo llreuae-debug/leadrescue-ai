@@ -4,7 +4,7 @@ import React, { useActionState } from "react";
 import Link from "next/link";
 import { resetPasswordAction, AuthActionResult } from "@/app/actions/auth";
 import { FormField } from "@/components/ui/FormField";
-import { ArrowRight, AlertCircle } from "lucide-react";
+import { ArrowRight, AlertCircle, Lock } from "lucide-react";
 
 export default function ResetPasswordPage() {
   const [state, formAction, isPending] = useActionState<AuthActionResult | null, FormData>(
@@ -13,20 +13,21 @@ export default function ResetPasswordPage() {
   );
 
   return (
-    <div className="linear-card p-6 sm:p-8 space-y-6">
-      <div className="space-y-1 text-center">
-        <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900">
+    <div className="card-white p-6 sm:p-8 space-y-6">
+      <div className="space-y-1.5 text-center">
+        <span className="badge-dark text-[10px] uppercase font-bold">Account Security</span>
+        <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-[#101113]">
           Set a new password
         </h1>
-        <p className="text-xs text-slate-500">
+        <p className="text-xs text-[#777D77] font-medium">
           Please enter your new password to regain access to your agency workspace.
         </p>
       </div>
 
       {state?.error && (
-        <div className="p-3 rounded-lg bg-rose-50 border border-rose-200 text-xs text-rose-800 flex items-start gap-2">
-          <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
-          <p className="text-[11px] leading-relaxed">{state.error}</p>
+        <div className="p-3.5 rounded-2xl bg-red-50 border-2 border-red-500 text-xs text-red-950 flex items-start gap-2">
+          <AlertCircle className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
+          <p className="text-[11px] leading-relaxed text-red-800 font-medium">{state.error}</p>
         </div>
       )}
 
@@ -43,7 +44,7 @@ export default function ResetPasswordPage() {
             minLength={8}
             autoComplete="new-password"
             placeholder="••••••••••••"
-            className="input-base w-full"
+            className="w-full text-xs font-bold border-2 border-[#101113] rounded-xl p-3 bg-[#F3F4F2] focus:bg-white focus:outline-none text-[#101113]"
             disabled={isPending}
           />
         </FormField>
@@ -56,7 +57,7 @@ export default function ResetPasswordPage() {
             minLength={8}
             autoComplete="new-password"
             placeholder="••••••••••••"
-            className="input-base w-full"
+            className="w-full text-xs font-bold border-2 border-[#101113] rounded-xl p-3 bg-[#F3F4F2] focus:bg-white focus:outline-none text-[#101113]"
             disabled={isPending}
           />
         </FormField>
@@ -64,22 +65,22 @@ export default function ResetPasswordPage() {
         <button
           type="submit"
           disabled={isPending}
-          className="btn-base bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold w-full shadow-xs disabled:opacity-50 h-10"
+          className="btn-primary text-xs font-black w-full h-11 flex items-center justify-center gap-2"
         >
           {isPending ? (
             <span>Updating password...</span>
           ) : (
             <>
-              <span>Update Password</span>
-              <ArrowRight className="w-4 h-4 ml-1" />
+              <span>Update Password & Sign In</span>
+              <ArrowRight className="w-4 h-4 text-[#B7FF3C]" />
             </>
           )}
         </button>
       </form>
 
-      <div className="pt-2 text-center text-xs text-slate-500 border-t border-slate-100">
+      <div className="pt-2 text-center text-xs font-medium text-[#777D77] border-t-2 border-[#DCDDDA]">
         Remember your password?{" "}
-        <Link href="/login" className="font-bold text-blue-600 hover:text-blue-700">
+        <Link href="/login" className="font-black text-[#101113] hover:underline">
           Sign In
         </Link>
       </div>

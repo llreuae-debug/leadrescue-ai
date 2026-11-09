@@ -17,8 +17,8 @@
 | **Stage 3** | Agency onboarding & multi-tenant foundation | **Completed** | Multi-tenant migration with RLS, 5 RBAC roles, permission helpers, automated test suite, 5-step onboarding wizard. |
 | **Stage 4** | Agency dashboard | **Completed** | Real-time KPI cards (Total, New, Qualified, Follow-ups Due, Won), lead acquisition trend, source breakdown, urgent follow-up action triggers, client & date range filters. |
 | **Stage 5** | Clients and lead management | **Completed** | Client workspaces (`/app/clients`, `/app/clients/[clientId]`), Lead CRUD (`/app/leads`), CSV column mapping, duplicate detection, and automated test suite. |
-| **Stage 6** | Sales pipeline | Pending | Next stage: Responsive Kanban board, stage persistence, accessible keyboard alternatives. |
-| **Stage 7** | Follow-up task management | Pending | Timezone-aware date calculations, overdue status, WhatsApp draft flow. |
+| **Stage 6** | Sales pipeline | **Completed** | Responsive Kanban board (`/app/pipeline`) across 7 stages, drag & drop, accessible keyboard stage switcher, loss reason modal, mobile list view. |
+| **Stage 7** | Follow-up task management | Pending | Next stage: Timezone-aware date calculations, overdue status, WhatsApp draft flow. |
 | **Stage 8** | AI sales assistant | Pending | Server-side grounded generation, English & Urdu support, human review. |
 | **Stage 9** | Reports and analytics | Pending | Documented metric formulas, cohort breakdowns, CSV export. |
 | **Stage 10** | Team management and permissions | Pending | 5 roles (Owner, Admin, Manager, Rep, Viewer), last owner protection. |
@@ -32,33 +32,21 @@
 
 ---
 
-## Stage 5 Deliverables Summary
+## Stage 6 Deliverables Summary
 
-### Client Management ([`/app/clients`](file:///Users/dilnawaz/LeadRescue%20AI/src/app/app/clients) & [`/app/clients/[clientId]`](file:///Users/dilnawaz/LeadRescue%20AI/src/app/app/clients/%5BclientId%5D))
-* **Client Directory:** Grid view showing client brand name, industry, total leads, active pipeline leads, won opportunities, account manager, status, and search filter.
-* **Add Client Workspace Modal:** Direct creation with industry selection and tenant boundary enforcement.
-* **Client Detail View:** 5 dedicated tabs:
-  1. **Overview:** Workspace metrics, account manager info, industry metadata.
-  2. **Leads:** Client-scoped data table.
-  3. **Pipeline:** Client-specific Kanban link.
-  4. **Reports:** Conversion and cohort analytics link.
-  5. **Settings:** Client brand and industry configuration.
-
-### Lead Management ([`/app/leads`](file:///Users/dilnawaz/LeadRescue%20AI/src/app/app/leads))
-* **Lead Ingestion & CRUD:**
-  * Contact full name, WhatsApp/phone, email, company, client workspace, source, campaign, status, priority, and deal value in PKR.
-  * **Duplicate Detection:** Checks incoming phone/email within the client workspace and flags potential duplicate records for manual confirmation.
-  * **Lead Detail Drawer:** Full slide-out drawer with direct WhatsApp web link, live status switcher, notes, and AI suggestion preview.
-* **Search & Multi-Criteria Filtering:**
-  * Real-time search across name, phone, email, company.
-  * Filter by Client Workspace, Status, Priority, and Source.
-* **CSV Import & Export:**
-  * **Import Modal:** Target client selection, file dropzone, column mapping, row preview table, row-level validation, and batch write.
-  * **Export Trigger:** One-click CSV export of filtered enquiries.
-
-### Automated Test Suite
-* [`tests/leads-and-csv.test.ts`](file:///Users/dilnawaz/LeadRescue%20AI/tests/leads-and-csv.test.ts):
-  * Duplicate detection matching phone/email per client workspace.
-  * CSV row-level validation (empty name rejection).
-  * Search and filter logic.
-  * **16 / 16 tests passing across all test suites.**
+### Sales Pipeline Engine ([`/app/pipeline`](file:///Users/dilnawaz/LeadRescue%20AI/src/app/app/pipeline))
+* **7 Standardized Pipeline Stages:** `New`, `Contacted`, `Qualified`, `Follow-up Required`, `Proposal Sent`, `Won`, and `Lost` defined in [`src/config/pipeline.ts`](file:///Users/dilnawaz/LeadRescue%20AI/src/config/pipeline.ts).
+* **Responsive Visual Kanban Board:**
+  * Drag & Drop stage movements with optimistic UI updates and rollback on network failure.
+  * **Accessible Keyboard Alternative:** Dropdown stage switcher on each card for keyboard navigation, mobile users, and screen readers.
+  * Individual card indicators: Lead name, Client Workspace, Deal value (PKR), Priority (`urgent`, `high`, `medium`, `low`), and Inbound channel.
+  * Column headers with count badges and stage-specific financial totals.
+* **Loss Reason Confirmation Dialog:**
+  * Prompting for categorised loss reasons when marking a lead as Lost (Price sensitivity, Selected competitor, Unresponsive, Incompatible vertical, Cancelled campaign).
+* **Narrow-Screen / Mobile List View:**
+  * One-click toggle between Kanban and List view preventing horizontal drag layout issues on small viewports.
+* **Server Action & Audit History:**
+  * [`src/app/actions/pipeline.ts`](file:///Users/dilnawaz/LeadRescue%20AI/src/app/actions/pipeline.ts): `updateLeadStageAction` persisting transitions and recording activity logs.
+* **Automated Test Suite:**
+  * [`tests/pipeline-stages.test.ts`](file:///Users/dilnawaz/LeadRescue%20AI/tests/pipeline-stages.test.ts): Stage transition validation, invalid stage rejection, loss reason requirement, and active pipeline volume calculations.
+  * **21 / 21 tests passing across all test suites.**

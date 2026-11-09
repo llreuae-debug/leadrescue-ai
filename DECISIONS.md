@@ -48,3 +48,8 @@
 * **Date:** 2026-11-10
 * **Decision:** Lead duplication is evaluated against `(agency_id, client_id)` matching phone and email. When duplicates are detected during manual creation or CSV ingestion, the system halts and presents the collision rather than silently overwriting. CSV imports require row preview and validation before batch writing.
 * **Rationale:** Silent merges in performance marketing destroy attribution and lead history. Review-first duplicate handling prevents data corruption.
+
+## ADR-009: Dual-Mode Pipeline Interaction (Kanban & Keyboard Selectors)
+* **Date:** 2026-11-10
+* **Decision:** The sales pipeline provides both HTML5 drag & drop and card-level stage selectors with optimistic updates and error rollbacks. When a lead is moved to "Lost", a loss reason modal is triggered. Narrow screens feature a dedicated List view.
+* **Rationale:** Pure drag & drop fails on touch screens, mobile devices, and screen readers. Providing dual interactions ensures full WCAG/ADA accessibility and zero dead-ends for reps on mobile.

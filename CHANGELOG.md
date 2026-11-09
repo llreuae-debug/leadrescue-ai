@@ -5,6 +5,21 @@ All notable changes to the LeadRescue AI codebase will be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.6.0] - 2026-11-10
+### Added
+- **Sales Pipeline (`/app/pipeline`):**
+  - Responsive visual Kanban board across 7 standardized stages (`New`, `Contacted`, `Qualified`, `Follow-up Required`, `Proposal Sent`, `Won`, `Lost`).
+  - Stage configuration in `src/config/pipeline.ts`.
+  - Drag & drop card movements with optimistic state updates and error rollback.
+  - Keyboard-accessible stage selector on each card.
+  - Loss reason confirmation dialog when moving leads to "Lost".
+  - One-click Kanban / Mobile List View toggle.
+  - Real-time active pipeline volume calculation in PKR (excluding lost deals).
+  - Search and client workspace filters.
+  - Server Action `updateLeadStageAction` in `src/app/actions/pipeline.ts`.
+- **Automated Tests:**
+  - `tests/pipeline-stages.test.ts` testing stage transitions, invalid stage rejection, loss reasons, and active pipeline volume (21/21 tests passing across all test suites).
+
 ## [0.5.0] - 2026-11-10
 ### Added
 - **Client Workspace Management (`/app/clients` & `/app/clients/[clientId]`):**
@@ -21,7 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - CSV Export of filtered leads.
   - Server Actions `getLeadsAction`, `createLeadAction`, `updateLeadStatusAction`, and `importLeadsCSVAction`.
 - **Automated Tests:**
-  - `tests/leads-and-csv.test.ts` testing duplicate detection, CSV mapping/validation, and search/filtering (16/16 tests passing across all test suites).
+  - `tests/leads-and-csv.test.ts` testing duplicate detection, CSV mapping/validation, and search/filtering.
 
 ## [0.4.0] - 2026-11-10
 ### Added
@@ -41,7 +56,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - PostgreSQL Row-Level Security (RLS) policies for tenant isolation.
 - **Server Actions & Tests:**
   - Server Action `getDashboardDataAction` in `src/app/actions/dashboard.ts`.
-  - Automated test suite in `tests/dashboard-metrics.test.ts` verifying calculations, client isolation, empty states, and tenant protection (12/12 tests passing).
+  - Automated test suite in `tests/dashboard-metrics.test.ts`.
 
 ## [0.3.0] - 2026-11-10
 ### Added
@@ -54,7 +69,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Database types in `src/types/database.ts` supporting 5 roles: `owner`, `admin`, `manager`, `sales_representative`, `viewer`.
   - Central permission evaluator in `src/lib/rbac.ts` (`hasPermission`).
   - Server-side trusted membership verification in `src/lib/permissions.ts` (`verifyAgencyAccess`).
-  - Automated test suite in `tests/multi-tenant-isolation.test.ts` (7/7 tests passed).
+  - Automated test suite in `tests/multi-tenant-isolation.test.ts`.
 - **Agency Onboarding Flow:**
   - Interactive 5-step wizard at `/app/onboarding` capturing profile, agency identity, regional settings (PKT, Urdu/English), client workspace, and optional CSV import.
   - Server Action `completeOnboardingAction` in `src/app/actions/onboarding.ts`.

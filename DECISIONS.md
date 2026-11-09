@@ -68,3 +68,8 @@
 * **Date:** 2026-11-10
 * **Decision:** Reporting calculations (Contact rate, Qualification rate, Follow-Up SLA Completion rate, Won Conversion rate) follow strictly documented arithmetic definitions visible in the UI and in exported reports. The task completion denominator excludes cancelled tasks, while snoozed tasks remain in active status. Time cohorts are explicitly bounded by creation dates rather than mixed without disclosure. Empty cohorts return 0.0% with zero division protection.
 * **Rationale:** Marketing agencies and enterprise clients require trustworthy mathematical integrity for campaign ROI discussions. Obscuring formulas or fabricating estimates erodes executive confidence.
+
+## ADR-013: Agency Team RBAC & Sole Owner Protection
+* **Date:** 2026-11-10
+* **Decision:** Agency team management strictly prevents demoting or removing the last remaining agency Owner (`isSoleAgencyOwner` rule). Only Owners can invite or promote another member to the Owner role. Membership actions (inviting, resending, role updates, suspensions, removals) are validated on the server side and logged to an immutable security audit trail recording the actor, target email, role, and timestamp.
+* **Rationale:** Preventing agency orphaned accounts protects organizations from administrative lockouts and hostile takeovers while maintaining security compliance.

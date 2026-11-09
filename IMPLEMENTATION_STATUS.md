@@ -21,7 +21,7 @@
 | **Stage 7** | Follow-up task management | **Completed** | Timezone-aware date calculations (`Asia/Karachi`), 5 status tabs, overdue counter, rescheduling, snooze (+1d), grounded WhatsApp draft launch modal, and test suite. |
 | **Stage 8** | AI sales assistant | **Completed** | Grounded generation engine, Urdu & English bilingual output, tone selection (Professional, Friendly, Concise), prompt injection defense, quota meter, and automated test suite. |
 | **Stage 9** | Reports and analytics | **Completed** | Documented metric formulas (Contact rate, Qualification rate, Task completion SLA, Won rate), multi-timeframe cohort filters, client workspace comparison, lost root cause analysis, CSV export, and test suite. |
-| **Stage 10** | Team management and permissions | Pending | 5 roles (Owner, Admin, Manager, Rep, Viewer), last owner protection. |
+| **Stage 10** | Team management and permissions | **Completed** | Agency team directory (`/app/team`), invite flow, role assignments, sole Owner demotion/removal protection, security audit logging, and automated test suite. |
 | **Stage 11** | Integrations | Pending | Webhooks, lead forms, verified connection status indicators. |
 | **Stage 12** | Billing and subscription entitlements | Pending | PKR pricing tiers, manual bank review workflow, quota enforcement. |
 | **Stage 13** | Client portal | Pending | Client restricted view (/portal/dashboard, /portal/leads, /portal/reports). |
@@ -122,4 +122,24 @@
   * `exportReportsCsvAction`: Client-triggered CSV download formatting all 4 reporting sections with explicit metadata and timestamps.
 * **Automated Test Suite ([`tests/reports-analytics.test.ts`](file:///Users/dilnawaz/LeadRescue%20AI/tests/reports-analytics.test.ts)):**
   * 7 automated tests validating formula mathematics, zero-division safety, client filter isolation, and loss reason ranking.
-  * **39 / 39 tests passing across all 7 test suites.**
+
+---
+
+## Stage 10 Deliverables Summary
+
+### Team Management & Permissions ([`/app/team`](file:///Users/dilnawaz/LeadRescue%20AI/src/app/app/team))
+* **Agency Membership Directory:**
+  * Member list with name, email, phone, role badges, status badges (`Active`, `Invited`, `Suspended`), and joined timestamps.
+  * Context-aware actions: Resend invitation, Change Role modal, Suspend/Reactivate toggle, and Remove Member dialog.
+* **Sole Owner Protection Rules ([`src/lib/team/team-management.ts`](file:///Users/dilnawaz/LeadRescue%20AI/src/lib/team/team-management.ts)):**
+  * `isSoleAgencyOwner`: Strictly prevents demoting or removing the last remaining Owner of an agency workspace.
+  * Hierarchical promotion guard: Non-owners cannot promote members to Owner or modify an Owner's role.
+* **Role-Permission Matrix Showcase:**
+  * Interactive breakdown of capabilities across all 5 roles (`Owner`, `Admin`, `Manager`, `Sales Representative`, `Viewer`).
+* **Security Audit Trail:**
+  * Live log of security-relevant operations (`member_invited`, `invitation_resent`, `role_updated`, `member_suspended`, `member_removed`) recording actor identities, target emails, and timestamps.
+* **Server Actions ([`src/app/actions/team.ts`](file:///Users/dilnawaz/LeadRescue%20AI/src/app/actions/team.ts)):**
+  * `getTeamDataAction`, `inviteTeamMemberAction`, `resendInvitationAction`, `updateMemberRoleAction`, `updateMemberStatusAction`, `removeMemberAction`.
+* **Automated Test Suite ([`tests/team-management.test.ts`](file:///Users/dilnawaz/LeadRescue%20AI/tests/team-management.test.ts)):**
+  * 5 automated tests validating Sole Owner demotion blocking, Sole Owner removal blocking, multi-owner support, role invitation boundaries, and email format/duplicate validations.
+  * **44 / 44 tests passing across all 8 test suites.**

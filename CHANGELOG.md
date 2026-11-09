@@ -5,6 +5,22 @@ All notable changes to the LeadRescue AI codebase will be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.10.0] - 2026-11-10
+### Added
+- **Team Management & Permissions (`/app/team`):**
+  - Full agency membership directory with roles, statuses, and joined dates.
+  - Interactive Role-Permission Matrix displaying permissions across all 5 roles (`Owner`, `Admin`, `Manager`, `Sales Representative`, `Viewer`).
+  - Invite Team Member modal with email and role validation.
+  - Resend Invitation action for pending invites.
+  - Modify Member Role modal with server-enforced role boundaries.
+  - Member access suspension and reactivation toggles.
+  - Sole Owner Protection: System strictly blocks demoting or removing the last remaining agency Owner.
+  - Hierarchical promotion protection: Non-owners cannot promote members to Owner or modify an Owner.
+  - Security Audit Trail: Real-time event log tracking member invitations, role updates, suspensions, and removals.
+  - Server Actions in `src/app/actions/team.ts`: `getTeamDataAction`, `inviteTeamMemberAction`, `resendInvitationAction`, `updateMemberRoleAction`, `updateMemberStatusAction`, `removeMemberAction`.
+- **Automated Tests:**
+  - `tests/team-management.test.ts` with 5 automated unit tests validating Sole Owner demotion prevention, Sole Owner removal prevention, multi-owner flexibility, role invitation boundaries, and email format/duplicate checks (44/44 tests passing total).
+
 ## [0.9.0] - 2026-11-10
 ### Added
 - **Reports and Analytics (`/app/reports`):**

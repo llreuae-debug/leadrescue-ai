@@ -5,6 +5,18 @@ All notable changes to the LeadRescue AI codebase will be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.7.0] - 2026-11-10
+### Added
+- **Follow-Up Task Management (`/app/follow-ups`):**
+  - Follow-up queue with 5 views (`All`, `Overdue`, `Today`, `Upcoming`, `Completed`) and dynamic overdue count badge.
+  - Pakistan Standard Time (`Asia/Karachi`) due date/time formatting.
+  - Task completion, reschedule modal, and +1d snooze action.
+  - Schedule Follow-up modal with duplicate pending task guard.
+  - Contextual WhatsApp draft modal with click-to-chat `https://wa.me/` launching and human-in-the-loop review safeguard.
+  - Server Actions in `src/app/actions/followups.ts`: `getFollowUpsAction`, `createFollowUpTaskAction`, `completeFollowUpTaskAction`, `rescheduleFollowUpTaskAction`, `snoozeFollowUpTaskAction`.
+- **Automated Tests:**
+  - `tests/follow-ups.test.ts` verifying overdue/today/upcoming logic, status transitions, snooze date math, and duplicate prevention (26/26 tests passing).
+
 ## [0.6.0] - 2026-11-10
 ### Added
 - **Sales Pipeline (`/app/pipeline`):**

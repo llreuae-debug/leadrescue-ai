@@ -53,3 +53,8 @@
 * **Date:** 2026-11-10
 * **Decision:** The sales pipeline provides both HTML5 drag & drop and card-level stage selectors with optimistic updates and error rollbacks. When a lead is moved to "Lost", a loss reason modal is triggered. Narrow screens feature a dedicated List view.
 * **Rationale:** Pure drag & drop fails on touch screens, mobile devices, and screen readers. Providing dual interactions ensures full WCAG/ADA accessibility and zero dead-ends for reps on mobile.
+
+## ADR-010: Timezone-Aware SLA Evaluation & Safe WhatsApp Dispatch
+* **Date:** 2026-11-10
+* **Decision:** Follow-up SLA due dates and overdue calculations are computed against the `Asia/Karachi` timezone (PKT / UTC+5). Follow-up actions that generate WhatsApp drafts strictly enforce a Human-in-the-Loop review pattern: messages are surfaced in a preview modal where representatives can review or edit the text before triggering a sanitized `https://wa.me/<phone>?text=<encoded_body>` window.
+* **Rationale:** Automated outbound messaging without human review risks customer spam penalties, hallucinated commitments, and compliance breaches. Standardizing on PKT prevents midnight alert confusion across Pakistani marketing agencies.

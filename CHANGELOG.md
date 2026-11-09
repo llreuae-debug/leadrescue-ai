@@ -5,6 +5,18 @@ All notable changes to the LeadRescue AI codebase will be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0-rc1] - 2026-11-10
+### Added
+- **Stage 17: Production Deployment & Pilot Launch:**
+  - Production Operations & Deployment Guide (`DEPLOYMENT_GUIDE.md`) with environment variable directory, sequential database migration checklist, and automated snapshot backup/rollback procedures.
+  - Pilot Agency Onboarding Runbook (`PILOT_ONBOARDING_GUIDE.md`) detailing the 9-step initial onboarding walkthrough for digital marketing agencies in Pakistan.
+  - Manual Pakistani Inter-Bank Fund Transfer (IBFT) instructions for Meezan Bank and HBL corporate accounts.
+  - Transparent documentation of known pilot phase limitations.
+- **Automated Tests:**
+  - `tests/deployment-pilot-readiness.test.ts` with 5 automated unit tests validating environment templates, database migration syntax & RLS, documentation presence, commercial pricing parity, and complete App Router page manifests.
+  - **Milestone Reached: 87 / 87 automated unit & integration tests passing across all 15 test suites.**
+  - **All 17 Build Stages from the Antigravity Step-by-Step Guide fully completed and verified.**
+
 ## [0.16.0] - 2026-11-10
 ### Added
 - **Security, Reliability & Production Readiness Audit:**

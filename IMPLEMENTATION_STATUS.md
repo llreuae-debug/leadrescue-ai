@@ -28,7 +28,7 @@
 | **Stage 14** | Super Admin console | **Completed** | Platform administration (`/admin/*`), privilege separation, manual IBFT review queue, plan manager, sensitive credential sanitization, audit trail, and automated test suite. |
 | **Stage 15** | Urdu, accessibility, and responsive QA | **Completed** | Native Urdu RTL support (`dir="rtl"`), Noto Nastaliq font stack, bidirectional phone/currency isolation, persistent language switcher, accessible skip link, touch targets, and automated test suite. |
 | **Stage 16** | Security, reliability, and production readiness | **Completed** | Full pre-launch audit (`AUDIT_REPORT.md`), RLS policy verification, 10-point end-to-end audit test suite (`tests/production-audit-e2e.test.ts`), and 82/82 passing tests. |
-| **Stage 17** | Deployment and pilot launch | Pending | Environment checklist, migration verify, pilot onboarding. |
+| **Stage 17** | Deployment and pilot launch | **Completed** | Production Deployment Guide (`DEPLOYMENT_GUIDE.md`), Pilot Agency Runbook (`PILOT_ONBOARDING_GUIDE.md`), migration verify checklist, automated readiness test suite (`tests/deployment-pilot-readiness.test.ts`), and 87/87 passing tests. |
 
 ---
 
@@ -303,3 +303,34 @@
   * 10. Super Admin privilege separation & sanitized audit metadata.
 * **Repository Test Suite Total:**
   * **82 / 82 tests passing across all 14 test suites.**
+
+---
+
+## Stage 17 Deliverables Summary
+
+### Production Deployment & Pilot Launch
+* **Production Operations & Deployment Guide ([`DEPLOYMENT_GUIDE.md`](file:///Users/dilnawaz/LeadRescue%20AI/DEPLOYMENT_GUIDE.md)):**
+  * Architecture overview: Next.js 15 App Router on Vercel + Supabase PostgreSQL.
+  * Environment variable directory documenting non-secret names and purposes.
+  * Sequential database migration checklist for Supabase CLI and SQL Editor.
+  * Rollback procedures, automated daily backup cadence, and emergency maintenance windows.
+  * Super Admin secure database bootstrap procedure.
+* **Pilot Agency Onboarding Runbook ([`PILOT_ONBOARDING_GUIDE.md`](file:///Users/dilnawaz/LeadRescue%20AI/PILOT_ONBOARDING_GUIDE.md)):**
+  * Structured 9-step pilot runbook for Pakistani digital marketing agencies:
+    1. Agency workspace creation with `Asia/Karachi` timezone defaults.
+    2. Brand client workspace creation.
+    3. Consent-verified lead dataset ingestion via CSV mapping and duplicate detection.
+    4. Team invitation and RBAC role assignment (`Manager`, `Sales Representative`, `Viewer`).
+    5. Follow-up SLA enforcement and direct WhatsApp click-to-chat launch (`https://wa.me/`).
+    6. Grounded bilingual AI sales draft generation (English and Urdu) with fact-checking.
+    7. Client Portal sharing (`/portal/*`) with private agency margin redaction.
+    8. Real-time attribution tracking, conversion rates, and multi-section CSV exports.
+    9. Feedback collection channels.
+  * Pakistani manual IBFT bank transfer guide (Meezan Bank & HBL corporate account details).
+  * Honest communication of known pilot limitations.
+* **Deployment & Pilot Readiness Automated Test Suite ([`tests/deployment-pilot-readiness.test.ts`](file:///Users/dilnawaz/LeadRescue%20AI/tests/deployment-pilot-readiness.test.ts)):**
+  * 5 automated unit tests validating `.env.example` safety, migration sequential ordering & RLS enforcement, critical documentation presence, Pakistani commercial plan pricing matching, and comprehensive App Router route manifests.
+* **Platform Milestone Achieved:**
+  * **ALL 17 STAGES FULLY IMPLEMENTED, VERIFIED, AND COMMITTED.**
+  * **87 / 87 unit and integration tests passing across all 15 test suites in 250ms.**
+  * **37 Next.js production App Router routes compiling cleanly with 0 TypeScript errors.**

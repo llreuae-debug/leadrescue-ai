@@ -33,3 +33,8 @@
 * **Date:** 2026-11-09
 * **Decision:** Use `@supabase/ssr` cookies and Next.js middleware for server-side route guards. Form submissions execute via Server Actions (`src/app/actions/auth.ts`) validating inputs on the server before dispatching to Supabase Auth.
 * **Rationale:** Client-side route hiding is not a security boundary. Deriving sessions server-side prevents unauthorized access to tenant data and eliminates token exposure risks.
+
+## ADR-006: Multi-Tenant PostgreSQL RLS & Agency Memberships
+* **Date:** 2026-11-10
+* **Decision:** All database queries are scoped to the active agency via database Row-Level Security (RLS) policies relying on `is_agency_member(agency_id)` and `is_agency_admin(agency_id)` functions. Server code verifies identity through `verifyAgencyAccess` rather than trusting client-submitted parameters.
+* **Rationale:** Multi-tenancy in B2B agency software cannot rely on application-level filtering alone. Enforcing isolation at the database layer eliminates cross-tenant data leaks.

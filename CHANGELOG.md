@@ -5,6 +5,22 @@ All notable changes to the LeadRescue AI codebase will be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] - 2026-11-10
+### Added
+- **Multi-Tenant Foundation & Database Migrations:**
+  - PostgreSQL schema and RLS policies in `supabase/migrations/20261109000000_stage3_multitenant_foundation.sql`.
+  - Tables: `profiles`, `agencies`, `agency_members`, `clients`.
+  - Automatic `on_auth_user_created` trigger for `profiles`.
+  - RLS security functions `is_agency_member(agency_id)` and `is_agency_admin(agency_id)`.
+- **Role-Based Access Control (RBAC):**
+  - Database types in `src/types/database.ts` supporting 5 roles: `owner`, `admin`, `manager`, `sales_representative`, `viewer`.
+  - Central permission evaluator in `src/lib/rbac.ts` (`hasPermission`).
+  - Server-side trusted membership verification in `src/lib/permissions.ts` (`verifyAgencyAccess`).
+  - Automated test suite in `tests/multi-tenant-isolation.test.ts` (7/7 tests passed).
+- **Agency Onboarding Flow:**
+  - Interactive 5-step wizard at `/app/onboarding` capturing profile, agency identity, regional settings (PKT, Urdu/English), client workspace, and optional CSV import.
+  - Server Action `completeOnboardingAction` in `src/app/actions/onboarding.ts`.
+
 ## [0.2.0] - 2026-11-09
 ### Added
 - **Marketing Pages:**

@@ -14,8 +14,8 @@
 | **Stage 0** | Repository inspection & implementation plan | **Completed** | Clean directory inspected, minimal stack agreed. |
 | **Stage 1** | Project foundation & design system | **Completed** | Tokens, shared components, responsive shell, preview route built. |
 | **Stage 2** | Marketing website & authentication | **Completed** | 10 public marketing routes, Pakistani launch plans, Supabase Auth flows, middleware protection. |
-| **Stage 3** | Agency onboarding & multi-tenant foundation | Pending | Next stage: profiles, agencies, agency_members, clients with RLS. |
-| **Stage 4** | Agency dashboard | Pending | Persisted KPI calculations, trends, overdue follow-up counters. |
+| **Stage 3** | Agency onboarding & multi-tenant foundation | **Completed** | Multi-tenant migration with RLS, 5 RBAC roles, permission helpers, automated test suite, 5-step onboarding wizard. |
+| **Stage 4** | Agency dashboard | Pending | Next stage: persisted KPI calculations, acquisition trend, follow-up accountability alerts. |
 | **Stage 5** | Clients and lead management | Pending | Client workspaces, lead CRUD, CSV import/mapping, duplicate check. |
 | **Stage 6** | Sales pipeline | Pending | Responsive Kanban, stage changes, accessible keyboard alternative. |
 | **Stage 7** | Follow-up task management | Pending | Timezone-aware date calculations, overdue status, WhatsApp draft flow. |
@@ -32,41 +32,28 @@
 
 ---
 
-## Stage 2 Deliverables Summary
+## Stage 3 Deliverables Summary
 
-### Public Marketing Routes
-- [x] `/` — Homepage with 9 comprehensive sections:
-  1. Hero with headline *"Every Lead Deserves a Follow-Up."*
-  2. The lead leakage problem
-  3. How LeadRescue AI works (01 Centralize, 02 AI Drafting, 03 Follow-up SLA)
-  4. Core features
-  5. Agency workflow explanation
-  6. Configurable Pakistan pricing preview
-  7. Interactive FAQ
-  8. Final conversion CTA
-  9. Footer with contact and legal links
-- [x] `/features` — Detailed capability breakdown (Lead Organisation, Client Workspaces, Sales Pipeline, Follow-up Task Management, AI Message Drafts, Reports).
-- [x] `/pricing` — Configurable Pakistani plans (`Starter: PKR 2,999`, `Growth: PKR 6,999`, `Advanced: PKR 14,999`), detailed category comparisons, and local payment guidance.
-- [x] `/about` — Origin, agency focus, mission statement, and core product principles.
-- [x] `/contact` — Headquarters info (Lahore & Islamabad) and contact form.
-- [x] `/privacy` — Multi-tenant data ownership, no model training on client data, retention guidelines.
-- [x] `/terms` — Commercial subscription terms, manual Pakistani bank transfers, anti-spam obligations.
+### Multi-Tenant Database Architecture
+* [`supabase/migrations/20261109000000_stage3_multitenant_foundation.sql`](file:///Users/dilnawaz/LeadRescue%20AI/supabase/migrations/20261109000000_stage3_multitenant_foundation.sql):
+  * `profiles`: User identity linked to `auth.users(id)` via automated trigger `on_auth_user_created`.
+  * `agencies`: Agency workspaces with Pakistan regional defaults (`Asia/Karachi`, `Pakistan`, English/Urdu preferences).
+  * `agency_members`: Tenant membership mapping users to agencies with custom roles (`owner`, `admin`, `manager`, `sales_representative`, `viewer`) and membership status (`active`, `invited`, `suspended`).
+  * `clients`: Client workspaces isolated per agency.
+  * Comprehensive indexes on `agency_id`, `user_id`, and `role`.
+  * PostgreSQL Row-Level Security (RLS) on all 4 tables with helper functions `is_agency_member` and `is_agency_admin`.
 
-### Authentication & Security Foundation
-- [x] Single source of truth for plan configuration: [`src/config/plans.ts`](file:///Users/dilnawaz/LeadRescue%20AI/src/config/plans.ts).
-- [x] Supabase SSR client setup: browser client, server client, and session middleware.
-- [x] Route protection via Next.js [`middleware.ts`](file:///Users/dilnawaz/LeadRescue%20AI/src/middleware.ts):
-  - Unauthenticated access to `/app/*` redirected to `/login?redirectedFrom=...`.
-  - Authenticated users attempting `/login` or `/signup` redirected to `/app/dashboard`.
-- [x] Server Actions with server-side validation ([`src/app/actions/auth.ts`](file:///Users/dilnawaz/LeadRescue%20AI/src/app/actions/auth.ts)):
-  - `loginAction`
-  - `signupAction`
-  - `logoutAction`
-  - `forgotPasswordAction`
-  - `resetPasswordAction`
-- [x] Auth pages with loading, error, and recovery states:
-  - `/login`
-  - `/signup`
-  - `/forgot-password`
-  - `/reset-password`
-  - `/auth/callback` (session exchange handler)
+### Central RBAC & Server Security
+* [`src/types/database.ts`](file:///Users/dilnawaz/LeadRescue%20AI/src/types/database.ts): Database interfaces, enums, and context definitions.
+* [`src/lib/rbac.ts`](file:///Users/dilnawaz/LeadRescue%20AI/src/lib/rbac.ts): Pure role-permission evaluation function `hasPermission`.
+* [`src/lib/permissions.ts`](file:///Users/dilnawaz/LeadRescue%20AI/src/lib/permissions.ts): Server-side helper `verifyAgencyAccess` verifying active session and membership before mutation.
+* [`tests/multi-tenant-isolation.test.ts`](file:///Users/dilnawaz/LeadRescue%20AI/tests/multi-tenant-isolation.test.ts): Automated test suite verifying role restrictions and preventing cross-agency tenant spoofing. (7/7 tests passing).
+
+### Agency Onboarding Experience
+* [`src/app/actions/onboarding.ts`](file:///Users/dilnawaz/LeadRescue%20AI/src/app/actions/onboarding.ts): Server action `completeOnboardingAction` handling profile update, agency insertion, owner assignment, and client workspace setup.
+* [`src/app/app/onboarding/page.tsx`](file:///Users/dilnawaz/LeadRescue%20AI/src/app/app/onboarding/page.tsx): 5-step onboarding wizard:
+  1. Agency Identity & Profile
+  2. Regional Settings (Timezone, Language, Size, Focus)
+  3. First Client Workspace
+  4. Optional CSV Lead Ingestion
+  5. Summary & Workspace Launch

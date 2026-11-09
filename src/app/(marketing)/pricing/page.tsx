@@ -5,11 +5,10 @@ import { formatCurrencyPKR } from "@/lib/utils";
 import {
   CheckCircle2,
   X,
-  HelpCircle,
-  Building2,
   ArrowRight,
   ShieldCheck,
   CreditCard,
+  Check,
 } from "lucide-react";
 
 export default function PricingPage() {
@@ -110,162 +109,199 @@ export default function PricingPage() {
   ];
 
   return (
-    <div className="space-y-16 py-16 px-4 sm:px-6 max-w-6xl mx-auto">
+    <div className="space-y-24 py-16 px-4 sm:px-8 max-w-7xl mx-auto">
       {/* Title */}
-      <div className="text-center space-y-3 max-w-2xl mx-auto">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold">
-          <span>Pakistan Launch Pricing</span>
+      <div className="space-y-4 max-w-3xl">
+        <div className="inline-flex items-center gap-2">
+          <span className="badge-lime text-xs font-black uppercase tracking-wider">
+            Agency Pricing
+          </span>
+          <span className="text-xs font-bold text-[#777D77]">Billed Monthly in PKR</span>
         </div>
-        <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-slate-900">
+        <h1 className="text-4xl sm:text-6xl font-black tracking-tight text-[#101113] leading-tight">
           Straightforward Plans for Growing Agencies
         </h1>
-        <p className="text-xs sm:text-sm text-slate-500 leading-relaxed">
+        <p className="text-base sm:text-lg text-[#202320] font-medium leading-relaxed">
           {PRICING_DISCLAIMER}
         </p>
       </div>
 
       {/* Pricing Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
-        {PLANS.map((plan) => (
-          <div
-            key={plan.id}
-            className={`linear-card p-6 sm:p-8 flex flex-col justify-between relative ${
-              plan.isPopular
-                ? "border-blue-500 ring-2 ring-blue-500/10 shadow-xl"
-                : ""
-            }`}
-          >
-            {plan.isPopular && (
-              <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-3.5 py-0.5 rounded-full bg-blue-600 text-white text-[11px] font-bold uppercase tracking-wider shadow-sm">
-                Most Popular
-              </div>
-            )}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
+        {PLANS.map((plan) => {
+          const isHighlight = plan.isPopular;
 
-            <div>
-              <div className="flex items-center justify-between">
-                <h3 className="text-xl font-bold text-slate-900">{plan.name}</h3>
-                <span className="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded bg-slate-100 text-slate-600">
-                  {plan.limits.clientWorkspaces} Workspaces
-                </span>
-              </div>
-              <p className="text-xs text-slate-500 mt-2 min-h-[34px] leading-relaxed">
-                {plan.tagline}
-              </p>
+          return (
+            <div
+              key={plan.id}
+              className={`p-8 rounded-3xl border-2 border-[#101113] flex flex-col justify-between transition-all relative ${
+                isHighlight
+                  ? "bg-[#B7FF3C] shadow-[0_8px_0_0_#101113]"
+                  : "bg-white shadow-[0_4px_0_0_#101113] hover:shadow-[0_6px_0_0_#101113]"
+              }`}
+            >
+              {isHighlight && (
+                <div className="absolute -top-4 left-8 px-4 py-1 rounded-full bg-[#101113] text-[#B7FF3C] text-xs font-black uppercase tracking-wider border border-[#B7FF3C]">
+                  Most Popular Choice
+                </div>
+              )}
 
-              <div className="mt-6 flex items-baseline gap-1.5">
-                <span className="text-3xl sm:text-4xl font-extrabold text-slate-900 tabular-nums">
-                  {formatCurrencyPKR(plan.pricePKR)}
-                </span>
-                <span className="text-xs text-slate-500 font-medium">/{plan.period}</span>
+              <div>
+                <div className="flex items-center justify-between">
+                  <h3 className="text-2xl font-black text-[#101113]">{plan.name}</h3>
+                  <span
+                    className={`text-[11px] font-black uppercase tracking-wider px-2.5 py-1 rounded-md border ${
+                      isHighlight
+                        ? "bg-white text-[#101113] border-[#101113]"
+                        : "bg-[#F3F4F2] text-[#101113] border-[#DCDDDA]"
+                    }`}
+                  >
+                    {plan.limits.clientWorkspaces} Workspaces
+                  </span>
+                </div>
+
+                <p
+                  className={`text-xs mt-2 font-bold min-h-[36px] ${
+                    isHighlight ? "text-[#101113]/85" : "text-[#777D77]"
+                  }`}
+                >
+                  {plan.tagline}
+                </p>
+
+                <div className="mt-6 flex items-baseline gap-1.5 pb-6 border-b-2 border-[#101113]/20">
+                  <span className="text-4xl sm:text-5xl font-black text-[#101113] tabular-nums">
+                    {formatCurrencyPKR(plan.pricePKR)}
+                  </span>
+                  <span className="text-xs font-bold text-[#101113]">/{plan.period}</span>
+                </div>
+
+                <div className="mt-6 space-y-3 text-xs font-bold">
+                  {plan.features.map((feat, i) => (
+                    <div key={i} className="flex items-center gap-2.5">
+                      {feat.included ? (
+                        <div
+                          className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 border ${
+                            isHighlight
+                              ? "bg-[#101113] text-[#B7FF3C] border-[#101113]"
+                              : "bg-[#B7FF3C] text-[#101113] border-[#101113]"
+                          }`}
+                        >
+                          <Check className="w-3 h-3 stroke-[3]" />
+                        </div>
+                      ) : (
+                        <div className="w-5 h-5 rounded-full flex items-center justify-center shrink-0 border border-[#DCDDDA] bg-[#F3F4F2] text-[#777D77]">
+                          <X className="w-3 h-3 stroke-[2.5]" />
+                        </div>
+                      )}
+                      <span
+                        className={
+                          !feat.included
+                            ? "text-[#777D77] line-through font-medium"
+                            : feat.highlight
+                            ? "text-[#101113] font-black"
+                            : "text-[#202320]"
+                        }
+                      >
+                        {feat.text}
+                      </span>
+                    </div>
+                  ))}
+                </div>
               </div>
 
-              <div className="mt-6 pt-6 border-t border-slate-100 space-y-3 text-xs">
-                {plan.features.map((feat, i) => (
-                  <div key={i} className="flex items-center gap-2.5">
-                    {feat.included ? (
-                      <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                    ) : (
-                      <X className="w-4 h-4 text-slate-300 shrink-0" />
-                    )}
-                    <span
-                      className={
-                        !feat.included
-                          ? "text-slate-400 line-through"
-                          : feat.highlight
-                          ? "font-semibold text-slate-900"
-                          : "text-slate-700"
-                      }
-                    >
-                      {feat.text}
-                    </span>
-                  </div>
-                ))}
+              <div className="mt-10 pt-4">
+                <Link
+                  href="/signup"
+                  className={`btn-base w-full text-xs font-black h-12 shadow-[0_3px_0_0_#101113] ${
+                    isHighlight
+                      ? "bg-[#101113] text-white hover:bg-[#202327]"
+                      : "btn-primary"
+                  }`}
+                >
+                  {plan.ctaLabel}
+                </Link>
               </div>
             </div>
-
-            <div className="mt-8 pt-4">
-              <Link
-                href="/signup"
-                className={`btn-base w-full text-xs font-semibold shadow-xs ${
-                  plan.isPopular
-                    ? "bg-blue-600 hover:bg-blue-700 text-white"
-                    : "bg-slate-900 hover:bg-slate-800 text-white"
-                }`}
-              >
-                {plan.ctaLabel}
-              </Link>
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* Feature Comparison Table */}
-      <div className="space-y-6 pt-8">
-        <div className="text-center space-y-1">
-          <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900">
+      <div className="space-y-8 pt-8">
+        <div className="space-y-2">
+          <span className="badge-lime text-xs uppercase tracking-wider">Matrix</span>
+          <h2 className="text-2xl sm:text-4xl font-black tracking-tight text-[#101113]">
             Compare Plan Capabilities
           </h2>
-          <p className="text-xs text-slate-500">
-            Every plan includes our core multi-tenant security architecture and 14-day evaluation period.
+          <p className="text-sm font-medium text-[#777D77]">
+            Every plan includes our multi-tenant PostgreSQL security architecture and 14-day evaluation period.
           </p>
         </div>
 
-        <div className="linear-card overflow-hidden">
+        <div className="rounded-3xl border-2 border-[#101113] bg-white overflow-hidden shadow-[0_6px_0_0_#101113]">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse text-xs">
               <thead>
-                <tr className="border-b border-slate-200 bg-slate-50/75">
-                  <th className="py-3.5 px-4 font-semibold text-slate-800 w-1/3">Capability</th>
-                  <th className="py-3.5 px-4 font-semibold text-slate-800 text-center">Starter</th>
-                  <th className="py-3.5 px-4 font-semibold text-slate-800 text-center bg-blue-50/50">Growth</th>
-                  <th className="py-3.5 px-4 font-semibold text-slate-800 text-center">Advanced</th>
+                <tr className="border-b-2 border-[#101113] bg-[#17191C] text-white">
+                  <th className="py-4 px-6 font-black uppercase text-[11px] tracking-wider w-1/3">Capability</th>
+                  <th className="py-4 px-6 font-black uppercase text-[11px] tracking-wider text-center">Starter</th>
+                  <th className="py-4 px-6 font-black uppercase text-[11px] tracking-wider text-center bg-[#B7FF3C] text-[#101113]">
+                    Growth (Popular)
+                  </th>
+                  <th className="py-4 px-6 font-black uppercase text-[11px] tracking-wider text-center">Agency Pro</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-[#DCDDDA]">
                 {comparisonCategories.map((cat, cIdx) => (
                   <React.Fragment key={cIdx}>
-                    <tr className="bg-slate-50/40">
+                    <tr className="bg-[#F3F4F2]">
                       <td
                         colSpan={4}
-                        className="py-2 px-4 font-bold uppercase tracking-wider text-[10px] text-slate-500"
+                        className="py-3 px-6 font-black uppercase tracking-wider text-[11px] text-[#101113]"
                       >
                         {cat.category}
                       </td>
                     </tr>
                     {cat.items.map((item, iIdx) => (
-                      <tr key={iIdx} className="hover:bg-slate-50/50">
-                        <td className="py-3 px-4 font-medium text-slate-700">{item.label}</td>
-                        <td className="py-3 px-4 text-center">
+                      <tr key={iIdx} className="hover:bg-[#F3F4F2]/50 transition-colors">
+                        <td className="py-3.5 px-6 font-bold text-[#202320]">{item.label}</td>
+                        <td className="py-3.5 px-6 text-center">
                           {typeof item.starter === "boolean" ? (
                             item.starter ? (
-                              <CheckCircle2 className="w-4 h-4 text-emerald-600 mx-auto" />
+                              <div className="w-5 h-5 rounded-full bg-[#101113] text-[#B7FF3C] flex items-center justify-center mx-auto">
+                                <Check className="w-3 h-3 stroke-[3]" />
+                              </div>
                             ) : (
-                              <span className="text-slate-300">—</span>
+                              <span className="text-[#DCDDDA] font-bold">—</span>
                             )
                           ) : (
-                            <span className="font-semibold text-slate-800">{item.starter}</span>
+                            <span className="font-extrabold text-[#101113]">{item.starter}</span>
                           )}
                         </td>
-                        <td className="py-3 px-4 text-center bg-blue-50/30">
+                        <td className="py-3.5 px-6 text-center bg-[#F3FDE1]">
                           {typeof item.growth === "boolean" ? (
                             item.growth ? (
-                              <CheckCircle2 className="w-4 h-4 text-emerald-600 mx-auto" />
+                              <div className="w-5 h-5 rounded-full bg-[#101113] text-[#B7FF3C] flex items-center justify-center mx-auto">
+                                <Check className="w-3 h-3 stroke-[3]" />
+                              </div>
                             ) : (
-                              <span className="text-slate-300">—</span>
+                              <span className="text-[#DCDDDA] font-bold">—</span>
                             )
                           ) : (
-                            <span className="font-semibold text-slate-900">{item.growth}</span>
+                            <span className="font-extrabold text-[#101113]">{item.growth}</span>
                           )}
                         </td>
-                        <td className="py-3 px-4 text-center">
+                        <td className="py-3.5 px-6 text-center">
                           {typeof item.advanced === "boolean" ? (
                             item.advanced ? (
-                              <CheckCircle2 className="w-4 h-4 text-emerald-600 mx-auto" />
+                              <div className="w-5 h-5 rounded-full bg-[#101113] text-[#B7FF3C] flex items-center justify-center mx-auto">
+                                <Check className="w-3 h-3 stroke-[3]" />
+                              </div>
                             ) : (
-                              <span className="text-slate-300">—</span>
+                              <span className="text-[#DCDDDA] font-bold">—</span>
                             )
                           ) : (
-                            <span className="font-semibold text-slate-800">{item.advanced}</span>
+                            <span className="font-extrabold text-[#101113]">{item.advanced}</span>
                           )}
                         </td>
                       </tr>
@@ -279,21 +315,23 @@ export default function PricingPage() {
       </div>
 
       {/* Payment Security Note */}
-      <div className="linear-card p-6 bg-slate-50/50 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
-        <div className="flex items-center gap-3">
-          <CreditCard className="w-5 h-5 text-blue-600 shrink-0" />
+      <div className="card-white p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6">
+        <div className="flex items-center gap-4">
+          <div className="w-12 h-12 rounded-2xl bg-[#B7FF3C] text-[#101113] border-1.5 border-[#101113] flex items-center justify-center shrink-0">
+            <CreditCard className="w-6 h-6 stroke-[2]" />
+          </div>
           <div>
-            <p className="font-semibold text-slate-900">Flexible Local Payment Methods</p>
-            <p className="text-slate-500">
-              Pakistani agencies can pay via Meezan/HBL bank transfer, corporate invoice, or credit card.
+            <p className="text-base font-extrabold text-[#101113]">Direct Pakistani Payment Methods</p>
+            <p className="text-xs text-[#777D77] font-medium mt-0.5">
+              Agencies can pay via Meezan/HBL bank transfer (IBFT), corporate billing invoice, or credit card.
             </p>
           </div>
         </div>
         <Link
           href="/contact"
-          className="btn-base bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 text-xs font-semibold shrink-0"
+          className="btn-base btn-secondary text-xs font-bold border-2 border-[#101113] shrink-0"
         >
-          Request Custom Billing
+          Request Custom Invoice
         </Link>
       </div>
     </div>

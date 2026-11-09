@@ -5,6 +5,37 @@ All notable changes to the LeadRescue AI codebase will be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.14.0] - 2026-11-10
+### Added
+- **Super Admin Console (`/admin/*`):**
+  - Dedicated Platform Admin Shell (`/admin/layout.tsx`) with elevated privilege indicators and root operations navigation.
+  - Platform Operations Dashboard (`/admin/dashboard`):
+    - Platform KPI cards: Total Registered Agencies, Active Paid Subscriptions, Pending IBFT Transfers, Platform MRR Run-rate in PKR, and Total Leads Managed.
+    - Pending manual bank transfer alert banner with direct queue link.
+    - Recent administrative event audit stream.
+  - Platform Agencies Directory (`/admin/agencies`):
+    - Searchable directory of agencies with status filter (`Active`, `Suspended`).
+    - Customer Lead Privacy Boundary: High-level operational metrics only; raw customer contact coordinates are shielded from platform views.
+    - Suspend / Reactivate action modal requiring mandatory documented justification.
+  - Manual Payment Reconciliation Queue (`/admin/subscriptions`):
+    - Pakistani IBFT bank deposit review interface (Meezan Bank & HBL).
+    - Status filtering (`Pending`, `Approved`, `Rejected`), transaction reference matching, and approve/reject actions with documented reason tracking.
+  - Platform Plan Tiers & Quota Limits Manager (`/admin/plans`):
+    - Authoritative plan configurator for Starter, Growth, and Advanced tiers.
+    - Server-side validation enforcing non-negative prices, valid workspace limits, and minimum lead quotas.
+    - Edit plan modal requiring change justification reason.
+  - Security & Operations Audit Trail (`/admin/audit-logs`):
+    - Non-repudiable log recording actor identity, action type, target resource, documented reason, and sanitized metadata.
+    - Action filtering across payment reviews, agency suspensions, and plan alterations.
+- **Server-Side Security & Privilege Separation (`src/lib/admin/admin-security.ts`):**
+  - `verifySuperAdminAccess`: Rejects normal agency Owner/Admin/Manager/Rep sessions; blocks client-side privilege elevation attempts.
+  - `sanitizeAuditMetadata`: Redacts passwords, access tokens, API keys, bearer headers, and secrets before log persistence.
+  - `validatePlanUpdate`: Guarantees plan pricing and quota integrity.
+  - `createAdminAuditEvent`: Generates structured, tamper-resistant audit events.
+  - Server actions in `src/app/actions/admin.ts`: `getAdminDashboardAction`, `getAdminAgenciesAction`, `toggleAgencyStatusAction`, `getAdminSubscriptionsAction`, `reviewAdminPaymentAction`, `getAdminPlansAction`, `updateAdminPlanAction`, `getAdminAuditLogsAction`.
+- **Automated Tests:**
+  - `tests/super-admin.test.ts` with 8 unit tests covering Super Admin verification, privilege elevation defense, role rejection (Owner/Admin/Manager), sensitive credential redaction, audit event construction, and plan update validations (66/66 tests passing total).
+
 ## [0.13.0] - 2026-11-10
 ### Added
 - **Restricted Client Portal (`/portal/*`):**

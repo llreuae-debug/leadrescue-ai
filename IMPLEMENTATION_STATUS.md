@@ -25,7 +25,7 @@
 | **Stage 11** | Integrations | **Completed** | Inbound webhook intake endpoint (`/api/webhooks/lead-intake`), HMAC SHA-256 signature verification, idempotency replay protection, integrations directory (`/app/integrations`), official WhatsApp Cloud API guide, and automated test suite. |
 | **Stage 12** | Billing and subscription entitlements | **Completed** | Authoritative PKR pricing tiers (`src/config/plans.ts`), Pakistan manual IBFT review workflow (`/app/billing`), server-enforced quota meters, payment approval/rejection lifecycle, and automated test suite. |
 | **Stage 13** | Client portal | **Completed** | Client-facing restricted portal (`/portal/dashboard`, `/portal/leads`, `/portal/reports`), field redaction (notes/margins stripped), client workspace isolation, CSV export, and automated test suite. |
-| **Stage 14** | Super Admin console | Pending | Platform administration, payment approvals, plan configuration. |
+| **Stage 14** | Super Admin console | **Completed** | Platform administration (`/admin/*`), privilege separation, manual IBFT review queue, plan manager, sensitive credential sanitization, audit trail, and automated test suite. |
 | **Stage 15** | Urdu, accessibility, and responsive QA | Pending | RTL mirror, Noto font fallbacks, screen-reader semantics. |
 | **Stage 16** | Security, reliability, and production readiness | Pending | RLS penetration tests, audit logs, performance benchmarks. |
 | **Stage 17** | Deployment and pilot launch | Pending | Environment checklist, migration verify, pilot onboarding. |
@@ -214,4 +214,38 @@
   * Grounded metrics guarantee notice: zero synthetic projections or inflated performance claims.
 * **Automated Test Suite ([`tests/client-portal.test.ts`](file:///Users/dilnawaz/LeadRescue%20AI/tests/client-portal.test.ts)):**
   * 5 unit tests validating field redaction, client workspace isolation, cross-agency isolation, metric computation, and empty dataset resilience.
-  * **58 / 58 tests passing across all 11 test suites.**
+
+---
+
+## Stage 14 Deliverables Summary
+
+### Super Admin Console ([`/admin/*`](file:///Users/dilnawaz/LeadRescue%20AI/src/app/admin))
+* **Privilege Separation & Strict Access Control ([`src/lib/admin/admin-security.ts`](file:///Users/dilnawaz/LeadRescue%20AI/src/lib/admin/admin-security.ts)):**
+  * Independent verification: Access requires explicit `is_super_admin: true` server authorization; normal agency Owner, Admin, Manager, and Rep roles are strictly rejected.
+  * Privilege elevation defense: Client metadata and URL tampering cannot grant platform admin privileges.
+* **Sensitive Credential Sanitization:**
+  * `sanitizeAuditMetadata`: Automatically redacts passwords, access tokens, API keys, bearer headers, and secrets before persisting to the immutable audit log.
+* **Platform Operations Dashboard ([`/admin/dashboard`](file:///Users/dilnawaz/LeadRescue%20AI/src/app/admin/dashboard)):**
+  * KPI StatCards: Total Registered Agencies, Active Paid Subscriptions, Pending IBFT Transfers, Platform MRR Run-rate in PKR, and Total Leads Managed.
+  * Pending bank transfer alert banner with direct queue link.
+  * Recent administrative event stream.
+* **Agency Directory & Workspace Management ([`/admin/agencies`](file:///Users/dilnawaz/LeadRescue%20AI/src/app/admin/agencies)):**
+  * Searchable agency directory with status filtering (`Active`, `Suspended`).
+  * Customer Lead Privacy Boundary: High-level operational metadata only; raw customer contact lists and private rep discussions are strictly shielded from platform views.
+  * Suspend / Reactivate action modal requiring mandatory documented justification.
+* **Manual Payment Reconciliations ([`/admin/subscriptions`](file:///Users/dilnawaz/LeadRescue%20AI/src/app/admin/subscriptions)):**
+  * Review queue for Pakistani IBFT bank transfers (Meezan Bank & HBL).
+  * Transaction reference (UTR/RRN), bank method, plan tier, and PKR amount matching.
+  * Approve action (elevates tenant to paid tier) & Reject action (captures documented reason).
+* **Plan Tiers & Quota Limits Manager ([`/admin/plans`](file:///Users/dilnawaz/LeadRescue%20AI/src/app/admin/plans)):**
+  * Configurator for Starter, Growth, and Advanced plans.
+  * Server-side validation enforcing non-negative prices, valid workspace limits (>= 1), and minimum lead allowances (>= 10).
+  * Edit modal with mandatory justification reason.
+* **Security & Operations Audit Trail ([`/admin/audit-logs`](file:///Users/dilnawaz/LeadRescue%20AI/src/app/admin/audit-logs)):**
+  * Non-repudiable log recording actor identity, action type, target resource, documented reason, and sanitized metadata.
+  * Action filters for payments approved/rejected, agencies suspended/reactivated, and plan changes.
+* **Server Actions ([`src/app/actions/admin.ts`](file:///Users/dilnawaz/LeadRescue%20AI/src/app/actions/admin.ts)):**
+  * `getAdminDashboardAction`, `getAdminAgenciesAction`, `toggleAgencyStatusAction`, `getAdminSubscriptionsAction`, `reviewAdminPaymentAction`, `getAdminPlansAction`, `updateAdminPlanAction`, `getAdminAuditLogsAction`.
+* **Automated Test Suite ([`tests/super-admin.test.ts`](file:///Users/dilnawaz/LeadRescue%20AI/tests/super-admin.test.ts)):**
+  * 8 unit tests covering Super Admin verification, privilege elevation defense, role rejection (Owner/Admin/Manager), sensitive credential redaction, audit event construction, and plan update validations.
+  * **66 / 66 tests passing across all 12 test suites.**

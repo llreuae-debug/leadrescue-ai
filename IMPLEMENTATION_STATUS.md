@@ -24,7 +24,7 @@
 | **Stage 10** | Team management and permissions | **Completed** | Agency team directory (`/app/team`), invite flow, role assignments, sole Owner demotion/removal protection, security audit logging, and automated test suite. |
 | **Stage 11** | Integrations | **Completed** | Inbound webhook intake endpoint (`/api/webhooks/lead-intake`), HMAC SHA-256 signature verification, idempotency replay protection, integrations directory (`/app/integrations`), official WhatsApp Cloud API guide, and automated test suite. |
 | **Stage 12** | Billing and subscription entitlements | **Completed** | Authoritative PKR pricing tiers (`src/config/plans.ts`), Pakistan manual IBFT review workflow (`/app/billing`), server-enforced quota meters, payment approval/rejection lifecycle, and automated test suite. |
-| **Stage 13** | Client portal | Pending | Client restricted view (/portal/dashboard, /portal/leads, /portal/reports). |
+| **Stage 13** | Client portal | **Completed** | Client-facing restricted portal (`/portal/dashboard`, `/portal/leads`, `/portal/reports`), field redaction (notes/margins stripped), client workspace isolation, CSV export, and automated test suite. |
 | **Stage 14** | Super Admin console | Pending | Platform administration, payment approvals, plan configuration. |
 | **Stage 15** | Urdu, accessibility, and responsive QA | Pending | RTL mirror, Noto font fallbacks, screen-reader semantics. |
 | **Stage 16** | Security, reliability, and production readiness | Pending | RLS penetration tests, audit logs, performance benchmarks. |
@@ -187,4 +187,31 @@
   * `getBillingOverviewAction`, `submitManualPaymentProofAction`, `reviewPaymentProofAction`, `updateBillingContactAction`.
 * **Automated Test Suite ([`tests/billing-entitlements.test.ts`](file:///Users/dilnawaz/LeadRescue%20AI/tests/billing-entitlements.test.ts)):**
   * 5 unit tests validating authoritative limits, server quota blocking, manual payment submission validation, role-based approval rights, and rejection logging.
-  * **53 / 53 tests passing across all 10 test suites.**
+
+---
+
+## Stage 13 Deliverables Summary
+
+### Client Portal ([`/portal/*`](file:///Users/dilnawaz/LeadRescue%20AI/src/app/portal))
+* **Dedicated Client-Facing Architecture:**
+  * Clean, simplified navigation isolating client workspaces from agency internal operations.
+  * Agency co-branding: Clear agency attribution banner ("Managed by [Agency Name]") with dedicated client support contact info.
+* **Server-Side Security & Field Redaction ([`src/lib/portal/portal-security.ts`](file:///Users/dilnawaz/LeadRescue%20AI/src/lib/portal/portal-security.ts)):**
+  * `sanitizeClientLead`: Strictly strips internal agency margin calculations, private sales rep notes, internal deliberation chatter, and unapproved financial fields before payload delivery.
+  * `filterClientLeads`: Enforces server-side client ID scoping, preventing URL tampering or cross-client data leaks.
+  * `computeClientMetrics`: Generates transparent, zero-division-safe conversion metrics without fabricated forecasts.
+* **Client Overview Dashboard ([`/portal/dashboard`](file:///Users/dilnawaz/LeadRescue%20AI/src/app/portal/dashboard)):**
+  * KPI StatCards: Total Enquiries, Contacted Enquiries (% SLA coverage), Qualified Leads, Closed Deals, and Won Deal Value (PKR).
+  * Inbound Lead Source distribution progress bars.
+  * Recent customer inquiries table with direct WhatsApp chat action links (`https://wa.me/`).
+* **Customer Enquiries Table ([`/portal/leads`](file:///Users/dilnawaz/LeadRescue%20AI/src/app/portal/leads)):**
+  * Filter bar supporting text search (customer name, phone, email, company), pipeline status dropdown, and marketing channel dropdown.
+  * Clean tabular layout with status badges and verified deal values.
+  * **Export My Enquiries (CSV):** Auditable CSV generator streaming only approved client-facing fields.
+* **Acquisition & Conversion Reports ([`/portal/reports`](file:///Users/dilnawaz/LeadRescue%20AI/src/app/portal/reports)):**
+  * 4-stage visual conversion funnel (Enquiries -> Contacted -> Qualified -> Won Deals).
+  * Channel Attribution & ROI table: Inquiries, channel share %, qualified count, closed deals, won revenue (PKR), and channel conversion rate %.
+  * Grounded metrics guarantee notice: zero synthetic projections or inflated performance claims.
+* **Automated Test Suite ([`tests/client-portal.test.ts`](file:///Users/dilnawaz/LeadRescue%20AI/tests/client-portal.test.ts)):**
+  * 5 unit tests validating field redaction, client workspace isolation, cross-agency isolation, metric computation, and empty dataset resilience.
+  * **58 / 58 tests passing across all 11 test suites.**

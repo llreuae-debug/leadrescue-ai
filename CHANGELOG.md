@@ -5,6 +5,32 @@ All notable changes to the LeadRescue AI codebase will be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.13.0] - 2026-11-10
+### Added
+- **Restricted Client Portal (`/portal/*`):**
+  - Dedicated client layout (`/portal/layout.tsx`) featuring client workspace branding, agency co-branding ("Managed by [Agency Name]"), and support contact coordinates.
+  - Client Overview Dashboard (`/portal/dashboard`):
+    - Real-time KPI StatCards: Total Enquiries, Contacted Enquiries (% SLA coverage), Qualified Leads, Closed Deals, and Won Deal Value (PKR).
+    - Inbound Lead Sources distribution progress bars.
+    - Recent inquiries table with status badges and direct WhatsApp chat links (`https://wa.me/`).
+  - Customer Enquiries Directory (`/portal/leads`):
+    - Search input (customer name, phone, email, company).
+    - Status filter dropdown (`New`, `Contacted`, `Qualified`, `Proposal Sent`, `Won`, `Lost`).
+    - Marketing channel filter dropdown.
+    - Verified lead details table with deal values in PKR.
+    - Export My Enquiries (CSV) action streaming only approved fields.
+  - Acquisition & Conversion Reports (`/portal/reports`):
+    - 4-stage visual conversion funnel (Enquiries -> Contacted -> Qualified -> Won Deals).
+    - Channel Attribution & ROI performance table breaking down leads, qualification volume, deals won, revenue won, and channel conversion rate %.
+    - Grounded metrics guarantee notice upholding zero synthetic forecasts or vanity projections.
+- **Server-Side Security & Field Redaction (`src/lib/portal/portal-security.ts`):**
+  - `sanitizeClientLead`: Strictly purges internal agency margin percentages, confidential sales rep notes, and internal pipeline deliberations before delivery.
+  - `filterClientLeads`: Enforces workspace scoping, preventing cross-client and cross-agency data leaks.
+  - `computeClientMetrics`: Calculates zero-division-safe conversion rates and channel breakdowns.
+  - Server actions in `src/app/actions/portal.ts`: `getClientPortalWorkspaceAction`, `getClientPortalDashboardAction`, `getClientPortalLeadsAction`, `getClientPortalReportsAction`, and `exportClientPortalLeadsCsvAction`.
+- **Automated Tests:**
+  - `tests/client-portal.test.ts` with 5 automated unit tests testing field redaction, client workspace isolation, cross-agency isolation, metric computation, and empty dataset resilience (58/58 tests passing total).
+
 ## [0.12.0] - 2026-11-10
 ### Added
 - **Billing & Subscription Entitlements (`/app/billing`):**

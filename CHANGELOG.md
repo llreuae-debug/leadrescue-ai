@@ -5,6 +5,21 @@ All notable changes to the LeadRescue AI codebase will be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.8.0] - 2026-11-10
+### Added
+- **AI Sales Assistant (`/app/ai-assistant`):**
+  - Grounded sales intelligence and multilingual follow-up drafting interface.
+  - Pure synthesis engine in `src/lib/ai/assistant-engine.ts` with strict fact extraction and missing context alerts.
+  - Prompt injection neutralization (`sanitizeUntrustedInput`) defending against directive overrides in lead notes.
+  - Dual-language support: English and authentic Urdu (with Nastaliq typography and Pakistani cultural business etiquette).
+  - Dynamic tone adjustment across `Professional`, `Friendly`, and `Concise`.
+  - Core sales capabilities: Lead history summary, WhatsApp follow-up draft, email outreach draft, qualification framework questions, next-best action, and Pakistani agency objection handling playbooks.
+  - Human-in-the-loop safeguards: In-place editable textarea, copy to clipboard, and direct safe WhatsApp Web launch (`https://wa.me/`).
+  - Server Actions in `src/app/actions/ai-assistant.ts`: `getAssistantLeadsAction`, `getLeadContextSnapshotAction`, `generateAiResponseAction`, and `getAssistantQuotaAction`.
+  - Quota meter with monthly usage tracking, limit enforcement, and reset date.
+- **Automated Tests:**
+  - `tests/ai-assistant.test.ts` with 6 automated tests testing fact extraction, missing data detection, prompt injection defense, tone switching, Urdu Unicode script generation, and objection handling (32/32 tests passing total).
+
 ## [0.7.0] - 2026-11-10
 ### Added
 - **Follow-Up Task Management (`/app/follow-ups`):**

@@ -58,3 +58,8 @@
 * **Date:** 2026-11-10
 * **Decision:** Follow-up SLA due dates and overdue calculations are computed against the `Asia/Karachi` timezone (PKT / UTC+5). Follow-up actions that generate WhatsApp drafts strictly enforce a Human-in-the-Loop review pattern: messages are surfaced in a preview modal where representatives can review or edit the text before triggering a sanitized `https://wa.me/<phone>?text=<encoded_body>` window.
 * **Rationale:** Automated outbound messaging without human review risks customer spam penalties, hallucinated commitments, and compliance breaches. Standardizing on PKT prevents midnight alert confusion across Pakistani marketing agencies.
+
+## ADR-011: Strictly Grounded AI Generation & Prompt Injection Defense
+* **Date:** 2026-11-10
+* **Decision:** The AI Sales Assistant synthesizes outputs strictly from verified database records (`LeadContextSnapshot`). Any absent attributes (e.g. unknown budget, missing phone, unverified timeline) are explicitly surfaced in a "Missing Context" block rather than hallucinated or assumed. All untrusted lead notes are passed through a directive sanitizer (`sanitizeUntrustedInput`) to prevent prompt injections (`system override`, `ignore instructions`). All generations require human review prior to dispatch, and billing quotas are strictly enforced per tier.
+* **Rationale:** Sales representatives must be able to trust AI recommendations without risk of hallucinated client promises, discount fabrication, or security breaches from untrusted prospect inputs.

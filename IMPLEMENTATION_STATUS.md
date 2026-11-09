@@ -19,7 +19,7 @@
 | **Stage 5** | Clients and lead management | **Completed** | Client workspaces (`/app/clients`, `/app/clients/[clientId]`), Lead CRUD (`/app/leads`), CSV column mapping, duplicate detection, and automated test suite. |
 | **Stage 6** | Sales pipeline | **Completed** | Responsive Kanban board (`/app/pipeline`) across 7 stages, drag & drop, accessible keyboard stage switcher, loss reason modal, mobile list view. |
 | **Stage 7** | Follow-up task management | **Completed** | Timezone-aware date calculations (`Asia/Karachi`), 5 status tabs, overdue counter, rescheduling, snooze (+1d), grounded WhatsApp draft launch modal, and test suite. |
-| **Stage 8** | AI sales assistant | Pending | Server-side grounded generation, English & Urdu support, human review. |
+| **Stage 8** | AI sales assistant | **Completed** | Grounded generation engine, Urdu & English bilingual output, tone selection (Professional, Friendly, Concise), prompt injection defense, quota meter, and automated test suite. |
 | **Stage 9** | Reports and analytics | Pending | Documented metric formulas, cohort breakdowns, CSV export. |
 | **Stage 10** | Team management and permissions | Pending | 5 roles (Owner, Admin, Manager, Rep, Viewer), last owner protection. |
 | **Stage 11** | Integrations | Pending | Webhooks, lead forms, verified connection status indicators. |
@@ -70,4 +70,30 @@
   * `getFollowUpsAction`, `createFollowUpTaskAction`, `completeFollowUpTaskAction`, `rescheduleFollowUpTaskAction`, `snoozeFollowUpTaskAction`.
 * **Automated Test Suite ([`tests/follow-ups.test.ts`](file:///Users/dilnawaz/LeadRescue%20AI/tests/follow-ups.test.ts)):**
   * Overdue/Today/Upcoming bucket categorization, reschedule timestamps, snooze +1d advancing, and duplicate pending task prevention.
-  * **26 / 26 tests passing across all 5 test suites.**
+
+---
+
+## Stage 8 Deliverables Summary
+
+### AI Sales Assistant ([`/app/ai-assistant`](file:///Users/dilnawaz/LeadRescue%20AI/src/app/app/ai-assistant))
+* **Strictly Grounded Synthesis Engine ([`src/lib/ai/assistant-engine.ts`](file:///Users/dilnawaz/LeadRescue%20AI/src/lib/ai/assistant-engine.ts)):**
+  * Extracts verifiable database facts (`extractGroundedFacts`) and strictly surfaces missing context (`identifyMissingInformation`) rather than fabricating unrecorded budgets, timelines, or intentions.
+  * Neutralizes prompt injections and control characters (`sanitizeUntrustedInput`) found in untrusted lead notes or user input.
+* **Bilingual English & Authentic Urdu Support:**
+  * Pakistani business etiquette and proper Urdu typography (`السلام علیکم`, polite honorifics, consultative positioning).
+* **Tone Selection:**
+  * Dynamic tone adaptation across `Professional` (consultative), `Friendly` (warm/approachable), and `Concise` (high-velocity action-oriented).
+* **Core Sales Capabilities:**
+  * 📋 **Lead History Summary:** Synthesizes touchpoints, SLA status, and notes.
+  * 💬 **WhatsApp Follow-up Draft:** Context-aware message copy with click-to-chat `https://wa.me/` link.
+  * ✉️ **Email Outreach Draft:** Grounded email subject and body template with custom account placeholders.
+  * ❓ **Qualification Framework:** 5 discovery questions targeting gaps in prospect record (budget, timeline, authority).
+  * 🎯 **Next-Best Action:** Actionable recommendation based on lead pipeline stage.
+  * 🛡️ **Objection Handling:** Grounded rebuttals for price sensitivity, competitor loyalty, delayed timelines, and partner approvals.
+* **Human-in-the-Loop Review Enforcement:**
+  * Every generation explicitly mandates human review (`requiresHumanReview: true`). Editable in-place textarea, one-click copy, and safe WhatsApp Web dispatch. Strictly no autonomous outbound messages.
+* **Server Action & Quota Enforcement ([`src/app/actions/ai-assistant.ts`](file:///Users/dilnawaz/LeadRescue%20AI/src/app/actions/ai-assistant.ts)):**
+  * Multi-tenant agency membership verification, lead snapshot loading, and plan quota tracking with reset dates.
+* **Automated Test Suite ([`tests/ai-assistant.test.ts`](file:///Users/dilnawaz/LeadRescue%20AI/tests/ai-assistant.test.ts)):**
+  * 6 automated unit tests validating fact extraction, missing data detection, prompt injection defense, English tone variation, Urdu script generation, and objection handling.
+  * **32 / 32 tests passing across all 6 test suites.**

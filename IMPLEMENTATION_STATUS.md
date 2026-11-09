@@ -22,7 +22,7 @@
 | **Stage 8** | AI sales assistant | **Completed** | Grounded generation engine, Urdu & English bilingual output, tone selection (Professional, Friendly, Concise), prompt injection defense, quota meter, and automated test suite. |
 | **Stage 9** | Reports and analytics | **Completed** | Documented metric formulas (Contact rate, Qualification rate, Task completion SLA, Won rate), multi-timeframe cohort filters, client workspace comparison, lost root cause analysis, CSV export, and test suite. |
 | **Stage 10** | Team management and permissions | **Completed** | Agency team directory (`/app/team`), invite flow, role assignments, sole Owner demotion/removal protection, security audit logging, and automated test suite. |
-| **Stage 11** | Integrations | Pending | Webhooks, lead forms, verified connection status indicators. |
+| **Stage 11** | Integrations | **Completed** | Inbound webhook intake endpoint (`/api/webhooks/lead-intake`), HMAC SHA-256 signature verification, idempotency replay protection, integrations directory (`/app/integrations`), official WhatsApp Cloud API guide, and automated test suite. |
 | **Stage 12** | Billing and subscription entitlements | Pending | PKR pricing tiers, manual bank review workflow, quota enforcement. |
 | **Stage 13** | Client portal | Pending | Client restricted view (/portal/dashboard, /portal/leads, /portal/reports). |
 | **Stage 14** | Super Admin console | Pending | Platform administration, payment approvals, plan configuration. |
@@ -142,4 +142,26 @@
   * `getTeamDataAction`, `inviteTeamMemberAction`, `resendInvitationAction`, `updateMemberRoleAction`, `updateMemberStatusAction`, `removeMemberAction`.
 * **Automated Test Suite ([`tests/team-management.test.ts`](file:///Users/dilnawaz/LeadRescue%20AI/tests/team-management.test.ts)):**
   * 5 automated tests validating Sole Owner demotion blocking, Sole Owner removal blocking, multi-owner support, role invitation boundaries, and email format/duplicate validations.
-  * **44 / 44 tests passing across all 8 test suites.**
+
+---
+
+## Stage 11 Deliverables Summary
+
+### Integrations Centre ([`/app/integrations`](file:///Users/dilnawaz/LeadRescue%20AI/src/app/app/integrations))
+* **Verified Integration Status Model:**
+  * 6 integrated channels (`CSV Import`, `Website Webhook & Forms`, `WhatsApp Business Cloud API`, `Meta Lead Ads`, `Google Sheets`, `SMTP Email`).
+  * Honest state enforcement: Third-party channels without verified credentials default strictly to `Not Connected` with configuration guides rather than fabricated success buttons.
+* **Inbound Lead Webhook API ([`/api/webhooks/lead-intake`](file:///Users/dilnawaz/LeadRescue%20AI/src/app/api/webhooks/lead-intake/route.ts)):**
+  * **HMAC SHA-256 Signatures:** Timing-safe verification using `x-leadrescue-signature` header against tenant signing secret.
+  * **Network Retry Idempotency:** Deduplicates repeated webhook deliveries via `idempotency-key` header to prevent duplicate lead creation on network drops.
+  * **Payload Schema Validation:** Enforces non-empty name, target client ID, and at least one contact coordinate (phone or email).
+  * **CORS Preflight Handlers:** Configured for embedded HTML web form submissions.
+* **Integrations UI ([`src/app/app/integrations/page.tsx`](file:///Users/dilnawaz/LeadRescue%20AI/src/app/app/integrations/page.tsx)):**
+  * Webhook credentials modal with endpoint URL, signing secret reveal toggle, cURL command generator, and embeddable HTML lead form snippet.
+  * Webhook Self-Test Ping trigger dispatching live signature validation.
+  * Official WhatsApp Cloud API setup modal detailing Meta Business Manager, Pakistani phone registration (+92), System User permanent tokens, and ban risk warnings regarding unofficial scrapers.
+* **Server Actions ([`src/app/actions/integrations.ts`](file:///Users/dilnawaz/LeadRescue%20AI/src/app/actions/integrations.ts)):**
+  * `getIntegrationsAction`, `getWebhookCredentialsAction`, `testWebhookConnectionAction`.
+* **Automated Test Suite ([`tests/integrations.test.ts`](file:///Users/dilnawaz/LeadRescue%20AI/tests/integrations.test.ts)):**
+  * 4 unit tests covering HMAC SHA-256 signature verification, tamper rejection, payload validation, and idempotency replay defense.
+  * **48 / 48 tests passing across all 9 test suites.**

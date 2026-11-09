@@ -73,3 +73,8 @@
 * **Date:** 2026-11-10
 * **Decision:** Agency team management strictly prevents demoting or removing the last remaining agency Owner (`isSoleAgencyOwner` rule). Only Owners can invite or promote another member to the Owner role. Membership actions (inviting, resending, role updates, suspensions, removals) are validated on the server side and logged to an immutable security audit trail recording the actor, target email, role, and timestamp.
 * **Rationale:** Preventing agency orphaned accounts protects organizations from administrative lockouts and hostile takeovers while maintaining security compliance.
+
+## ADR-014: Verified Integrations Model & Idempotent Webhooks
+* **Date:** 2026-11-10
+* **Decision:** Third-party integrations are presented honestly: services without active credentials default strictly to "Not Connected". Unofficial WhatsApp Web scraping is banned; only the official Meta Cloud API is supported, with the user-reviewed `https://wa.me/` link as the safe fallback. Inbound webhooks (`/api/webhooks/lead-intake`) enforce timing-safe HMAC SHA-256 signature verification and `idempotency-key` tracking to guarantee at-most-once processing across network retries.
+* **Rationale:** False connection claims destroy user trust, while unverified webhooks invite spam injection and duplicate lead records that skew performance reporting.

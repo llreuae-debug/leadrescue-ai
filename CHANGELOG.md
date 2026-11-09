@@ -5,6 +5,23 @@ All notable changes to the LeadRescue AI codebase will be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.11.0] - 2026-11-10
+### Added
+- **Integrations Centre (`/app/integrations`):**
+  - Verified integration status catalog (`CSV Import`, `Website Webhook & Forms`, `WhatsApp Business Cloud API`, `Meta Lead Ads`, `Google Sheets`, `SMTP Email`).
+  - Zero-mock status model: Unconfigured third-party integrations default strictly to `Not Connected` with setup requirements rather than simulated success buttons.
+  - Inbound Lead Intake API Route (`/api/webhooks/lead-intake`):
+    - Timing-safe HMAC SHA-256 signature verification in `x-leadrescue-signature` header.
+    - Idempotency replay defense via `idempotency-key` header to prevent duplicate lead creation on network retries.
+    - Payload schema validation ensuring non-empty name, target client ID, and at least one contact coordinate (phone or email).
+    - CORS preflight handlers for browser website form submissions.
+  - Interactive Webhook Credentials modal with endpoint URL, signing secret reveal toggle, cURL sample, and embeddable HTML lead form snippet.
+  - Webhook Self-Test Ping trigger dispatching live signature validation.
+  - Official WhatsApp Cloud API setup modal detailing Meta Business Manager, Pakistani phone registration (+92), System User permanent tokens, and ban risk warnings regarding unofficial scrapers.
+  - Server Actions in `src/app/actions/integrations.ts`: `getIntegrationsAction`, `getWebhookCredentialsAction`, `testWebhookConnectionAction`.
+- **Automated Tests:**
+  - `tests/integrations.test.ts` with 4 unit tests covering HMAC SHA-256 signature verification, tamper rejection, payload validation, and idempotency replay defense (48/48 tests passing total).
+
 ## [0.10.0] - 2026-11-10
 ### Added
 - **Team Management & Permissions (`/app/team`):**

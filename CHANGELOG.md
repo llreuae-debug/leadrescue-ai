@@ -5,6 +5,20 @@ All notable changes to the LeadRescue AI codebase will be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.9.0] - 2026-11-10
+### Added
+- **Reports and Analytics (`/app/reports`):**
+  - Transparent agency performance dashboard with visible, documented metric formulas.
+  - Key SLA cards: Contact Rate, Qualification Rate, Follow-Up Completion Rate, and Won Conversion Rate with closed deal revenue in PKR.
+  - Inbound Channel Attribution: Breakdown by lead source with qualification counts, won deals, and revenue volume.
+  - Lost Opportunity Root Cause Analysis: Categorized loss reasons (Price sensitivity, Selected competitor, Unresponsive, Incompatible vertical, Cancelled campaign).
+  - Client Workspace Comparison: Cross-client benchmark table.
+  - Multi-criteria filter engine: Date ranges (`7d`, `30d`, `90d`, `All Time`), client workspace, and inbound source.
+  - Server Actions in `src/app/actions/reports.ts`: `getReportsDataAction` and `exportReportsCsvAction`.
+  - Comprehensive CSV report export containing executive KPI summary, channel performance, client breakdown, and lost reasons.
+- **Automated Tests:**
+  - `tests/reports-analytics.test.ts` with 7 automated tests testing Contact rate, Qualification rate, Task completion SLA math, Won conversion rate, zero division resilience, client workspace filtering, and loss reason ranking (39/39 tests passing total).
+
 ## [0.8.0] - 2026-11-10
 ### Added
 - **AI Sales Assistant (`/app/ai-assistant`):**

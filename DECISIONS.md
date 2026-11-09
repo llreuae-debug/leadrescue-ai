@@ -63,3 +63,8 @@
 * **Date:** 2026-11-10
 * **Decision:** The AI Sales Assistant synthesizes outputs strictly from verified database records (`LeadContextSnapshot`). Any absent attributes (e.g. unknown budget, missing phone, unverified timeline) are explicitly surfaced in a "Missing Context" block rather than hallucinated or assumed. All untrusted lead notes are passed through a directive sanitizer (`sanitizeUntrustedInput`) to prevent prompt injections (`system override`, `ignore instructions`). All generations require human review prior to dispatch, and billing quotas are strictly enforced per tier.
 * **Rationale:** Sales representatives must be able to trust AI recommendations without risk of hallucinated client promises, discount fabrication, or security breaches from untrusted prospect inputs.
+
+## ADR-012: Documented Metric Formulas & Cohort Boundary Integrity
+* **Date:** 2026-11-10
+* **Decision:** Reporting calculations (Contact rate, Qualification rate, Follow-Up SLA Completion rate, Won Conversion rate) follow strictly documented arithmetic definitions visible in the UI and in exported reports. The task completion denominator excludes cancelled tasks, while snoozed tasks remain in active status. Time cohorts are explicitly bounded by creation dates rather than mixed without disclosure. Empty cohorts return 0.0% with zero division protection.
+* **Rationale:** Marketing agencies and enterprise clients require trustworthy mathematical integrity for campaign ROI discussions. Obscuring formulas or fabricating estimates erodes executive confidence.

@@ -20,7 +20,7 @@
 | **Stage 6** | Sales pipeline | **Completed** | Responsive Kanban board (`/app/pipeline`) across 7 stages, drag & drop, accessible keyboard stage switcher, loss reason modal, mobile list view. |
 | **Stage 7** | Follow-up task management | **Completed** | Timezone-aware date calculations (`Asia/Karachi`), 5 status tabs, overdue counter, rescheduling, snooze (+1d), grounded WhatsApp draft launch modal, and test suite. |
 | **Stage 8** | AI sales assistant | **Completed** | Grounded generation engine, Urdu & English bilingual output, tone selection (Professional, Friendly, Concise), prompt injection defense, quota meter, and automated test suite. |
-| **Stage 9** | Reports and analytics | Pending | Documented metric formulas, cohort breakdowns, CSV export. |
+| **Stage 9** | Reports and analytics | **Completed** | Documented metric formulas (Contact rate, Qualification rate, Task completion SLA, Won rate), multi-timeframe cohort filters, client workspace comparison, lost root cause analysis, CSV export, and test suite. |
 | **Stage 10** | Team management and permissions | Pending | 5 roles (Owner, Admin, Manager, Rep, Viewer), last owner protection. |
 | **Stage 11** | Integrations | Pending | Webhooks, lead forms, verified connection status indicators. |
 | **Stage 12** | Billing and subscription entitlements | Pending | PKR pricing tiers, manual bank review workflow, quota enforcement. |
@@ -96,4 +96,30 @@
   * Multi-tenant agency membership verification, lead snapshot loading, and plan quota tracking with reset dates.
 * **Automated Test Suite ([`tests/ai-assistant.test.ts`](file:///Users/dilnawaz/LeadRescue%20AI/tests/ai-assistant.test.ts)):**
   * 6 automated unit tests validating fact extraction, missing data detection, prompt injection defense, English tone variation, Urdu script generation, and objection handling.
-  * **32 / 32 tests passing across all 6 test suites.**
+
+---
+
+## Stage 9 Deliverables Summary
+
+### Reports & Analytics ([`/app/reports`](file:///Users/dilnawaz/LeadRescue%20AI/src/app/app/reports))
+* **Documented Metric Formulas & SLA Rules ([`src/lib/reports/metrics.ts`](file:///Users/dilnawaz/LeadRescue%20AI/src/lib/reports/metrics.ts)):**
+  * **Contact Rate:** `(Leads at Contacted or later / Total leads) × 100%` (measures first touch SLA coverage).
+  * **Qualification Rate:** `(Qualified leads / Total leads) × 100%` (evaluates audience & campaign intent).
+  * **Follow-up SLA Completion Rate:** `(Completed tasks / Tasks due in period) × 100%` (excludes cancelled tasks from denominator; snoozed tasks remain active).
+  * **Won Conversion Rate:** `(Won leads / [Won + Lost closed leads]) × 100%` (evaluates closing velocity).
+  * **Zero Division Protection:** Empty cohorts return clean zero values without NaN or runtime exceptions.
+* **Filter Engine:**
+  * Multi-timeframe controls (`7d`, `30d`, `90d`, `All Time`).
+  * Client workspace dropdown filter.
+  * Inbound source attribution filter.
+* **Multi-Section Visual Breakdown:**
+  * **Executive KPI Cards:** Contact Rate, Qualification Rate, Follow-Up SLA Completion Rate, Won Conversion Rate (with won revenue in PKR).
+  * **Inbound Channel Attribution:** Table displaying volume, qualified leads, won deals, win rate %, and revenue won in PKR.
+  * **Lost Opportunity Root Cause Analysis:** Visual distribution of loss reasons (Price sensitivity, Selected competitor, Unresponsive, Incompatible vertical, Cancelled campaign).
+  * **Client Workspace Comparison:** Cross-client comparison table tracking lead volume, contact rates, qualification rates, won counts, and closed revenue.
+* **Server Action & CSV Export ([`src/app/actions/reports.ts`](file:///Users/dilnawaz/LeadRescue%20AI/src/app/actions/reports.ts)):**
+  * `getReportsDataAction`: Server-side aggregation scoped to authorized agency tenant.
+  * `exportReportsCsvAction`: Client-triggered CSV download formatting all 4 reporting sections with explicit metadata and timestamps.
+* **Automated Test Suite ([`tests/reports-analytics.test.ts`](file:///Users/dilnawaz/LeadRescue%20AI/tests/reports-analytics.test.ts)):**
+  * 7 automated tests validating formula mathematics, zero-division safety, client filter isolation, and loss reason ranking.
+  * **39 / 39 tests passing across all 7 test suites.**

@@ -14,6 +14,7 @@ import {
 import Link from "next/link";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { logoutAction } from "@/app/actions/auth";
+import { LanguageSwitcher } from "@/components/ui/LanguageSwitcher";
 
 interface AppHeaderProps {
   onOpenMobileNav?: () => void;
@@ -68,6 +69,8 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
 
       {/* Right: Actions, Notifications, User */}
       <div className="flex items-center gap-2.5">
+        <LanguageSwitcher />
+
         <Link
           href="/design-system"
           className="hidden sm:inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 rounded-md transition-colors"

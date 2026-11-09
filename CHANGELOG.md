@@ -5,6 +5,23 @@ All notable changes to the LeadRescue AI codebase will be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.15.0] - 2026-11-10
+### Added
+- **Urdu Localization & RTL Support:**
+  - Complete bilingual translation system (`src/lib/i18n/translations.ts`) with natural, authentic Pakistani phrasing across all navigation, actions, statuses, and metrics.
+  - Direction mapping (`document.documentElement.dir = "rtl"` and `lang="ur"`) with persistent user choice saved to `localStorage` (`leadrescue_lang`).
+  - Bi-directional formatting helpers:
+    - `formatBilingualPhone`: Wraps phone numbers in Unicode Left-to-Right isolates (`\u202A`...`\u202C`) to guarantee phone numbers are never reversed in RTL text.
+    - `formatBilingualCurrency`: Handles linguistic order (`PKR 6,999` vs `6,999 روپے`).
+  - `LanguageSwitcher` pill component embedded across `AppHeader`, `ClientPortalLayout`, and `MarketingHeader`.
+  - Urdu typography fallback stack (`Noto Nastaliq Urdu`, `Jameel Noori Nastaleeq`, `Urdu Typesetting`) in `globals.css`.
+- **Accessibility & Responsive QA:**
+  - Accessible skip-to-content landmark link (`.skip-link`).
+  - Minimum 44px touch targets on mobile interactions.
+  - Preserved directional icons (checkmarks, coins, phone icons remain stable while arrows mirror appropriately via `.rtl-mirror`).
+- **Automated Tests:**
+  - `tests/i18n-accessibility.test.ts` with 6 automated unit tests validating dictionary completeness, natural Urdu phrasing, direction mapping, bidirectional phone isolation, currency formatting, and accessibility landmarks (72/72 tests passing total).
+
 ## [0.14.0] - 2026-11-10
 ### Added
 - **Super Admin Console (`/admin/*`):**

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { ArrowRight, Menu, X, Sparkles } from "lucide-react";
+import { LanguageSwitcher } from "@/components/ui/LanguageSwitcher";
 
 export const MarketingHeader: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -58,6 +59,7 @@ export const MarketingHeader: React.FC = () => {
 
         {/* Auth CTA */}
         <div className="hidden md:flex items-center gap-3">
+          <LanguageSwitcher />
           <Link
             href="/login"
             className="text-xs font-semibold text-slate-700 hover:text-slate-900 px-3 py-2 transition-colors"

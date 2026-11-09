@@ -117,3 +117,43 @@ html, body {
 .input-base::placeholder {
   color: #94a3b8;
 }
+
+/* RTL direction and Urdu Nastaliq typography fallbacks */
+[dir="rtl"] {
+  font-family: 'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', 'Urdu Typesetting', 'Segoe UI', Tahoma, system-ui, sans-serif;
+  letter-spacing: normal;
+}
+
+/* Directional mirrors for arrows and navigation pointers */
+[dir="rtl"] .rtl-mirror {
+  transform: scaleX(-1);
+}
+
+/* Directional isolation for mixed phone numbers and currency */
+.bidi-isolate {
+  unicode-bidi: isolate;
+  direction: ltr;
+  display: inline-block;
+}
+
+/* Accessible skip to main content landmark (keyboard focusable) */
+.skip-link {
+  position: absolute;
+  top: -9999px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--primary-blue);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  z-index: 100;
+  text-decoration: none;
+  transition: top 150ms ease;
+}
+.skip-link:focus {
+  top: 16px;
+  outline: 2px solid white;
+  outline-offset: 2px;
+}

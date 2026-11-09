@@ -15,6 +15,7 @@ import {
   Menu,
   X
 } from "lucide-react";
+import { LanguageSwitcher } from "@/components/ui/LanguageSwitcher";
 import { getClientPortalWorkspaceAction } from "@/app/actions/portal";
 import { ClientPortalWorkspace } from "@/types/portal";
 
@@ -124,6 +125,8 @@ export default function ClientPortalLayout({
 
             {/* Right Actions & Support info */}
             <div className="hidden md:flex items-center gap-3">
+              <LanguageSwitcher />
+
               <div className="text-right text-xs">
                 <p className="text-slate-400">Support Contact</p>
                 <a

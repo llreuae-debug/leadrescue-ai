@@ -26,7 +26,7 @@
 | **Stage 12** | Billing and subscription entitlements | **Completed** | Authoritative PKR pricing tiers (`src/config/plans.ts`), Pakistan manual IBFT review workflow (`/app/billing`), server-enforced quota meters, payment approval/rejection lifecycle, and automated test suite. |
 | **Stage 13** | Client portal | **Completed** | Client-facing restricted portal (`/portal/dashboard`, `/portal/leads`, `/portal/reports`), field redaction (notes/margins stripped), client workspace isolation, CSV export, and automated test suite. |
 | **Stage 14** | Super Admin console | **Completed** | Platform administration (`/admin/*`), privilege separation, manual IBFT review queue, plan manager, sensitive credential sanitization, audit trail, and automated test suite. |
-| **Stage 15** | Urdu, accessibility, and responsive QA | Pending | RTL mirror, Noto font fallbacks, screen-reader semantics. |
+| **Stage 15** | Urdu, accessibility, and responsive QA | **Completed** | Native Urdu RTL support (`dir="rtl"`), Noto Nastaliq font stack, bidirectional phone/currency isolation, persistent language switcher, accessible skip link, touch targets, and automated test suite. |
 | **Stage 16** | Security, reliability, and production readiness | Pending | RLS penetration tests, audit logs, performance benchmarks. |
 | **Stage 17** | Deployment and pilot launch | Pending | Environment checklist, migration verify, pilot onboarding. |
 
@@ -248,4 +248,30 @@
   * `getAdminDashboardAction`, `getAdminAgenciesAction`, `toggleAgencyStatusAction`, `getAdminSubscriptionsAction`, `reviewAdminPaymentAction`, `getAdminPlansAction`, `updateAdminPlanAction`, `getAdminAuditLogsAction`.
 * **Automated Test Suite ([`tests/super-admin.test.ts`](file:///Users/dilnawaz/LeadRescue%20AI/tests/super-admin.test.ts)):**
   * 8 unit tests covering Super Admin verification, privilege elevation defense, role rejection (Owner/Admin/Manager), sensitive credential redaction, audit event construction, and plan update validations.
-  * **66 / 66 tests passing across all 12 test suites.**
+
+---
+
+## Stage 15 Deliverables Summary
+
+### Urdu Localization, Accessibility & Responsive Design
+* **Bilingual Translation Dictionary ([`src/lib/i18n/translations.ts`](file:///Users/dilnawaz/LeadRescue%20AI/src/lib/i18n/translations.ts)):**
+  * Authentic Pakistani Urdu vocabulary (not awkward machine translation):
+    * Brand Tagline: "ہر لیڈ کی فالو اپ ضروری ہے۔" (Every Lead Deserves a Follow-Up)
+    * Navigation, actions, status badges, metrics, and empty states.
+  * Localized Pakistani financial & banking terms: `بینک ٹرانسفر (IBFT)`, `میزان بینک لمیٹڈ`, `حبیب بینک لمیٹڈ (HBL)`, `ٹرانزیکشن ریفرنس نمبر (UTR/RRN)`, `روپے`.
+* **Bi-directional Formatting & Isolation Helpers:**
+  * `formatBilingualPhone`: Wraps phone numbers in Unicode Left-to-Right isolates (`\u202A` and `\u202C`) to prevent reversed digits in Pakistani RTL text.
+  * `formatBilingualCurrency`: Respects linguistic order (e.g. `PKR 6,999` in English vs `6,999 روپے` in Urdu).
+* **Language Context & State Persistence ([`src/lib/i18n/context.tsx`](file:///Users/dilnawaz/LeadRescue%20AI/src/lib/i18n/context.tsx)):**
+  * Synchronizes language state (`en` / `ur`) with `localStorage` (`leadrescue_lang`).
+  * Dynamically updates `document.documentElement.lang` and `document.documentElement.dir` (`ltr` / `rtl`).
+* **Language Switcher Component ([`src/components/ui/LanguageSwitcher.tsx`](file:///Users/dilnawaz/LeadRescue%20AI/src/components/ui/LanguageSwitcher.tsx)):**
+  * Accessible toggle with `aria-label="Switch application language between English and Urdu / زبان تبدیل کریں"`.
+  * Embedded across `AppHeader`, `ClientPortalLayout`, and `MarketingHeader`.
+* **Urdu Typography & RTL CSS Fallbacks ([`src/app/globals.css`](file:///Users/dilnawaz/LeadRescue%20AI/src/app/globals.css)):**
+  * Font stack for `[dir="rtl"]`: `'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', 'Urdu Typesetting', 'Segoe UI', Tahoma, system-ui, sans-serif`.
+  * Directional mirror utility (`.rtl-mirror`) for pointers and arrows.
+  * Keyboard-focusable skip to main content landmark (`.skip-link`).
+* **Automated Test Suite ([`tests/i18n-accessibility.test.ts`](file:///Users/dilnawaz/LeadRescue%20AI/tests/i18n-accessibility.test.ts)):**
+  * 6 automated unit tests validating dictionary parity, authentic Urdu phrasing, direction mapping, bidirectional phone isolation, currency formatting, and accessibility landmarks.
+  * **72 / 72 tests passing across all 13 test suites.**

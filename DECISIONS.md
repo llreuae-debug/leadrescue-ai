@@ -23,3 +23,13 @@
 * **Date:** 2026-11-09
 * **Decision:** Any application route not yet integrated with live database persistence displays a structured `RoutePlaceholder` explaining its build stage and upcoming roadmap.
 * **Rationale:** In accordance with product principles, simulated data or fake interactive screens must never be passed off as functional workflows.
+
+## ADR-004: Centralised Configurable Plan Architecture
+* **Date:** 2026-11-09
+* **Decision:** All plan names, pricing in PKR (`Starter: 2,999`, `Growth: 6,999`, `Advanced: 14,999`), quotas, and entitlements originate from a single configuration file (`src/config/plans.ts`).
+* **Rationale:** Hardcoding plan limits across pricing pages, billing interfaces, and server entitlement checks creates dangerous discrepancy risks and billing bugs.
+
+## ADR-005: Server-Side Authentication & Session Route Protection
+* **Date:** 2026-11-09
+* **Decision:** Use `@supabase/ssr` cookies and Next.js middleware for server-side route guards. Form submissions execute via Server Actions (`src/app/actions/auth.ts`) validating inputs on the server before dispatching to Supabase Auth.
+* **Rationale:** Client-side route hiding is not a security boundary. Deriving sessions server-side prevents unauthorized access to tenant data and eliminates token exposure risks.

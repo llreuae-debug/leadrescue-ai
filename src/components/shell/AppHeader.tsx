@@ -5,12 +5,15 @@ import { cn } from "@/lib/utils";
 import {
   Menu,
   Bell,
-  Search,
-  Plus,
-  HelpCircle,
   ExternalLink,
+  LogOut,
+  Settings,
+  CreditCard,
+  User,
 } from "lucide-react";
 import Link from "next/link";
+import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
+import { logoutAction } from "@/app/actions/auth";
 
 interface AppHeaderProps {
   onOpenMobileNav?: () => void;
@@ -84,11 +87,66 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
           <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-blue-600 ring-2 ring-white" />
         </button>
 
-        {/* Agency / User Profile Avatar */}
-        <div className="flex items-center pl-2 border-l border-slate-200 gap-2">
-          <div className="w-8 h-8 rounded-full bg-slate-900 text-white flex items-center justify-center text-xs font-bold cursor-pointer">
-            PD
-          </div>
+        {/* Account Menu Dropdown */}
+        <div className="flex items-center pl-2 border-l border-slate-200">
+          <DropdownMenu.Root>
+            <DropdownMenu.Trigger asChild>
+              <button
+                type="button"
+                className="w-8 h-8 rounded-full bg-slate-900 text-white flex items-center justify-center text-xs font-bold hover:ring-2 hover:ring-blue-600 focus:outline-none transition-all"
+                aria-label="Open user menu"
+              >
+                PD
+              </button>
+            </DropdownMenu.Trigger>
+
+            <DropdownMenu.Portal>
+              <DropdownMenu.Content
+                align="end"
+                sideOffset={8}
+                className="z-50 min-w-[200px] rounded-xl border border-slate-200 bg-white p-1.5 shadow-lg text-xs text-slate-700 animate-in fade-in-50"
+              >
+                <div className="px-2.5 py-2 border-b border-slate-100">
+                  <p className="font-semibold text-slate-900">Prime Digital</p>
+                  <p className="text-[10px] text-slate-400 truncate">admin@primedigital.pk</p>
+                </div>
+
+                <div className="py-1">
+                  <DropdownMenu.Item asChild>
+                    <Link
+                      href="/app/settings"
+                      className="flex items-center gap-2 px-2.5 py-2 rounded-lg hover:bg-slate-100 cursor-pointer outline-none font-medium"
+                    >
+                      <Settings className="w-3.5 h-3.5 text-slate-400" />
+                      <span>Agency Settings</span>
+                    </Link>
+                  </DropdownMenu.Item>
+
+                  <DropdownMenu.Item asChild>
+                    <Link
+                      href="/app/billing"
+                      className="flex items-center gap-2 px-2.5 py-2 rounded-lg hover:bg-slate-100 cursor-pointer outline-none font-medium"
+                    >
+                      <CreditCard className="w-3.5 h-3.5 text-slate-400" />
+                      <span>Subscription & Plan</span>
+                    </Link>
+                  </DropdownMenu.Item>
+                </div>
+
+                <DropdownMenu.Separator className="h-px bg-slate-100 my-1" />
+
+                <form action={logoutAction}>
+                  <button
+                    type="submit"
+                    className="w-full flex items-center gap-2 px-2.5 py-2 rounded-lg hover:bg-rose-50 text-rose-600 cursor-pointer outline-none font-semibold transition-colors"
+                  >
+                    <LogOut className="w-3.5 h-3.5" />
+                    <span>Sign Out</span>
+                  </button>
+                </form>
+              </DropdownMenu.Content>
+            </DropdownMenu.Portal>
+          </DropdownMenu.Root>
         </div>
       </div>
     </header>

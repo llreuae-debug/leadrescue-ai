@@ -13,8 +13,8 @@
 | :--- | :--- | :--- | :--- |
 | **Stage 0** | Repository inspection & implementation plan | **Completed** | Clean directory inspected, minimal stack agreed. |
 | **Stage 1** | Project foundation & design system | **Completed** | Tokens, shared components, responsive shell, preview route built. |
-| **Stage 2** | Marketing website & authentication | Pending | Next stage: 10 public marketing routes & Supabase Auth. |
-| **Stage 3** | Agency onboarding & multi-tenant foundation | Pending | Profiles, agencies, agency_members, clients with RLS. |
+| **Stage 2** | Marketing website & authentication | **Completed** | 10 public marketing routes, Pakistani launch plans, Supabase Auth flows, middleware protection. |
+| **Stage 3** | Agency onboarding & multi-tenant foundation | Pending | Next stage: profiles, agencies, agency_members, clients with RLS. |
 | **Stage 4** | Agency dashboard | Pending | Persisted KPI calculations, trends, overdue follow-up counters. |
 | **Stage 5** | Clients and lead management | Pending | Client workspaces, lead CRUD, CSV import/mapping, duplicate check. |
 | **Stage 6** | Sales pipeline | Pending | Responsive Kanban, stage changes, accessible keyboard alternative. |
@@ -32,22 +32,41 @@
 
 ---
 
-## Shared UI Components Built in Stage 1
+## Stage 2 Deliverables Summary
 
-- [x] `AppSidebar` (collapsible 248px desktop / 72px collapsed)
-- [x] `AppHeader` (breadcrumbs, notification placeholder, account menu)
-- [x] `AppShell` (responsive layout with mobile drawer)
-- [x] `RoutePlaceholder` (honest status for unfinished routes)
-- [x] `PageHeader` (title, description, badge, action slots)
-- [x] `StatCard` (KPI metrics, trend indicators, tabular numerals)
-- [x] `StatusBadge` (default, success, warning, danger, ai, neutral variants)
-- [x] `DataTable` (responsive columns, loading skeleton, empty states, pagination)
-- [x] `EmptyState` (accessible icons, actions, secondary actions)
-- [x] `LoadingState` (spinner & skeleton modes)
-- [x] `ErrorState` (error messages, retry button)
-- [x] `ConfirmDialog` (Radix dialog primitive with destructive style support)
-- [x] `FormField` (label, hint, error, required indicator)
-- [x] `SearchInput` (search icon, clear button, custom placeholder)
-- [x] `FilterBar` (filter count badge, option slots, reset trigger)
-- [x] `ChartCard` (card container, actions, footer)
-- [x] `UsageMeter` (progress bar, thresholds for warning/danger, plan quotas)
+### Public Marketing Routes
+- [x] `/` — Homepage with 9 comprehensive sections:
+  1. Hero with headline *"Every Lead Deserves a Follow-Up."*
+  2. The lead leakage problem
+  3. How LeadRescue AI works (01 Centralize, 02 AI Drafting, 03 Follow-up SLA)
+  4. Core features
+  5. Agency workflow explanation
+  6. Configurable Pakistan pricing preview
+  7. Interactive FAQ
+  8. Final conversion CTA
+  9. Footer with contact and legal links
+- [x] `/features` — Detailed capability breakdown (Lead Organisation, Client Workspaces, Sales Pipeline, Follow-up Task Management, AI Message Drafts, Reports).
+- [x] `/pricing` — Configurable Pakistani plans (`Starter: PKR 2,999`, `Growth: PKR 6,999`, `Advanced: PKR 14,999`), detailed category comparisons, and local payment guidance.
+- [x] `/about` — Origin, agency focus, mission statement, and core product principles.
+- [x] `/contact` — Headquarters info (Lahore & Islamabad) and contact form.
+- [x] `/privacy` — Multi-tenant data ownership, no model training on client data, retention guidelines.
+- [x] `/terms` — Commercial subscription terms, manual Pakistani bank transfers, anti-spam obligations.
+
+### Authentication & Security Foundation
+- [x] Single source of truth for plan configuration: [`src/config/plans.ts`](file:///Users/dilnawaz/LeadRescue%20AI/src/config/plans.ts).
+- [x] Supabase SSR client setup: browser client, server client, and session middleware.
+- [x] Route protection via Next.js [`middleware.ts`](file:///Users/dilnawaz/LeadRescue%20AI/src/middleware.ts):
+  - Unauthenticated access to `/app/*` redirected to `/login?redirectedFrom=...`.
+  - Authenticated users attempting `/login` or `/signup` redirected to `/app/dashboard`.
+- [x] Server Actions with server-side validation ([`src/app/actions/auth.ts`](file:///Users/dilnawaz/LeadRescue%20AI/src/app/actions/auth.ts)):
+  - `loginAction`
+  - `signupAction`
+  - `logoutAction`
+  - `forgotPasswordAction`
+  - `resetPasswordAction`
+- [x] Auth pages with loading, error, and recovery states:
+  - `/login`
+  - `/signup`
+  - `/forgot-password`
+  - `/reset-password`
+  - `/auth/callback` (session exchange handler)

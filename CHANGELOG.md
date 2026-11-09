@@ -5,6 +5,16 @@ All notable changes to the LeadRescue AI codebase will be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.16.0] - 2026-11-10
+### Added
+- **Security, Reliability & Production Readiness Audit:**
+  - Formal Production Readiness & Security Audit Report published at `AUDIT_REPORT.md` (Status: PASS, zero critical/high vulnerabilities).
+  - PostgreSQL Row-Level Security (RLS) policies and composite indexes audit across all schema tables (`profiles`, `agencies`, `agency_members`, `clients`, `leads`, `follow_up_tasks`, `lead_activities`).
+  - Strict tenant boundary isolation, client portal field redaction, and Super Admin privilege separation checks.
+  - Secret segregation verification (`.env` and `.env*.local` protected from version control).
+- **Automated Tests:**
+  - `tests/production-audit-e2e.test.ts` covering the 10 core critical platform workflows (Auth, Agency Provisioning, Multi-Tenant Isolation, Client Workspace Scoping, Webhook Signatures, Pipeline Stages, Follow-Up SLA, Grounded AI, Billing Quotas, and Super Admin Access) — **82 / 82 tests passing across all 14 test suites**.
+
 ## [0.15.0] - 2026-11-10
 ### Added
 - **Urdu Localization & RTL Support:**

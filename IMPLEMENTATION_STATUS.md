@@ -16,8 +16,8 @@
 | **Stage 2** | Marketing website & authentication | **Completed** | 10 public marketing routes, Pakistani launch plans, Supabase Auth flows, middleware protection. |
 | **Stage 3** | Agency onboarding & multi-tenant foundation | **Completed** | Multi-tenant migration with RLS, 5 RBAC roles, permission helpers, automated test suite, 5-step onboarding wizard. |
 | **Stage 4** | Agency dashboard | **Completed** | Real-time KPI cards (Total, New, Qualified, Follow-ups Due, Won), lead acquisition trend, source breakdown, urgent follow-up action triggers, client & date range filters. |
-| **Stage 5** | Clients and lead management | Pending | Next stage: Client workspaces, lead CRUD, CSV import/mapping, duplicate check. |
-| **Stage 6** | Sales pipeline | Pending | Responsive Kanban, stage changes, accessible keyboard alternative. |
+| **Stage 5** | Clients and lead management | **Completed** | Client workspaces (`/app/clients`, `/app/clients/[clientId]`), Lead CRUD (`/app/leads`), CSV column mapping, duplicate detection, and automated test suite. |
+| **Stage 6** | Sales pipeline | Pending | Next stage: Responsive Kanban board, stage persistence, accessible keyboard alternatives. |
 | **Stage 7** | Follow-up task management | Pending | Timezone-aware date calculations, overdue status, WhatsApp draft flow. |
 | **Stage 8** | AI sales assistant | Pending | Server-side grounded generation, English & Urdu support, human review. |
 | **Stage 9** | Reports and analytics | Pending | Documented metric formulas, cohort breakdowns, CSV export. |
@@ -32,33 +32,33 @@
 
 ---
 
-## Stage 4 Deliverables Summary
+## Stage 5 Deliverables Summary
 
-### Database Migration for Leads & Dashboard
-* [`supabase/migrations/20261110000000_stage4_leads_and_dashboard.sql`](file:///Users/dilnawaz/LeadRescue%20AI/supabase/migrations/20261110000000_stage4_leads_and_dashboard.sql):
-  * **`leads`:** Inbound enquiries with agency/client ownership, contact details, source, status, priority, deal value, assigned user, and follow-up timestamps.
-  * **`follow_up_tasks`:** Follow-up tasks with due dates, task types (`call`, `whatsapp`, `email`, `meeting`), status (`pending`, `completed`, `snoozed`, `cancelled`).
-  * **`lead_activities`:** Audit logs recording state transitions and actor timestamps.
-  * **Indexes & RLS:** Performance indexes on `status`, `due_at`, `client_id`, `agency_id`, and strict tenant RLS policies.
+### Client Management ([`/app/clients`](file:///Users/dilnawaz/LeadRescue%20AI/src/app/app/clients) & [`/app/clients/[clientId]`](file:///Users/dilnawaz/LeadRescue%20AI/src/app/app/clients/%5BclientId%5D))
+* **Client Directory:** Grid view showing client brand name, industry, total leads, active pipeline leads, won opportunities, account manager, status, and search filter.
+* **Add Client Workspace Modal:** Direct creation with industry selection and tenant boundary enforcement.
+* **Client Detail View:** 5 dedicated tabs:
+  1. **Overview:** Workspace metrics, account manager info, industry metadata.
+  2. **Leads:** Client-scoped data table.
+  3. **Pipeline:** Client-specific Kanban link.
+  4. **Reports:** Conversion and cohort analytics link.
+  5. **Settings:** Client brand and industry configuration.
 
-### Server Aggregation & Metrics
-* [`src/app/actions/dashboard.ts`](file:///Users/dilnawaz/LeadRescue%20AI/src/app/actions/dashboard.ts): Server Action `getDashboardDataAction` executing agency-scoped queries with client workspace and date-range filters. Includes explicit Demo Workspace labeling for preview environments.
-
-### Dashboard User Interface ([`/app/dashboard`](file:///Users/dilnawaz/LeadRescue%20AI/src/app/app/dashboard))
-* [`src/app/app/dashboard/page.tsx`](file:///Users/dilnawaz/LeadRescue%20AI/src/app/app/dashboard/page.tsx):
-  * **KPI Cards:** Total Leads, New Enquiries, Qualified Leads, Follow-ups Due (with Overdue indicator), and Won Opportunities (with closed PKR revenue).
-  * **Lead Acquisition Trend:** Daily inbound enquiry volume visualization.
-  * **Enquiry Source Breakdown:** Multi-channel distribution (Meta Ads, Google Ads, WhatsApp, CSV).
-  * **Urgent Follow-ups:** Instant WhatsApp and completion actions for overdue/today tasks.
-  * **AI Pipeline Recommendations:** Grounded objection and SLA alerts.
-  * **Recent Lead Activity Timeline:** Chronological agency events.
-  * **Workspace & Date Filters:** Client workspace switcher and date ranges (7d, 30d, 90d, All Time).
-  * **Quick Actions:** Add Lead, Import CSV, Add Client modal triggers.
+### Lead Management ([`/app/leads`](file:///Users/dilnawaz/LeadRescue%20AI/src/app/app/leads))
+* **Lead Ingestion & CRUD:**
+  * Contact full name, WhatsApp/phone, email, company, client workspace, source, campaign, status, priority, and deal value in PKR.
+  * **Duplicate Detection:** Checks incoming phone/email within the client workspace and flags potential duplicate records for manual confirmation.
+  * **Lead Detail Drawer:** Full slide-out drawer with direct WhatsApp web link, live status switcher, notes, and AI suggestion preview.
+* **Search & Multi-Criteria Filtering:**
+  * Real-time search across name, phone, email, company.
+  * Filter by Client Workspace, Status, Priority, and Source.
+* **CSV Import & Export:**
+  * **Import Modal:** Target client selection, file dropzone, column mapping, row preview table, row-level validation, and batch write.
+  * **Export Trigger:** One-click CSV export of filtered enquiries.
 
 ### Automated Test Suite
-* [`tests/dashboard-metrics.test.ts`](file:///Users/dilnawaz/LeadRescue%20AI/tests/dashboard-metrics.test.ts):
-  * KPI metrics calculation validation without double-counting.
-  * Client workspace filter isolation.
-  * Empty dataset handling.
-  * Strict cross-agency tenant isolation.
-  * **12 / 12 tests passing across all test suites.**
+* [`tests/leads-and-csv.test.ts`](file:///Users/dilnawaz/LeadRescue%20AI/tests/leads-and-csv.test.ts):
+  * Duplicate detection matching phone/email per client workspace.
+  * CSV row-level validation (empty name rejection).
+  * Search and filter logic.
+  * **16 / 16 tests passing across all test suites.**

@@ -5,6 +5,24 @@ All notable changes to the LeadRescue AI codebase will be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.0] - 2026-11-10
+### Added
+- **Client Workspace Management (`/app/clients` & `/app/clients/[clientId]`):**
+  - Client directory displaying total leads, active pipeline leads, won opportunities, account manager assignment, and active/archived status.
+  - "Add Client Workspace" modal with industry vertical selector.
+  - Client detail view with 5 tabs: Overview, Leads, Pipeline, Reports, and Settings.
+  - Server Actions `getClientsAction`, `getClientByIdAction`, and `createClientAction`.
+- **Lead Management (`/app/leads`):**
+  - Search by name, phone, email, and company.
+  - Multi-criteria filter bar (Client, Status, Priority, Source).
+  - "Add Lead" modal with client-scoped duplicate detection check.
+  - Slide-out Lead Detail Drawer with direct WhatsApp click-to-chat link, status switcher, and activity logs.
+  - CSV Import modal with column mapping, parsed row preview table, row validation, and batch write.
+  - CSV Export of filtered leads.
+  - Server Actions `getLeadsAction`, `createLeadAction`, `updateLeadStatusAction`, and `importLeadsCSVAction`.
+- **Automated Tests:**
+  - `tests/leads-and-csv.test.ts` testing duplicate detection, CSV mapping/validation, and search/filtering (16/16 tests passing across all test suites).
+
 ## [0.4.0] - 2026-11-10
 ### Added
 - **Agency Dashboard (`/app/dashboard`):**

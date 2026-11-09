@@ -43,3 +43,8 @@
 * **Date:** 2026-11-10
 * **Decision:** Dashboard queries are aggregated on the server scoped by active agency, client workspace, and timeframe filters. When running in preview or unconfigured environments, an explicit "Demo Workspace Mode" badge is surfaced to avoid misrepresenting simulated data as live customer metrics.
 * **Rationale:** Agencies require trustworthy metrics to assess lead response velocity. Transparent labeling prevents accidental confusion during pilots.
+
+## ADR-008: Client-Scoped Duplicate Detection & CSV Import Mapping
+* **Date:** 2026-11-10
+* **Decision:** Lead duplication is evaluated against `(agency_id, client_id)` matching phone and email. When duplicates are detected during manual creation or CSV ingestion, the system halts and presents the collision rather than silently overwriting. CSV imports require row preview and validation before batch writing.
+* **Rationale:** Silent merges in performance marketing destroy attribution and lead history. Review-first duplicate handling prevents data corruption.

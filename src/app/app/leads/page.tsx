@@ -26,16 +26,12 @@ import {
   Download,
   Filter,
   X,
-  Phone,
-  Mail,
-  Building2,
-  Calendar,
-  Clock,
   Sparkles,
   AlertTriangle,
-  CheckCircle2,
   MessageSquare,
   FileSpreadsheet,
+  ArrowRight,
+  ArrowUpRight,
 } from "lucide-react";
 
 export default function LeadsPage() {
@@ -193,7 +189,6 @@ export default function LeadsPage() {
   };
 
   const handleSimulateCSVFile = () => {
-    // Generate sample preview rows for testing CSV mapping
     const sampleRows: CSVLeadRow[] = [
       {
         name: "Rashid Minhas",
@@ -244,16 +239,16 @@ export default function LeadsPage() {
       cell: (lead) => (
         <div
           onClick={() => setSelectedLead(lead)}
-          className="cursor-pointer group flex items-start gap-2.5"
+          className="cursor-pointer group flex items-start gap-3"
         >
-          <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 font-bold flex items-center justify-center text-xs shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+          <div className="w-9 h-9 rounded-xl bg-[#17191C] text-[#B7FF3C] font-black flex items-center justify-center text-xs shrink-0 group-hover:scale-105 transition-transform shadow-[0_2px_0_0_#101113]">
             {lead.name.substring(0, 2).toUpperCase()}
           </div>
           <div>
-            <p className="font-semibold text-slate-900 group-hover:text-blue-600 transition-colors">
+            <p className="font-extrabold text-[#101113] group-hover:underline">
               {lead.name}
             </p>
-            <p className="text-[11px] text-slate-400">
+            <p className="text-[11px] text-[#777D77] font-medium">
               {lead.company ? `${lead.company} • ` : ""}
               {lead.phone || lead.email}
             </p>
@@ -265,7 +260,7 @@ export default function LeadsPage() {
       key: "client",
       header: "Client Workspace",
       cell: (lead) => (
-        <span className="font-medium text-slate-700">{lead.client?.name || "General"}</span>
+        <span className="font-bold text-[#202320]">{lead.client?.name || "General"}</span>
       ),
     },
     {
@@ -273,9 +268,9 @@ export default function LeadsPage() {
       header: "Source / Campaign",
       cell: (lead) => (
         <div>
-          <span className="font-medium text-slate-700">{lead.source}</span>
+          <span className="font-bold text-[#101113]">{lead.source}</span>
           {lead.campaign && (
-            <p className="text-[10px] text-slate-400 truncate max-w-[140px]">
+            <p className="text-[10px] text-[#777D77] truncate max-w-[140px] font-medium">
               {lead.campaign}
             </p>
           )}
@@ -287,14 +282,14 @@ export default function LeadsPage() {
       header: "Priority",
       cell: (lead) => (
         <span
-          className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${
+          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider border ${
             lead.priority === "urgent"
-              ? "bg-rose-100 text-rose-800"
+              ? "bg-rose-50 text-rose-800 border-rose-300"
               : lead.priority === "high"
-              ? "bg-amber-100 text-amber-800"
+              ? "bg-amber-50 text-amber-900 border-amber-300"
               : lead.priority === "medium"
-              ? "bg-blue-100 text-blue-800"
-              : "bg-slate-100 text-slate-700"
+              ? "bg-[#B7FF3C] text-[#101113] border-[#101113]"
+              : "bg-[#F3F4F2] text-[#777D77] border-[#DCDDDA]"
           }`}
         >
           {lead.priority}
@@ -324,7 +319,7 @@ export default function LeadsPage() {
       header: "Deal Value",
       align: "right",
       cell: (lead) => (
-        <span className="font-bold text-slate-900 tabular-nums">
+        <span className="font-extrabold text-[#101113] tabular-nums">
           {formatCurrencyPKR(lead.deal_value || 0)}
         </span>
       ),
@@ -332,26 +327,28 @@ export default function LeadsPage() {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <PageHeader
         title="Lead Management"
-        description="Every Lead Deserves a Follow-Up. Central enquiry intake, duplicate detection, and rep assignment."
+        description="Every Lead Deserves a Follow-Up. Central enquiry intake, duplicate detection, and representative assignment."
         badge={
           isDemo ? (
-            <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-50 text-amber-800 border border-amber-200">
+            <span className="badge-dark text-xs uppercase tracking-wider">
               Demo Workspace Mode
             </span>
           ) : (
-            <StatusBadge label={`${leads.length} Enquiries`} variant="default" />
+            <span className="badge-lime text-xs uppercase tracking-wider">
+              {leads.length} Active Enquiries
+            </span>
           )
         }
       >
         <button
           type="button"
           onClick={() => setAddModalOpen(true)}
-          className="btn-base bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold shadow-xs h-9 px-3.5"
+          className="btn-base btn-primary text-xs font-black shadow-[0_3px_0_0_#101113]"
         >
-          <Plus className="w-4 h-4 mr-1" />
+          <Plus className="w-4 h-4 text-[#B7FF3C]" />
           <span>Add Lead</span>
         </button>
         <button
@@ -361,36 +358,36 @@ export default function LeadsPage() {
             setImportResult(null);
             setCsvModalOpen(true);
           }}
-          className="btn-base bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 text-xs font-semibold h-9 px-3.5"
+          className="btn-base btn-secondary text-xs font-bold border-2 border-[#101113]"
         >
-          <Upload className="w-3.5 h-3.5 mr-1" />
+          <Upload className="w-3.5 h-3.5 mr-1 text-[#101113]" />
           <span>Import CSV</span>
         </button>
         <button
           type="button"
           onClick={handleExportCSV}
-          className="btn-base bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 text-xs font-semibold h-9 px-3.5"
+          className="btn-base btn-secondary text-xs font-bold border-2 border-[#101113]"
         >
-          <Download className="w-3.5 h-3.5 mr-1" />
-          <span>Export</span>
+          <Download className="w-3.5 h-3.5 mr-1 text-[#101113]" />
+          <span>Export CSV</span>
         </button>
       </PageHeader>
 
       {/* Search and Multi-Criteria Filter Bar */}
-      <div className="flex flex-wrap items-center gap-2.5 p-3 rounded-xl bg-white border border-slate-200 text-xs">
+      <div className="flex flex-wrap items-center gap-3 p-4 rounded-3xl bg-white border-2 border-[#DCDDDA] shadow-[0_2px_0_0_#DCDDDA] text-xs">
         <SearchInput
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           onClear={() => setSearch("")}
           placeholder="Search by name, email, phone, or company..."
-          wrapperClassName="w-full sm:w-72"
+          wrapperClassName="w-full sm:w-80"
         />
 
-        <div className="flex flex-wrap items-center gap-2 flex-1">
+        <div className="flex flex-wrap items-center gap-2.5 flex-1">
           <select
             value={clientFilter}
             onChange={(e) => setClientFilter(e.target.value)}
-            className="input-base text-xs h-9 py-0 bg-slate-50"
+            className="input-base text-xs h-10 py-0 rounded-xl bg-[#F3F4F2] font-bold border border-[#DCDDDA]"
           >
             <option value="all">All Clients</option>
             {clients.map((c) => (
@@ -403,7 +400,7 @@ export default function LeadsPage() {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="input-base text-xs h-9 py-0 bg-slate-50"
+            className="input-base text-xs h-10 py-0 rounded-xl bg-[#F3F4F2] font-bold border border-[#DCDDDA]"
           >
             <option value="all">All Statuses</option>
             <option value="new">New</option>
@@ -418,7 +415,7 @@ export default function LeadsPage() {
           <select
             value={priorityFilter}
             onChange={(e) => setPriorityFilter(e.target.value)}
-            className="input-base text-xs h-9 py-0 bg-slate-50"
+            className="input-base text-xs h-10 py-0 rounded-xl bg-[#F3F4F2] font-bold border border-[#DCDDDA]"
           >
             <option value="all">All Priorities</option>
             <option value="urgent">Urgent</option>
@@ -437,7 +434,7 @@ export default function LeadsPage() {
               setStatusFilter("all");
               setPriorityFilter("all");
             }}
-            className="text-xs text-slate-500 hover:text-slate-800 font-semibold"
+            className="text-xs text-[#101113] hover:underline font-black cursor-pointer"
           >
             Reset Filters
           </button>
@@ -459,25 +456,25 @@ export default function LeadsPage() {
         />
       )}
 
-      {/* LEAD DETAIL DRAWER */}
+      {/* LEAD DETAIL DRAWER (High-contrast neo-minimalist style) */}
       {selectedLead && (
-        <div className="fixed inset-0 z-50 flex justify-end bg-slate-950/40 backdrop-blur-xs">
-          <div className="w-full max-w-lg bg-white h-full shadow-2xl flex flex-col justify-between overflow-y-auto animate-in slide-in-from-right duration-200">
+        <div className="fixed inset-0 z-50 flex justify-end bg-[#101113]/60 backdrop-blur-xs animate-in fade-in">
+          <div className="w-full max-w-lg bg-white h-full border-l-2 border-[#101113] shadow-2xl flex flex-col justify-between overflow-y-auto animate-in slide-in-from-right duration-200">
             <div>
-              <div className="flex items-center justify-between p-6 border-b border-slate-100">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 font-bold flex items-center justify-center text-sm">
+              <div className="flex items-center justify-between p-6 border-b-2 border-[#DCDDDA]">
+                <div className="flex items-center gap-3.5">
+                  <div className="w-11 h-11 rounded-2xl bg-[#17191C] text-[#B7FF3C] font-black flex items-center justify-center text-sm border-1.5 border-[#101113] shadow-[0_2px_0_0_#101113]">
                     {selectedLead.name.substring(0, 2).toUpperCase()}
                   </div>
                   <div>
-                    <h3 className="font-bold text-slate-900 text-base">{selectedLead.name}</h3>
-                    <p className="text-xs text-slate-400">{selectedLead.client?.name || "Client Workspace"}</p>
+                    <h3 className="font-black text-[#101113] text-lg">{selectedLead.name}</h3>
+                    <p className="text-xs text-[#777D77] font-semibold">{selectedLead.client?.name || "Client Workspace"}</p>
                   </div>
                 </div>
                 <button
                   type="button"
                   onClick={() => setSelectedLead(null)}
-                  className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100"
+                  className="p-2 rounded-xl text-[#777D77] hover:text-[#101113] hover:bg-[#F3F4F2] transition-colors"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -485,21 +482,21 @@ export default function LeadsPage() {
 
               <div className="p-6 space-y-6 text-xs">
                 {/* Contact information card */}
-                <div className="linear-card p-4 space-y-3 bg-slate-50/50">
-                  <h4 className="font-bold uppercase tracking-wider text-[10px] text-slate-500">
+                <div className="card-white p-5 space-y-3 bg-[#F3F4F2]">
+                  <h4 className="font-black uppercase tracking-wider text-[11px] text-[#101113]">
                     Contact & Campaign Details
                   </h4>
-                  <div className="space-y-2">
+                  <div className="space-y-2.5">
                     {selectedLead.phone && (
                       <div className="flex items-center justify-between">
-                        <span className="text-slate-500">WhatsApp / Phone:</span>
+                        <span className="text-[#777D77] font-medium">WhatsApp / Phone:</span>
                         <div className="flex items-center gap-2">
-                          <span className="font-semibold text-slate-900">{selectedLead.phone}</span>
+                          <span className="font-bold text-[#101113]">{selectedLead.phone}</span>
                           <a
                             href={`https://wa.me/${selectedLead.phone.replace(/[^0-9]/g, "")}`}
                             target="_blank"
                             rel="noreferrer"
-                            className="p-1 rounded bg-emerald-50 text-emerald-600 hover:bg-emerald-100"
+                            className="p-1.5 rounded-lg bg-[#B7FF3C] text-[#101113] hover:bg-[#A3EE28] border border-[#101113]"
                             title="Chat on WhatsApp"
                           >
                             <MessageSquare className="w-3.5 h-3.5" />
@@ -509,31 +506,31 @@ export default function LeadsPage() {
                     )}
                     {selectedLead.email && (
                       <div className="flex items-center justify-between">
-                        <span className="text-slate-500">Email:</span>
+                        <span className="text-[#777D77] font-medium">Email:</span>
                         <a
                           href={`mailto:${selectedLead.email}`}
-                          className="font-semibold text-blue-600 hover:underline"
+                          className="font-bold text-[#101113] hover:underline decoration-[#B7FF3C]"
                         >
                           {selectedLead.email}
                         </a>
                       </div>
                     )}
                     <div className="flex items-center justify-between">
-                      <span className="text-slate-500">Deal Value:</span>
-                      <span className="font-bold text-slate-900 tabular-nums">
+                      <span className="text-[#777D77] font-medium">Deal Value:</span>
+                      <span className="font-black text-[#101113] tabular-nums">
                         {formatCurrencyPKR(selectedLead.deal_value || 0)}
                       </span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-slate-500">Inbound Channel:</span>
-                      <span className="font-semibold text-slate-700">{selectedLead.source}</span>
+                      <span className="text-[#777D77] font-medium">Inbound Channel:</span>
+                      <span className="font-bold text-[#101113]">{selectedLead.source}</span>
                     </div>
                   </div>
                 </div>
 
                 {/* Status Switcher */}
                 <div className="space-y-2">
-                  <label className="font-semibold text-slate-700 block">Lead Pipeline Status</label>
+                  <label className="font-black text-[#101113] block">Lead Pipeline Status</label>
                   <select
                     value={selectedLead.status}
                     onChange={async (e) => {
@@ -542,7 +539,7 @@ export default function LeadsPage() {
                       setSelectedLead({ ...selectedLead, status: newStatus });
                       loadData();
                     }}
-                    className="input-base w-full bg-slate-50 text-xs font-semibold"
+                    className="input-base w-full bg-white text-xs font-bold border-1.5 border-[#101113]"
                   >
                     <option value="new">New Enquiry</option>
                     <option value="contacted">Contacted</option>
@@ -556,35 +553,35 @@ export default function LeadsPage() {
 
                 {/* Notes */}
                 {selectedLead.notes && (
-                  <div className="space-y-1.5">
-                    <label className="font-semibold text-slate-700 block">Recorded Notes</label>
-                    <div className="p-3 rounded-lg bg-slate-50 text-slate-700 leading-relaxed border border-slate-200">
+                  <div className="space-y-2">
+                    <label className="font-black text-[#101113] block">Recorded Notes</label>
+                    <div className="p-4 rounded-2xl bg-white text-[#202320] leading-relaxed border-2 border-[#DCDDDA] font-medium">
                       {selectedLead.notes}
                     </div>
                   </div>
                 )}
 
                 {/* AI Follow-up Recommendation Preview */}
-                <div className="p-4 rounded-xl bg-violet-50/60 border border-violet-100 space-y-2">
-                  <div className="flex items-center gap-1.5 font-bold text-violet-900">
-                    <Sparkles className="w-4 h-4 text-violet-600" />
+                <div className="card-charcoal p-5 space-y-2">
+                  <div className="flex items-center gap-2 font-black text-[#B7FF3C]">
+                    <Sparkles className="w-4 h-4" />
                     <span>Grounded AI Sales Suggestion</span>
                   </div>
-                  <p className="text-[11px] text-violet-800 leading-relaxed">
+                  <p className="text-[11px] text-[#DCDDDA] leading-relaxed font-medium">
                     Lead is in &quot;{selectedLead.status}&quot; stage with {selectedLead.source} origin. Draft an English or Urdu WhatsApp follow-up tailored to their enquiry history.
                   </p>
                 </div>
               </div>
             </div>
 
-            <div className="p-4 border-t border-slate-100 bg-slate-50 flex items-center justify-between">
-              <span className="text-[11px] text-slate-400">
+            <div className="p-5 border-t-2 border-[#DCDDDA] bg-[#F3F4F2] flex items-center justify-between">
+              <span className="text-[11px] text-[#777D77] font-semibold">
                 Created {new Date(selectedLead.created_at).toLocaleDateString()}
               </span>
               <button
                 type="button"
                 onClick={() => setSelectedLead(null)}
-                className="btn-base bg-white border border-slate-200 text-slate-700 text-xs font-semibold px-4 h-8"
+                className="btn-base btn-secondary text-xs font-bold px-4 h-9 border-2 border-[#101113]"
               >
                 Close Drawer
               </button>
@@ -595,27 +592,27 @@ export default function LeadsPage() {
 
       {/* CREATE LEAD MODAL */}
       {addModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/40 backdrop-blur-xs">
-          <div className="w-full max-w-lg linear-card p-6 bg-white shadow-xl space-y-5 animate-in fade-in">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
-                  <Plus className="w-4 h-4" />
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#101113]/60 backdrop-blur-xs">
+          <div className="w-full max-w-lg rounded-3xl border-2 border-[#101113] p-7 bg-white shadow-[0_10px_0_0_#101113] space-y-6 animate-in fade-in">
+            <div className="flex items-center justify-between pb-4 border-b-2 border-[#DCDDDA]">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-[#B7FF3C] text-[#101113] border-1.5 border-[#101113] flex items-center justify-center font-black">
+                  <Plus className="w-5 h-5" />
                 </div>
-                <h3 className="font-bold text-slate-900 text-sm">Add Inbound Enquiry</h3>
+                <h3 className="font-black text-[#101113] text-base">Add Inbound Enquiry</h3>
               </div>
               <button
                 type="button"
                 onClick={() => setAddModalOpen(false)}
-                className="p-1 rounded-md text-slate-400 hover:text-slate-600"
+                className="p-1.5 rounded-xl text-[#777D77] hover:text-[#101113] hover:bg-[#F3F4F2]"
               >
-                <X className="w-4 h-4" />
+                <X className="w-5 h-5" />
               </button>
             </div>
 
             {createWarning && (
-              <div className="p-3 rounded-lg bg-amber-50 border border-amber-200 text-amber-800 text-xs font-medium flex items-start gap-2">
-                <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+              <div className="p-3.5 rounded-xl bg-amber-50 border border-amber-300 text-amber-900 text-xs font-bold flex items-start gap-2">
+                <AlertTriangle className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
                 <p>{createWarning}</p>
               </div>
             )}
@@ -677,7 +674,7 @@ export default function LeadsPage() {
                   <select
                     value={newLead.source}
                     onChange={(e) => setNewLead({ ...newLead, source: e.target.value })}
-                    className="input-base w-full text-xs"
+                    className="input-base w-full text-xs font-bold"
                     disabled={creating}
                   >
                     <option value="Meta Ads">Meta Ads</option>
@@ -691,7 +688,7 @@ export default function LeadsPage() {
                   <select
                     value={newLead.priority}
                     onChange={(e) => setNewLead({ ...newLead, priority: e.target.value as any })}
-                    className="input-base w-full text-xs"
+                    className="input-base w-full text-xs font-bold"
                     disabled={creating}
                   >
                     <option value="urgent">Urgent</option>
@@ -706,7 +703,7 @@ export default function LeadsPage() {
                     value={newLead.dealValue || ""}
                     onChange={(e) => setNewLead({ ...newLead, dealValue: Number(e.target.value) })}
                     placeholder="250000"
-                    className="input-base w-full text-xs"
+                    className="input-base w-full text-xs font-bold"
                     disabled={creating}
                   />
                 </FormField>
@@ -718,24 +715,24 @@ export default function LeadsPage() {
                   value={newLead.notes}
                   onChange={(e) => setNewLead({ ...newLead, notes: e.target.value })}
                   placeholder="Specific requirements, quotation details, or discussion summary..."
-                  className="input-base w-full h-auto py-2 text-xs"
+                  className="w-full rounded-xl border-1.5 border-[#DCDDDA] p-3 text-xs text-[#202320] focus:border-[#101113] focus:ring-2 focus:ring-[#B7FF3C]/40 outline-none"
                   disabled={creating}
                 />
               </FormField>
 
-              <div className="flex items-center justify-end gap-2 pt-2">
+              <div className="flex items-center justify-end gap-3 pt-3">
                 <button
                   type="button"
                   onClick={() => setAddModalOpen(false)}
                   disabled={creating}
-                  className="btn-base bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 text-xs font-semibold px-4"
+                  className="btn-base btn-secondary text-xs font-bold px-4"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={creating}
-                  className="btn-base bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-4 shadow-xs"
+                  className="btn-base btn-primary text-xs font-black px-5 shadow-[0_3px_0_0_#101113]"
                 >
                   {creating ? "Saving..." : "Create Lead"}
                 </button>
@@ -747,33 +744,33 @@ export default function LeadsPage() {
 
       {/* CSV IMPORT MODAL */}
       {csvModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/40 backdrop-blur-xs">
-          <div className="w-full max-w-2xl linear-card p-6 bg-white shadow-xl space-y-5 animate-in fade-in">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
-                  <FileSpreadsheet className="w-4 h-4" />
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#101113]/60 backdrop-blur-xs">
+          <div className="w-full max-w-2xl rounded-3xl border-2 border-[#101113] p-7 bg-white shadow-[0_10px_0_0_#101113] space-y-6 animate-in fade-in">
+            <div className="flex items-center justify-between pb-4 border-b-2 border-[#DCDDDA]">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-[#B7FF3C] text-[#101113] border-1.5 border-[#101113] flex items-center justify-center font-black">
+                  <FileSpreadsheet className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-slate-900 text-sm">Import Inbound Leads via CSV</h3>
-                  <p className="text-[11px] text-slate-400">Map spreadsheet columns and validate rows before writing</p>
+                  <h3 className="font-black text-[#101113] text-base">Import Inbound Leads via CSV</h3>
+                  <p className="text-[11px] text-[#777D77] font-medium">Map spreadsheet columns and validate rows before writing</p>
                 </div>
               </div>
               <button
                 type="button"
                 onClick={() => setCsvModalOpen(false)}
-                className="p-1 rounded-md text-slate-400 hover:text-slate-600"
+                className="p-1.5 rounded-xl text-[#777D77] hover:text-[#101113] hover:bg-[#F3F4F2]"
               >
-                <X className="w-4 h-4" />
+                <X className="w-5 h-5" />
               </button>
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-5">
               <FormField label="Target Client Workspace" required>
                 <select
                   value={csvTargetClient}
                   onChange={(e) => setCsvTargetClient(e.target.value)}
-                  className="input-base w-full"
+                  className="input-base w-full font-bold"
                 >
                   {clients.map((c) => (
                     <option key={c.id} value={c.id}>
@@ -785,53 +782,53 @@ export default function LeadsPage() {
 
               {/* Upload Dropzone */}
               {csvPreviewRows.length === 0 ? (
-                <div className="border-2 border-dashed border-slate-200 rounded-xl p-8 text-center space-y-3 bg-slate-50/50">
-                  <Upload className="w-8 h-8 text-slate-400 mx-auto" />
+                <div className="border-2 border-dashed border-[#DCDDDA] rounded-3xl p-8 text-center space-y-3 bg-[#F3F4F2]/50">
+                  <Upload className="w-9 h-9 text-[#17191C] mx-auto" />
                   <div>
-                    <p className="text-xs font-semibold text-slate-800">
+                    <p className="text-xs font-black text-[#101113]">
                       Choose CSV file to parse
                     </p>
-                    <p className="text-[11px] text-slate-500 mt-0.5">
+                    <p className="text-[11px] text-[#777D77] mt-0.5 font-medium">
                       Columns expected: Name, Phone, Email, Company, Deal Value, Notes
                     </p>
                   </div>
                   <button
                     type="button"
                     onClick={handleSimulateCSVFile}
-                    className="btn-base bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-4 h-9 shadow-xs"
+                    className="btn-base btn-primary text-xs font-black px-5 shadow-[0_3px_0_0_#101113]"
                   >
                     Load Sample CSV Dataset
                   </button>
                 </div>
               ) : (
                 <div className="space-y-3">
-                  <div className="flex items-center justify-between text-xs font-semibold text-slate-700">
+                  <div className="flex items-center justify-between text-xs font-bold text-[#101113]">
                     <span>Parsed Rows Preview ({csvPreviewRows.length} records ready)</span>
                     <button
                       type="button"
                       onClick={() => setCsvPreviewRows([])}
-                      className="text-slate-400 hover:text-slate-700"
+                      className="text-[#777D77] hover:text-[#101113] underline font-bold"
                     >
                       Clear
                     </button>
                   </div>
-                  <div className="border border-slate-200 rounded-lg overflow-hidden max-h-48 overflow-y-auto">
+                  <div className="border-2 border-[#DCDDDA] rounded-2xl overflow-hidden max-h-48 overflow-y-auto">
                     <table className="w-full text-left text-xs border-collapse">
-                      <thead className="bg-slate-50 border-b border-slate-200 text-[11px] text-slate-500 font-semibold">
+                      <thead className="bg-[#F3F4F2] border-b border-[#DCDDDA] text-[11px] text-[#101113] font-black uppercase">
                         <tr>
-                          <th className="p-2">Name</th>
-                          <th className="p-2">Phone</th>
-                          <th className="p-2">Email</th>
-                          <th className="p-2 text-right">Value (PKR)</th>
+                          <th className="p-3">Name</th>
+                          <th className="p-3">Phone</th>
+                          <th className="p-3">Email</th>
+                          <th className="p-3 text-right">Value (PKR)</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-slate-100">
+                      <tbody className="divide-y divide-[#DCDDDA]">
                         {csvPreviewRows.map((row, i) => (
-                          <tr key={i} className="hover:bg-slate-50">
-                            <td className="p-2 font-semibold text-slate-900">{row.name}</td>
-                            <td className="p-2 text-slate-600">{row.phone}</td>
-                            <td className="p-2 text-slate-600">{row.email}</td>
-                            <td className="p-2 text-right tabular-nums font-semibold text-slate-800">
+                          <tr key={i} className="hover:bg-[#F3F4F2]/60">
+                            <td className="p-3 font-extrabold text-[#101113]">{row.name}</td>
+                            <td className="p-3 text-[#202320] font-medium">{row.phone}</td>
+                            <td className="p-3 text-[#202320] font-medium">{row.email}</td>
+                            <td className="p-3 text-right tabular-nums font-black text-[#101113]">
                               {formatCurrencyPKR(row.dealValue || 0)}
                             </td>
                           </tr>
@@ -841,20 +838,20 @@ export default function LeadsPage() {
                   </div>
 
                   {importResult && (
-                    <div className="p-3 rounded-lg bg-emerald-50 border border-emerald-200 text-xs text-emerald-800 space-y-1">
-                      <p className="font-semibold">
-                        Successfully imported {importResult.imported} records into target client workspace!
+                    <div className="p-4 rounded-2xl bg-[#F3FDE1] border-1.5 border-[#101113] text-xs text-[#101113] space-y-1 font-bold">
+                      <p>
+                        ✓ Successfully imported {importResult.imported} records into target client workspace!
                       </p>
                     </div>
                   )}
                 </div>
               )}
 
-              <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
+              <div className="flex items-center justify-end gap-3 pt-3 border-t-2 border-[#DCDDDA]">
                 <button
                   type="button"
                   onClick={() => setCsvModalOpen(false)}
-                  className="btn-base bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 text-xs font-semibold px-4"
+                  className="btn-base btn-secondary text-xs font-bold px-4"
                 >
                   Close
                 </button>
@@ -863,7 +860,7 @@ export default function LeadsPage() {
                     type="button"
                     onClick={handleConfirmCSVImport}
                     disabled={importing}
-                    className="btn-base bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold px-5 shadow-xs"
+                    className="btn-base btn-lime text-xs font-black px-6"
                   >
                     {importing ? "Importing..." : "Confirm & Import Leads"}
                   </button>

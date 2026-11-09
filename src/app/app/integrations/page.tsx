@@ -34,6 +34,7 @@ import {
   Info,
   ChevronRight,
   ShieldAlert,
+  X,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -117,17 +118,17 @@ export default function IntegrationsPage() {
   const getIntegrationIcon = (id: IntegrationId) => {
     switch (id) {
       case "csv_import":
-        return <FileSpreadsheet className="w-5 h-5 text-emerald-600" />;
+        return <FileSpreadsheet className="w-6 h-6 text-[#101113]" />;
       case "webhook_forms":
-        return <Webhook className="w-5 h-5 text-blue-600" />;
+        return <Webhook className="w-6 h-6 text-[#101113]" />;
       case "whatsapp_cloud":
-        return <MessageSquare className="w-5 h-5 text-emerald-600" />;
+        return <MessageSquare className="w-6 h-6 text-[#101113]" />;
       case "meta_lead_ads":
-        return <Share2 className="w-5 h-5 text-indigo-600" />;
+        return <Share2 className="w-6 h-6 text-[#101113]" />;
       case "google_sheets":
-        return <Table className="w-5 h-5 text-emerald-700" />;
+        return <Table className="w-6 h-6 text-[#101113]" />;
       case "smtp_email":
-        return <Mail className="w-5 h-5 text-violet-600" />;
+        return <Mail className="w-6 h-6 text-[#101113]" />;
     }
   };
 
@@ -137,17 +138,20 @@ export default function IntegrationsPage() {
       <PageHeader
         title="Integrations Centre"
         description="Reliable inbound lead capture, webhook signatures, and verified third-party communication channels."
+        badge={<span className="badge-lime text-[11px] font-bold">API Connectors</span>}
       />
 
       {/* Honest Status & Security Principles Banner */}
-      <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-xs flex items-start gap-3">
-        <ShieldCheck className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
-        <div className="text-xs text-slate-600 space-y-1">
-          <span className="font-semibold text-slate-800 block">
+      <div className="card-white p-5 bg-[#F3F4F2] flex items-start gap-3.5">
+        <div className="w-8 h-8 rounded-xl bg-[#17191C] text-[#B7FF3C] flex items-center justify-center shrink-0 border border-[#101113]">
+          <ShieldCheck className="w-4 h-4" />
+        </div>
+        <div className="text-xs text-[#101113] space-y-1">
+          <span className="font-black text-[#101113] uppercase tracking-wider block text-xs">
             Zero Mocked Claims & Verified Connection Model
           </span>
-          <p className="leading-relaxed">
-            LeadRescue AI marks third-party integrations as <strong>Connected</strong> only after real credentials, permissions, and validation handshakes succeed. Unconfigured integrations default strictly to <strong>Not Connected</strong> with setup guides rather than misleading buttons.
+          <p className="leading-relaxed font-medium text-[#777D77]">
+            LeadRescue AI marks third-party integrations as <strong className="text-[#101113]">Connected</strong> only after real credentials, permissions, and validation handshakes succeed. Unconfigured integrations default strictly to <strong className="text-[#101113]">Not Connected</strong> with setup guides rather than misleading buttons.
           </p>
         </div>
       </div>
@@ -155,44 +159,41 @@ export default function IntegrationsPage() {
       {isLoading ? (
         <LoadingState message="Loading integration catalog and active endpoints..." />
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {integrations.map((item) => (
             <div
               key={item.id}
-              className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs flex flex-col justify-between hover:border-slate-300 transition-all space-y-4"
+              className="card-white p-6 flex flex-col justify-between space-y-5"
             >
-              <div className="space-y-3">
-                <div className="flex items-start justify-between gap-2">
-                  <div className="flex items-center gap-2.5">
-                    <div className="p-2 bg-slate-50 border border-slate-100 rounded-lg">
-                      {getIntegrationIcon(item.id)}
-                    </div>
-                    <div>
-                      <h3 className="text-xs font-bold text-slate-900 leading-snug">{item.name}</h3>
-                      <span className="text-[10px] text-slate-400 font-medium uppercase tracking-wider">
-                        {item.category}
-                      </span>
-                    </div>
+              <div className="space-y-4">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="w-12 h-12 rounded-2xl bg-[#B7FF3C] text-[#101113] flex items-center justify-center shrink-0 border-2 border-[#101113]">
+                    {getIntegrationIcon(item.id)}
                   </div>
 
-                  <StatusBadge
-                    label={item.status === "connected" ? "CONNECTED" : "NOT CONNECTED"}
-                    variant={item.status === "connected" ? "success" : "neutral"}
-                    dot
-                  />
+                  <span className={item.status === "connected" ? "badge-lime text-[10px]" : "badge-dark text-[10px]"}>
+                    {item.status === "connected" ? "CONNECTED" : "NOT CONNECTED"}
+                  </span>
                 </div>
 
-                <p className="text-xs text-slate-600 leading-relaxed">{item.description}</p>
+                <div>
+                  <h3 className="text-sm font-black text-[#101113]">{item.name}</h3>
+                  <span className="text-[10px] text-[#777D77] font-bold uppercase tracking-wider">
+                    {item.category}
+                  </span>
+                </div>
+
+                <p className="text-xs text-[#777D77] leading-relaxed font-medium">{item.description}</p>
 
                 {/* Features Pill List */}
-                <div className="space-y-1 pt-1">
-                  <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block">
+                <div className="space-y-1.5 pt-1">
+                  <span className="text-[10px] font-black text-[#101113] uppercase tracking-wider block">
                     Capabilities:
                   </span>
-                  <ul className="text-[11px] text-slate-600 space-y-1">
+                  <ul className="text-xs text-[#101113] space-y-1 font-medium">
                     {item.features.slice(0, 2).map((feat, i) => (
-                      <li key={i} className="flex items-center gap-1.5">
-                        <Check className="w-3 h-3 text-emerald-600 shrink-0" />
+                      <li key={i} className="flex items-center gap-2">
+                        <div className="w-1.5 h-1.5 rounded-full bg-[#101113] shrink-0" />
                         <span className="truncate">{feat}</span>
                       </li>
                     ))}
@@ -201,11 +202,11 @@ export default function IntegrationsPage() {
               </div>
 
               {/* Action Buttons */}
-              <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
+              <div className="pt-4 border-t-2 border-[#DCDDDA]">
                 {item.id === "csv_import" ? (
                   <Link
                     href="/app/leads"
-                    className="w-full text-center py-2 px-3 text-xs font-semibold text-slate-700 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg transition-colors flex items-center justify-center gap-1.5"
+                    className="w-full btn-secondary text-xs py-2.5 px-3 flex items-center justify-center gap-1.5"
                   >
                     <span>Open CSV Importer</span>
                     <ChevronRight className="w-3.5 h-3.5" />
@@ -214,16 +215,16 @@ export default function IntegrationsPage() {
                   <button
                     type="button"
                     onClick={openWebhookModal}
-                    className="w-full text-center py-2 px-3 text-xs font-semibold text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-lg transition-colors flex items-center justify-center gap-1.5"
+                    className="w-full btn-lime text-xs py-2.5 px-3 flex items-center justify-center gap-1.5"
                   >
                     <Code className="w-3.5 h-3.5" />
-                    <span>View Webhook & Form Code</span>
+                    <span>View Webhook & Code</span>
                   </button>
                 ) : item.id === "whatsapp_cloud" ? (
                   <button
                     type="button"
                     onClick={() => setShowWhatsAppModal(true)}
-                    className="w-full text-center py-2 px-3 text-xs font-semibold text-slate-700 bg-white hover:bg-slate-50 border border-slate-200 rounded-lg transition-colors flex items-center justify-center gap-1.5"
+                    className="w-full btn-secondary text-xs py-2.5 px-3 flex items-center justify-center gap-1.5"
                   >
                     <span>Configure Meta Cloud API</span>
                     <ExternalLink className="w-3 h-3" />
@@ -235,7 +236,7 @@ export default function IntegrationsPage() {
                       setSelectedIntegration(item);
                       setShowConfigModal(true);
                     }}
-                    className="w-full text-center py-2 px-3 text-xs font-semibold text-slate-600 bg-white hover:bg-slate-50 border border-slate-200 rounded-lg transition-colors flex items-center justify-center gap-1.5"
+                    className="w-full btn-secondary text-xs py-2.5 px-3 flex items-center justify-center gap-1.5"
                   >
                     <span>Setup Credentials</span>
                     <ExternalLink className="w-3 h-3" />
@@ -249,26 +250,28 @@ export default function IntegrationsPage() {
 
       {/* Webhook & Embedded Form Drawer Modal */}
       {showWebhookModal && webhookData && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-2xs p-4">
-          <div className="bg-white rounded-xl shadow-xl max-w-2xl w-full p-6 space-y-4 border border-slate-200 max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4">
+          <div className="card-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 space-y-5 border-2 border-[#101113] shadow-2xl max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between pb-3 border-b-2 border-[#DCDDDA]">
               <div className="flex items-center gap-2">
-                <Webhook className="w-4 h-4 text-blue-600" />
-                <h3 className="text-sm font-bold text-slate-900">Inbound Webhook & Form Endpoint</h3>
+                <Webhook className="w-5 h-5 text-[#101113]" />
+                <h3 className="text-sm font-black text-[#101113] uppercase tracking-wider">
+                  Inbound Webhook & Form Endpoint
+                </h3>
               </div>
               <button
                 type="button"
                 onClick={() => setShowWebhookModal(false)}
-                className="text-slate-400 hover:text-slate-600 text-xs"
+                className="w-8 h-8 rounded-full hover:bg-[#F3F4F2] flex items-center justify-center text-[#101113] font-bold"
               >
-                ✕
+                <X className="w-4 h-4" />
               </button>
             </div>
 
             <div className="space-y-4 text-xs">
               {/* Endpoint URL */}
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                <label className="block text-xs font-black uppercase tracking-wider text-[#101113] mb-1.5">
                   Webhook Endpoint (POST)
                 </label>
                 <div className="flex items-center gap-2">
@@ -276,12 +279,12 @@ export default function IntegrationsPage() {
                     type="text"
                     readOnly
                     value={webhookData.endpointUrl}
-                    className="w-full text-xs font-mono bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-slate-800 focus:outline-none"
+                    className="w-full text-xs font-mono bg-[#F3F4F2] border-2 border-[#101113] rounded-xl px-3.5 py-2.5 text-[#101113] font-bold focus:outline-none"
                   />
                   <button
                     type="button"
                     onClick={() => copyText("url", webhookData.endpointUrl)}
-                    className="px-3 py-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-medium rounded-lg shrink-0 flex items-center gap-1 shadow-2xs"
+                    className="btn-secondary text-xs px-4 py-2.5 shrink-0 flex items-center gap-1.5"
                   >
                     {copiedKey === "url" ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
                     <span>{copiedKey === "url" ? "Copied" : "Copy"}</span>
@@ -291,7 +294,7 @@ export default function IntegrationsPage() {
 
               {/* Signing Secret */}
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                <label className="block text-xs font-black uppercase tracking-wider text-[#101113] mb-1.5">
                   HMAC SHA-256 Signing Secret
                 </label>
                 <div className="flex items-center gap-2">
@@ -299,12 +302,12 @@ export default function IntegrationsPage() {
                     type={revealSecret ? "text" : "password"}
                     readOnly
                     value={webhookData.signingSecret}
-                    className="w-full text-xs font-mono bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-slate-800 focus:outline-none"
+                    className="w-full text-xs font-mono bg-[#F3F4F2] border-2 border-[#101113] rounded-xl px-3.5 py-2.5 text-[#101113] font-bold focus:outline-none"
                   />
                   <button
                     type="button"
                     onClick={() => setRevealSecret(!revealSecret)}
-                    className="p-2 border border-slate-200 hover:bg-slate-50 rounded-lg text-slate-500"
+                    className="p-2.5 border-2 border-[#101113] bg-white hover:bg-[#F3F4F2] rounded-xl text-[#101113]"
                     title={revealSecret ? "Hide secret" : "Reveal secret"}
                   >
                     {revealSecret ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
@@ -312,22 +315,22 @@ export default function IntegrationsPage() {
                   <button
                     type="button"
                     onClick={() => copyText("secret", webhookData.signingSecret)}
-                    className="px-3 py-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-medium rounded-lg shrink-0 flex items-center gap-1 shadow-2xs"
+                    className="btn-secondary text-xs px-4 py-2.5 shrink-0 flex items-center gap-1.5"
                   >
                     {copiedKey === "secret" ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
                     <span>{copiedKey === "secret" ? "Copied" : "Copy"}</span>
                   </button>
                 </div>
-                <p className="text-[11px] text-slate-500 mt-1">
-                  Pass this signature in header <code>x-leadrescue-signature</code>. Requests with duplicate <code>idempotency-key</code> headers will not create duplicate leads.
+                <p className="text-[11px] text-[#777D77] font-medium mt-1">
+                  Pass signature in header <code>x-leadrescue-signature</code>. Requests with duplicate <code>idempotency-key</code> headers will not create duplicate leads.
                 </p>
               </div>
 
               {/* Self-Test Ping Section */}
-              <div className="bg-slate-50 border border-slate-200 rounded-lg p-3.5 flex items-center justify-between gap-4">
+              <div className="card-white p-4 bg-[#F3F4F2] flex items-center justify-between gap-4">
                 <div className="space-y-0.5">
-                  <span className="font-semibold text-slate-800 text-xs block">Dispatch Self-Test Ping</span>
-                  <p className="text-[11px] text-slate-500">
+                  <span className="font-black text-[#101113] text-xs uppercase tracking-wider block">Dispatch Self-Test Ping</span>
+                  <p className="text-[11px] text-[#777D77] font-medium">
                     Sends a verified test payload to validate your endpoint handling and signature computation.
                   </p>
                 </div>
@@ -336,7 +339,7 @@ export default function IntegrationsPage() {
                   type="button"
                   disabled={isTestingWebhook}
                   onClick={handleTestWebhook}
-                  className="px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-300 text-white font-semibold rounded-lg text-xs shadow-2xs transition-colors shrink-0 flex items-center gap-1.5"
+                  className="btn-primary text-xs px-4 py-2 shrink-0 flex items-center gap-1.5 disabled:opacity-50"
                 >
                   <Send className="w-3 h-3" />
                   <span>{isTestingWebhook ? "Pinging..." : "Test Ping"}</span>
@@ -345,16 +348,16 @@ export default function IntegrationsPage() {
 
               {testResult && (
                 <div
-                  className={`p-3 rounded-lg border text-xs flex items-center gap-2 ${
+                  className={`p-3.5 rounded-2xl border-2 text-xs flex items-center gap-2 font-bold ${
                     testResult.success
-                      ? "bg-emerald-50 border-emerald-200 text-emerald-800"
-                      : "bg-rose-50 border-rose-200 text-rose-800"
+                      ? "bg-emerald-50 border-emerald-500 text-emerald-900"
+                      : "bg-red-50 border-red-500 text-red-900"
                   }`}
                 >
                   {testResult.success ? (
                     <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
                   ) : (
-                    <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+                    <AlertCircle className="w-4 h-4 text-red-600 shrink-0" />
                   )}
                   <span>{testResult.message}</span>
                 </div>
@@ -362,27 +365,31 @@ export default function IntegrationsPage() {
 
               {/* Code Snippets */}
               <div className="space-y-2">
-                <span className="font-semibold text-slate-700 block">Sample cURL Command:</span>
-                <pre className="p-3 bg-slate-900 text-slate-100 rounded-lg font-mono text-[11px] overflow-x-auto leading-relaxed">
+                <span className="font-black uppercase tracking-wider text-[#101113] block text-[11px]">
+                  Sample cURL Command:
+                </span>
+                <pre className="p-4 bg-[#17191C] text-[#B7FF3C] rounded-2xl border-2 border-[#101113] font-mono text-[11px] overflow-x-auto leading-relaxed">
                   {webhookData.sampleCurl}
                 </pre>
               </div>
 
               <div className="space-y-2">
-                <span className="font-semibold text-slate-700 block">Embeddable HTML Lead Form Snippet:</span>
-                <pre className="p-3 bg-slate-900 text-slate-100 rounded-lg font-mono text-[11px] overflow-x-auto leading-relaxed">
+                <span className="font-black uppercase tracking-wider text-[#101113] block text-[11px]">
+                  Embeddable HTML Lead Form Snippet:
+                </span>
+                <pre className="p-4 bg-[#17191C] text-[#B7FF3C] rounded-2xl border-2 border-[#101113] font-mono text-[11px] overflow-x-auto leading-relaxed">
                   {webhookData.sampleHtml}
                 </pre>
               </div>
             </div>
 
-            <div className="flex justify-end pt-2 border-t border-slate-100">
+            <div className="flex justify-end pt-3 border-t-2 border-[#DCDDDA]">
               <button
                 type="button"
                 onClick={() => setShowWebhookModal(false)}
-                className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-lg text-xs transition-colors"
+                className="btn-primary text-xs px-5 py-2.5"
               >
-                Close
+                Close Window
               </button>
             </div>
           </div>
@@ -391,35 +398,37 @@ export default function IntegrationsPage() {
 
       {/* Official WhatsApp Business API Guidance Modal */}
       {showWhatsAppModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-2xs p-4">
-          <div className="bg-white rounded-xl shadow-xl max-w-lg w-full p-6 space-y-4 border border-slate-200">
-            <div className="flex items-center justify-between pb-2 border-b border-slate-100">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4">
+          <div className="card-white rounded-3xl max-w-lg w-full p-6 sm:p-8 space-y-5 border-2 border-[#101113] shadow-2xl">
+            <div className="flex items-center justify-between pb-3 border-b-2 border-[#DCDDDA]">
               <div className="flex items-center gap-2">
-                <MessageSquare className="w-4 h-4 text-emerald-600" />
-                <h3 className="text-sm font-bold text-slate-900">Official WhatsApp Cloud API Setup</h3>
+                <MessageSquare className="w-5 h-5 text-[#101113]" />
+                <h3 className="text-sm font-black text-[#101113] uppercase tracking-wider">
+                  Official WhatsApp Cloud API
+                </h3>
               </div>
               <button
                 type="button"
                 onClick={() => setShowWhatsAppModal(false)}
-                className="text-slate-400 hover:text-slate-600 text-xs"
+                className="w-8 h-8 rounded-full hover:bg-[#F3F4F2] flex items-center justify-center text-[#101113] font-bold"
               >
-                ✕
+                <X className="w-4 h-4" />
               </button>
             </div>
 
-            <div className="space-y-3 text-xs leading-relaxed text-slate-700">
-              <div className="bg-rose-50 border border-rose-200 text-rose-900 rounded-lg p-3 text-xs flex items-start gap-2">
-                <ShieldAlert className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
-                <span>
-                  <strong>Strict Policy:</strong> LeadRescue AI strictly avoids unofficial browser scrapers or unapproved headless WhatsApp sessions, which lead to permanent Meta number bans.
+            <div className="space-y-4 text-xs leading-relaxed text-[#101113]">
+              <div className="bg-red-50 border-2 border-red-500 text-red-950 rounded-2xl p-4 text-xs flex items-start gap-2.5">
+                <ShieldAlert className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
+                <span className="font-medium">
+                  <strong className="font-bold">Strict Policy:</strong> LeadRescue AI strictly avoids unofficial browser scrapers or unapproved headless WhatsApp sessions, which lead to permanent Meta number bans.
                 </span>
               </div>
 
-              <p>
-                To enable automated outbound messaging, follow the official Meta Developer onboarding:
+              <p className="font-medium text-[#777D77]">
+                To enable automated outbound messaging, complete the official Meta Developer onboarding:
               </p>
 
-              <ol className="list-decimal list-inside space-y-2 text-slate-600">
+              <ol className="list-decimal list-inside space-y-2 text-[#101113] font-medium">
                 <li>
                   <strong>Meta Business Manager:</strong> Complete Business Verification in Meta Business Suite.
                 </li>
@@ -434,18 +443,18 @@ export default function IntegrationsPage() {
                 </li>
               </ol>
 
-              <div className="bg-slate-50 p-3 rounded-lg border border-slate-100 text-[11px] text-slate-500">
+              <div className="bg-[#F3F4F2] p-4 rounded-2xl border-2 border-[#101113] text-[11px] text-[#101113] font-medium">
                 <em>Until credentials are provided, sales representatives use the built-in click-to-chat review launch modal (`https://wa.me/`) with zero ban risk.</em>
               </div>
             </div>
 
-            <div className="flex justify-end pt-2 border-t border-slate-100">
+            <div className="flex justify-end pt-3 border-t-2 border-[#DCDDDA]">
               <button
                 type="button"
                 onClick={() => setShowWhatsAppModal(false)}
-                className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-lg text-xs transition-colors"
+                className="btn-primary text-xs px-5 py-2.5"
               >
-                Close
+                Close Guidance
               </button>
             </div>
           </div>
@@ -454,41 +463,43 @@ export default function IntegrationsPage() {
 
       {/* Generic Setup Requirements Modal */}
       {showConfigModal && selectedIntegration && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-2xs p-4">
-          <div className="bg-white rounded-xl shadow-xl max-w-md w-full p-6 space-y-4 border border-slate-200">
-            <div className="flex items-center justify-between pb-2 border-b border-slate-100">
-              <h3 className="text-sm font-bold text-slate-900">{selectedIntegration.name}</h3>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4">
+          <div className="card-white rounded-3xl max-w-md w-full p-6 sm:p-8 space-y-5 border-2 border-[#101113] shadow-2xl">
+            <div className="flex items-center justify-between pb-3 border-b-2 border-[#DCDDDA]">
+              <h3 className="text-sm font-black text-[#101113] uppercase tracking-wider">{selectedIntegration.name}</h3>
               <button
                 type="button"
                 onClick={() => setShowConfigModal(false)}
-                className="text-slate-400 hover:text-slate-600 text-xs"
+                className="w-8 h-8 rounded-full hover:bg-[#F3F4F2] flex items-center justify-center text-[#101113] font-bold"
               >
-                ✕
+                <X className="w-4 h-4" />
               </button>
             </div>
 
-            <div className="space-y-3 text-xs text-slate-600">
+            <div className="space-y-4 text-xs text-[#777D77] font-medium">
               <p>{selectedIntegration.description}</p>
 
               <div>
-                <span className="font-semibold text-slate-800 block mb-1.5">Required Credentials to Connect:</span>
-                <ul className="space-y-1 list-disc list-inside text-slate-700">
+                <span className="font-black text-[#101113] uppercase text-[10px] tracking-wider block mb-2">
+                  Required Credentials to Connect:
+                </span>
+                <ul className="space-y-1.5 list-disc list-inside text-[#101113]">
                   {selectedIntegration.setupRequirements.map((req, i) => (
                     <li key={i}>{req}</li>
                   ))}
                 </ul>
               </div>
 
-              <div className="bg-amber-50 border border-amber-200 text-amber-900 rounded-lg p-3 text-[11px]">
-                <strong>Configuration Note:</strong> Provide these credentials in your deployment environment variables (see <code>.env.example</code>). This service will switch to <strong>Connected</strong> once validated.
+              <div className="bg-[#F3F4F2] border-2 border-[#101113] text-[#101113] rounded-2xl p-4 text-[11px]">
+                <strong className="font-bold">Configuration Note:</strong> Provide these credentials in your deployment environment variables (see <code>.env.example</code>). This service will switch to <strong>Connected</strong> once validated.
               </div>
             </div>
 
-            <div className="flex justify-end pt-2 border-t border-slate-100">
+            <div className="flex justify-end pt-3 border-t-2 border-[#DCDDDA]">
               <button
                 type="button"
                 onClick={() => setShowConfigModal(false)}
-                className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-lg text-xs transition-colors"
+                className="btn-primary text-xs px-5 py-2.5"
               >
                 Close
               </button>

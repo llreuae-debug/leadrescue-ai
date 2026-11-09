@@ -13,12 +13,10 @@ import { FormField } from "@/components/ui/FormField";
 import {
   Building2,
   Plus,
-  Users,
-  Briefcase,
   ChevronRight,
-  TrendingUp,
   X,
   ShieldCheck,
+  ArrowRight,
 } from "lucide-react";
 
 export default function ClientsPage() {
@@ -87,41 +85,43 @@ export default function ClientsPage() {
   );
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <PageHeader
         title="Client Workspaces"
-        description="Organise client accounts, manage assigned representatives, and isolate lead pipelines per brand."
+        description="Organise client brands, manage assigned representatives, and isolate lead pipelines per client."
         badge={
           isDemo ? (
-            <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-50 text-amber-800 border border-amber-200">
+            <span className="badge-dark text-xs uppercase tracking-wider">
               Demo Workspace Mode
             </span>
           ) : (
-            <StatusBadge label={`${clients.length} Active Workspaces`} variant="success" />
+            <span className="badge-lime text-xs uppercase tracking-wider">
+              {clients.length} Active Workspaces
+            </span>
           )
         }
       >
         <button
           type="button"
           onClick={() => setModalOpen(true)}
-          className="btn-base bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold shadow-xs h-9 px-4"
+          className="btn-base btn-primary text-xs font-black shadow-[0_3px_0_0_#101113]"
         >
-          <Plus className="w-4 h-4 mr-1" />
+          <Plus className="w-4 h-4 text-[#B7FF3C]" />
           <span>Add Client Workspace</span>
         </button>
       </PageHeader>
 
-      {/* Search and Filters */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+      {/* Search and Filters Strip */}
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 rounded-3xl bg-white border-2 border-[#DCDDDA] shadow-[0_2px_0_0_#DCDDDA]">
         <SearchInput
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           onClear={() => setSearch("")}
           placeholder="Search client by brand or industry..."
-          wrapperClassName="sm:w-80"
+          wrapperClassName="w-full sm:w-80"
         />
-        <div className="text-xs text-slate-500">
-          Showing <strong className="text-slate-900 font-semibold">{filteredClients.length}</strong> of {clients.length} clients
+        <div className="text-xs text-[#777D77] font-semibold">
+          Showing <strong className="text-[#101113] font-bold">{filteredClients.length}</strong> of {clients.length} client accounts
         </div>
       </div>
 
@@ -146,24 +146,24 @@ export default function ClientsPage() {
           }}
         />
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredClients.map((client) => (
             <Link
               key={client.id}
               href={`/app/clients/${client.id}`}
-              className="linear-card p-5 flex flex-col justify-between hover:border-slate-300 hover:shadow-md transition-all group"
+              className="p-6 rounded-3xl border-2 border-[#101113] bg-white flex flex-col justify-between hover:bg-[#F3FDE1] shadow-[0_4px_0_0_#101113] hover:shadow-[0_6px_0_0_#101113] transition-all group"
             >
               <div>
                 <div className="flex items-start justify-between gap-3">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 font-bold flex items-center justify-center text-sm border border-blue-100 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                  <div className="flex items-center gap-3.5">
+                    <div className="w-12 h-12 rounded-2xl bg-[#17191C] text-[#B7FF3C] font-black flex items-center justify-center text-sm border-1.5 border-[#101113] shadow-[0_2px_0_0_#101113] group-hover:scale-105 transition-transform">
                       {client.name.substring(0, 2).toUpperCase()}
                     </div>
                     <div>
-                      <h3 className="font-bold text-slate-900 text-sm group-hover:text-blue-600 transition-colors">
+                      <h3 className="font-black text-[#101113] text-base group-hover:underline decoration-[#B7FF3C] decoration-2">
                         {client.name}
                       </h3>
-                      <p className="text-[11px] text-slate-500">{client.industry}</p>
+                      <p className="text-xs text-[#777D77] font-semibold">{client.industry}</p>
                     </div>
                   </div>
                   <StatusBadge
@@ -172,35 +172,35 @@ export default function ClientsPage() {
                   />
                 </div>
 
-                <div className="grid grid-cols-3 gap-2 mt-5 py-3 border-y border-slate-100 text-center">
+                <div className="grid grid-cols-3 gap-2 mt-6 py-4 border-y-2 border-[#DCDDDA] text-center bg-[#F3F4F2] rounded-2xl">
                   <div>
-                    <span className="text-[10px] text-slate-400 uppercase font-semibold">Total</span>
-                    <p className="text-base font-bold text-slate-900 tabular-nums">
+                    <span className="text-[10px] text-[#777D77] uppercase font-black">Total</span>
+                    <p className="text-lg font-black text-[#101113] tabular-nums mt-0.5">
                       {client.totalLeads}
                     </p>
                   </div>
                   <div>
-                    <span className="text-[10px] text-slate-400 uppercase font-semibold">Active</span>
-                    <p className="text-base font-bold text-blue-600 tabular-nums">
+                    <span className="text-[10px] text-[#777D77] uppercase font-black">Active</span>
+                    <p className="text-lg font-black text-[#101113] tabular-nums mt-0.5">
                       {client.activeLeads}
                     </p>
                   </div>
                   <div>
-                    <span className="text-[10px] text-slate-400 uppercase font-semibold">Won</span>
-                    <p className="text-base font-bold text-emerald-600 tabular-nums">
+                    <span className="text-[10px] text-[#777D77] uppercase font-black">Won</span>
+                    <p className="text-lg font-black text-emerald-700 tabular-nums mt-0.5">
                       {client.wonOpportunities}
                     </p>
                   </div>
                 </div>
               </div>
 
-              <div className="mt-4 pt-2 flex items-center justify-between text-xs text-slate-500">
-                <span className="truncate">
-                  Manager: <strong className="text-slate-700 font-medium">{client.account_manager?.full_name || "Unassigned"}</strong>
+              <div className="mt-5 pt-2 flex items-center justify-between text-xs text-[#777D77]">
+                <span className="truncate font-semibold">
+                  Manager: <strong className="text-[#101113] font-bold">{client.account_manager?.full_name || "Unassigned"}</strong>
                 </span>
-                <span className="text-blue-600 font-semibold group-hover:translate-x-0.5 transition-transform flex items-center">
-                  <span>Open</span>
-                  <ChevronRight className="w-3.5 h-3.5" />
+                <span className="text-[#101113] font-black group-hover:translate-x-1 transition-transform flex items-center gap-1">
+                  <span>Open Cockpit</span>
+                  <ChevronRight className="w-4 h-4 text-[#101113]" />
                 </span>
               </div>
             </Link>
@@ -210,26 +210,26 @@ export default function ClientsPage() {
 
       {/* Add Client Modal */}
       {modalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/40 backdrop-blur-xs">
-          <div className="w-full max-w-md linear-card p-6 bg-white shadow-xl space-y-5 animate-in fade-in">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
-                  <Building2 className="w-4 h-4" />
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#101113]/60 backdrop-blur-xs">
+          <div className="w-full max-w-md rounded-3xl border-2 border-[#101113] p-7 bg-white shadow-[0_10px_0_0_#101113] space-y-6 animate-in fade-in">
+            <div className="flex items-center justify-between pb-4 border-b-2 border-[#DCDDDA]">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-[#B7FF3C] text-[#101113] border-1.5 border-[#101113] flex items-center justify-center font-black">
+                  <Building2 className="w-5 h-5" />
                 </div>
-                <h3 className="font-bold text-slate-900 text-sm">Add Client Workspace</h3>
+                <h3 className="font-black text-[#101113] text-base">Add Client Workspace</h3>
               </div>
               <button
                 type="button"
                 onClick={() => setModalOpen(false)}
-                className="p-1 rounded-md text-slate-400 hover:text-slate-600"
+                className="p-1.5 rounded-xl text-[#777D77] hover:text-[#101113] hover:bg-[#F3F4F2]"
               >
-                <X className="w-4 h-4" />
+                <X className="w-5 h-5" />
               </button>
             </div>
 
             {createError && (
-              <div className="p-3 rounded-lg bg-rose-50 text-rose-700 text-xs font-medium">
+              <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-300 text-rose-800 text-xs font-bold">
                 {createError}
               </div>
             )}
@@ -242,7 +242,7 @@ export default function ClientsPage() {
                   value={newClientName}
                   onChange={(e) => setNewClientName(e.target.value)}
                   placeholder="e.g. Apex Retailers"
-                  className="input-base w-full"
+                  className="input-base w-full font-bold"
                   disabled={creating}
                 />
               </FormField>
@@ -251,7 +251,7 @@ export default function ClientsPage() {
                 <select
                   value={newClientIndustry}
                   onChange={(e) => setNewClientIndustry(e.target.value)}
-                  className="input-base w-full"
+                  className="input-base w-full font-bold"
                   disabled={creating}
                 >
                   <option value="E-commerce & Fashion">E-commerce & Fashion</option>
@@ -264,26 +264,26 @@ export default function ClientsPage() {
                 </select>
               </FormField>
 
-              <div className="p-3 rounded-lg bg-slate-50 border border-slate-200 text-[11px] text-slate-600 flex items-start gap-2">
+              <div className="p-3.5 rounded-2xl bg-[#F3F4F2] border border-[#DCDDDA] text-xs text-[#202320] flex items-start gap-2.5 font-medium">
                 <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
                 <span>
                   All leads, custom pipeline stages, and follow-up SLAs will be strictly isolated to this client workspace.
                 </span>
               </div>
 
-              <div className="flex items-center justify-end gap-2 pt-2">
+              <div className="flex items-center justify-end gap-3 pt-3 border-t-2 border-[#DCDDDA]">
                 <button
                   type="button"
                   onClick={() => setModalOpen(false)}
                   disabled={creating}
-                  className="btn-base bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 text-xs font-semibold px-4"
+                  className="btn-base btn-secondary text-xs font-bold px-4"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={creating}
-                  className="btn-base bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-4 shadow-xs"
+                  className="btn-base btn-primary text-xs font-black px-5 shadow-[0_3px_0_0_#101113]"
                 >
                   {creating ? "Creating..." : "Create Client"}
                 </button>

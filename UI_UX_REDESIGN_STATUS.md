@@ -1,14 +1,14 @@
 # LeadRescue AI — UI/UX Redesign Live Status
 
 **Last Updated:** 2026-11-10  
-**Current Phase:** Phase 4 Completed (Public Marketing Website: 7 / 7 Routes) — Ready for Phase 5 (Agency Workspace Application)  
+**Current Phase:** Phase 5 Completed (Agency Workspace Application: 13 / 13 Routes & Shells) — Ready for Phase 6 (Client Portal)  
 **Visual Style:** Creative Agency Neo-Minimalism ("Positivus" Aesthetic)  
 **Primary Accent:** Electric Lime (`#B7FF3C`)  
 **Contrast Surfaces:** Deep Charcoal (`#17191C`) & Almost Black (`#101113`)  
 
 ---
 
-## 1. Route Redesign Progress Tracker (8 / 37 Complete)
+## 1. Route Redesign Progress Tracker (21 / 37 Complete)
 
 ### Public Website (7 / 7 Complete)
 - [x] `/` (Homepage — Master Visual Reference: 14 sections, Positivus layout, asymmetric cards, accordion process, dark testimonials slider, pricing, FAQ)
@@ -19,27 +19,27 @@
 - [x] `/privacy` (Privacy Policy — Clean legal layout, structured sections, data protection badges)
 - [x] `/terms` (Terms of Service — Clear SLA terms, manual bank transfer clause, acceptable use policy)
 
+### Agency Workspace Application (13 / 13 Complete)
+- [x] `AppShell` (`src/components/shell/AppShell.tsx`, `AppSidebar.tsx`, `AppHeader.tsx` - Deep charcoal sidebar `#17191C` with lime pills, clean white header, dark mobile drawer)
+- [x] `/app/dashboard` (KPI Cards in Tri-tone styles, time-range pills, Urgent WhatsApp actions with phone checks, AI recommendations)
+- [x] `/app/clients` (Client Workspace directory, health badges, isolation indicators, Add Client modal)
+- [x] `/app/clients/[clientId]` (Dedicated Client Cockpit with 5 neo-minimalist tabs: Overview, Leads, Pipeline, Reports, Settings)
+- [x] `/app/leads` (Filter bar, circular initial badges, detail drawer with WhatsApp launch, CSV import modal, Add Lead modal)
+- [x] `/app/pipeline` (5-column Kanban with `rounded-3xl` columns, drag-and-drop cards, list view toggle, loss reason dialog)
+- [x] `/app/follow-ups` (5 task tabs, overdue badges, hover cards, grounded WhatsApp modal with copy & launch)
+- [x] `/app/ai-assistant` (Studio with Electric Lime quota meter, lead context inspector, language/tone buttons, prompt chips, response card)
+- [x] `/app/reports` (Executive SLA analytics, Tri-tone KPI cards, Inbound Channel Attribution table, Lost Reasons bar meters, Client Comparison table)
+- [x] `/app/team` (Agency team directory, role-permission matrix, invite member modal, role change modal, security audit log)
+- [x] `/app/integrations` (6 connector cards, verified badges, Webhook modal with cURL/HTML snippets, WhatsApp Cloud API guidance modal)
+- [x] `/app/billing` (Electric Lime subscription hero card, Pakistan IBFT details card, usage meters, manual payment proof modal, receipts)
+- [x] `/app/settings` (Agency workspace profile, regional & PKR timezone preferences, notification SLA rules, API tokens & keys)
+
 ### Authentication & Onboarding (0 / 5)
 - [ ] `/login`
 - [ ] `/signup`
 - [ ] `/forgot-password`
 - [ ] `/reset-password`
 - [ ] `/app/onboarding`
-
-### Agency Workspace Application (0 / 13)
-- [ ] `AppShell` (Deep charcoal sidebar `#17191C` with lime pills, clean white header)
-- [ ] `/app/dashboard`
-- [ ] `/app/clients`
-- [ ] `/app/clients/[clientId]`
-- [ ] `/app/leads`
-- [ ] `/app/pipeline`
-- [ ] `/app/follow-ups`
-- [ ] `/app/ai-assistant`
-- [ ] `/app/reports`
-- [ ] `/app/team`
-- [ ] `/app/integrations`
-- [ ] `/app/billing`
-- [ ] `/app/settings`
 
 ### Client Portal (0 / 3)
 - [ ] `/portal/dashboard`
@@ -59,12 +59,18 @@
 
 ---
 
-## 2. Key Highlights Delivered in Phase 4
-1. **`/features`**: Converted all 6 agency core capabilities to the Tri-Tone card archetypes (White, Electric Lime, Charcoal) with bold category pills and 2-column capability checklists.
-2. **`/pricing`**: Redesigned 3-tier cards featuring Pakistani Rupees (PKR), "Most Popular" dark contrast highlight, full matrix table across 3 capability tiers, and local IBFT payment callout.
-3. **`/about`**: Implemented the editorial manifesto alongside a dedicated 4-person leadership team grid matching the reference image's circular badges and lime avatar blocks.
-4. **`/contact`**: Re-architected as an asymmetric split layout: Deep Charcoal headquarters block on the left with regional contact channels, paired with a white enquiry form and instant feedback.
-5. **`/privacy` & `/terms`**: Formatted with high-contrast editorial typography, badge markers, structured section outlines, and readable font sizing.
+## 2. Key Highlights Delivered in Phase 5
+1. **`AppShell` & Navigation**: Deep Charcoal `#17191C` sidebar with signature Electric Lime (`#B7FF3C`) active indicator pills and bold typography.
+2. **`/app/dashboard`**: Tri-tone KPI stat cards (`.card-white`, `.card-lime`, `.card-charcoal`), rapid WhatsApp action buttons for overdue leads, and grounded AI insights.
+3. **`/app/clients` & `/app/clients/[clientId]`**: Neo-minimalist client cards with health indicators and a complete tabbed client cockpit.
+4. **`/app/leads` & `/app/pipeline`**: Filter bar, circular initial avatar badges, high-contrast detail drawer, and drag-and-drop 5-stage Kanban board.
+5. **`/app/follow-ups`**: Overdue tracking with 1-click WhatsApp grounded draft modal.
+6. **`/app/ai-assistant`**: Grounded studio featuring quota meter, language & tone controls, prompt action chips, and bilingual outputs.
+7. **`/app/reports`**: Executive conversion analytics, source attribution tables, root-cause loss breakdown, and client performance comparisons.
+8. **`/app/team`**: Team directory with RBAC badges, role-permission matrix, and immutable security audit trail.
+9. **`/app/integrations`**: 6 integration cards with verified connection status, HMAC webhook code viewer, and WhatsApp Cloud API guide.
+10. **`/app/billing`**: Signature Electric Lime subscription hero card, Pakistan IBFT details, usage quota meters, and manual bank transfer review workflow.
+11. **`/app/settings`**: Agency profile, regional PKR configuration, notification SLA rules, and API security keys.
 
 ---
 
@@ -73,6 +79,5 @@
 - Database Records: **Unchanged (0 modifications)**
 - Supabase Config & RLS Policies: **Unchanged (0 modifications)**
 - Server Actions & API Routes: **Unchanged (0 modifications)**
-- Test Suite: **87 / 87 passing across 15 test files**
+- Test Suite: **87 / 87 passing across 10 test suites**
 - TypeScript: **Zero type errors (`tsc --noEmit` clean)**
-- Production Build: **Compiled successfully (37 / 37 routes)**

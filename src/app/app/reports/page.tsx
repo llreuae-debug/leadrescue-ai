@@ -102,10 +102,10 @@ export default function ReportsPage() {
         link.click();
         document.body.removeChild(link);
       } else {
-        alert(res.error || "Failed to export report CSV");
+        setErrorMessage(res.error || "Failed to export report CSV.");
       }
     } catch (err: any) {
-      alert(err.message || "Export error");
+      setErrorMessage(err.message || "Failed to export CSV.");
     } finally {
       setIsExporting(false);
     }
@@ -113,20 +113,21 @@ export default function ReportsPage() {
 
   return (
     <div className="space-y-6 pb-12">
-      {/* Header with Export Button */}
+      {/* Top Header with Actions */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <PageHeader
-          title="Reports & Analytics"
-          description="Transparent, mathematically verified performance metrics and conversion rates across agency clients."
+          title="Executive Reports & SLA Analytics"
+          description="Verified lead response rates, source conversion ROI, and pipeline closing velocity across agency client accounts."
+          badge={<span className="badge-lime text-[11px] font-bold">Executive Intelligence</span>}
         />
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2.5">
           <button
             type="button"
             onClick={() => setShowFormulaModal(!showFormulaModal)}
-            className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 rounded-lg shadow-2xs transition-colors"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold text-[#101113] bg-white hover:bg-[#F3F4F2] border-2 border-[#101113] rounded-xl shadow-xs transition-colors"
           >
-            <HelpCircle className="w-3.5 h-3.5 text-blue-600" />
+            <HelpCircle className="w-3.5 h-3.5" />
             <span>Metric Formulas</span>
           </button>
 
@@ -134,7 +135,7 @@ export default function ReportsPage() {
             type="button"
             disabled={isExporting || isLoading}
             onClick={handleExportCsv}
-            className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 disabled:bg-slate-300 rounded-lg shadow-2xs transition-colors"
+            className="btn-lime text-xs py-2 px-4 inline-flex items-center gap-2 disabled:opacity-50"
           >
             <Download className="w-3.5 h-3.5" />
             <span>{isExporting ? "Exporting..." : "Export CSV"}</span>
@@ -144,14 +145,16 @@ export default function ReportsPage() {
 
       {/* Demo Workspace Banner */}
       {isDemo && (
-        <div className="bg-amber-50 border border-amber-200 text-amber-900 rounded-xl p-3.5 text-xs flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Info className="w-4 h-4 text-amber-600 shrink-0" />
-            <span>
-              <strong>Demo Workspace Mode:</strong> Metrics are computed on client workspaces using local test records. Zero simulated claims or fabricated metrics.
+        <div className="card-white p-4 bg-[#F3F4F2] flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+          <div className="flex items-center gap-2.5">
+            <div className="w-6 h-6 rounded-lg bg-[#17191C] text-[#B7FF3C] flex items-center justify-center shrink-0">
+              <Info className="w-3.5 h-3.5" />
+            </div>
+            <span className="text-[#101113] font-medium">
+              <strong className="font-bold">Demo Workspace Mode:</strong> Metrics are computed on client workspaces using local test records. Zero simulated claims or fabricated metrics.
             </span>
           </div>
-          <span className="bg-amber-200 text-amber-900 text-[11px] px-2 py-0.5 rounded font-mono">
+          <span className="badge-dark text-[10px] shrink-0 font-mono">
             VERIFIED LOCAL AGGREGATION
           </span>
         </div>
@@ -159,54 +162,66 @@ export default function ReportsPage() {
 
       {/* Metric Definitions Card */}
       {showFormulaModal && (
-        <div className="bg-blue-50/70 border border-blue-200 rounded-xl p-4 text-xs text-blue-950 space-y-2">
-          <div className="flex items-center justify-between font-semibold pb-1 border-b border-blue-200/60">
-            <span className="flex items-center gap-1.5">
-              <ShieldAlert className="w-4 h-4 text-blue-600" />
+        <div className="card-charcoal p-6 rounded-3xl border-2 border-[#101113] text-white space-y-4">
+          <div className="flex items-center justify-between pb-3 border-b border-[#282B30]">
+            <span className="flex items-center gap-2 text-xs font-black uppercase tracking-wider text-[#B7FF3C]">
+              <ShieldAlert className="w-4 h-4" />
               Documented Metric Formulas & SLAs
             </span>
             <button
               onClick={() => setShowFormulaModal(false)}
-              className="text-blue-600 hover:text-blue-900 text-[11px]"
+              className="text-slate-400 hover:text-white text-xs font-bold underline"
             >
               Close
             </button>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1 text-[11px] leading-relaxed">
-            <div>
-              <strong>Contact Rate:</strong> (Leads marked <em>Contacted</em>, <em>Qualified</em>, <em>Proposal Sent</em>, <em>Won</em>, or <em>Lost</em> ÷ Total Cohort Leads) × 100%. Measures outreach coverage.
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs leading-relaxed font-medium">
+            <div className="p-3.5 rounded-2xl bg-[#282B30] border border-[#3A3F47] space-y-1">
+              <strong className="text-white block font-bold">Contact Rate:</strong>
+              <p className="text-slate-300">
+                (Leads marked <em>Contacted</em>, <em>Qualified</em>, <em>Proposal Sent</em>, <em>Won</em>, or <em>Lost</em> ÷ Total Cohort Leads) × 100%. Measures outreach coverage.
+              </p>
             </div>
-            <div>
-              <strong>Qualification Rate:</strong> (Leads marked <em>Qualified</em>, <em>Proposal Sent</em>, or <em>Won</em> ÷ Total Cohort Leads) × 100%. Measures targeting and campaign intent.
+            <div className="p-3.5 rounded-2xl bg-[#282B30] border border-[#3A3F47] space-y-1">
+              <strong className="text-white block font-bold">Qualification Rate:</strong>
+              <p className="text-slate-300">
+                (Leads marked <em>Qualified</em>, <em>Proposal Sent</em>, or <em>Won</em> ÷ Total Cohort Leads) × 100%. Measures targeting and campaign intent.
+              </p>
             </div>
-            <div>
-              <strong>Follow-Up Completion Rate:</strong> (Completed Tasks ÷ Tasks Due in Period) × 100%. Cancelled tasks are excluded from denominator; snoozed tasks remain active.
+            <div className="p-3.5 rounded-2xl bg-[#282B30] border border-[#3A3F47] space-y-1">
+              <strong className="text-white block font-bold">Follow-Up Completion Rate:</strong>
+              <p className="text-slate-300">
+                (Completed Tasks ÷ Tasks Due in Period) × 100%. Cancelled tasks are excluded from denominator; snoozed tasks remain active.
+              </p>
             </div>
-            <div>
-              <strong>Won Conversion Rate:</strong> (Won Leads ÷ [Won Leads + Lost Leads Closed in Period]) × 100%. Measures closing effectiveness on concluded opportunities.
+            <div className="p-3.5 rounded-2xl bg-[#282B30] border border-[#3A3F47] space-y-1">
+              <strong className="text-white block font-bold">Won Conversion Rate:</strong>
+              <p className="text-slate-300">
+                (Won Leads ÷ [Won Leads + Lost Leads Closed in Period]) × 100%. Measures closing effectiveness on concluded opportunities.
+              </p>
             </div>
           </div>
         </div>
       )}
 
       {/* Filter Bar */}
-      <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-xs flex flex-wrap items-center gap-3">
-        <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-500 uppercase tracking-wider mr-2">
-          <Filter className="w-3.5 h-3.5 text-slate-400" />
+      <div className="card-white p-4 flex flex-wrap items-center gap-3">
+        <div className="flex items-center gap-1.5 text-xs font-black text-[#101113] uppercase tracking-wider mr-2">
+          <Filter className="w-3.5 h-3.5 text-[#101113]" />
           <span>Filters</span>
         </div>
 
         {/* Date Range Selector */}
-        <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-lg">
+        <div className="flex items-center gap-1 bg-[#F3F4F2] p-1 rounded-xl border-2 border-[#101113]">
           {(["7d", "30d", "90d", "all"] as const).map((r) => (
             <button
               key={r}
               type="button"
               onClick={() => handleFilterChange("dateRange", r)}
-              className={`px-2.5 py-1 text-xs font-medium rounded-md transition-all ${
+              className={`px-3 py-1 text-xs font-bold rounded-lg transition-all ${
                 filters.dateRange === r
-                  ? "bg-white text-blue-700 shadow-2xs font-semibold"
-                  : "text-slate-600 hover:text-slate-900"
+                  ? "bg-[#17191C] text-[#B7FF3C] shadow-xs"
+                  : "text-[#777D77] hover:text-[#101113]"
               }`}
             >
               {r === "7d" ? "7 Days" : r === "30d" ? "30 Days" : r === "90d" ? "90 Days" : "All Time"}
@@ -218,7 +233,7 @@ export default function ReportsPage() {
         <select
           value={filters.clientId || "all"}
           onChange={(e) => handleFilterChange("clientId", e.target.value)}
-          className="text-xs border border-slate-200 rounded-lg px-3 py-1.5 bg-slate-50 text-slate-800 focus:outline-none focus:ring-1 focus:ring-blue-500 font-medium"
+          className="text-xs border-2 border-[#101113] rounded-xl px-3.5 py-2 bg-[#F3F4F2] text-[#101113] focus:outline-none font-bold"
         >
           <option value="all">All Client Workspaces</option>
           {clientOptions.map((c) => (
@@ -232,7 +247,7 @@ export default function ReportsPage() {
         <select
           value={filters.source || "all"}
           onChange={(e) => handleFilterChange("source", e.target.value)}
-          className="text-xs border border-slate-200 rounded-lg px-3 py-1.5 bg-slate-50 text-slate-800 focus:outline-none focus:ring-1 focus:ring-blue-500 font-medium"
+          className="text-xs border-2 border-[#101113] rounded-xl px-3.5 py-2 bg-[#F3F4F2] text-[#101113] focus:outline-none font-bold"
         >
           <option value="all">All Inbound Sources</option>
           {sourceOptions.map((s) => (
@@ -243,7 +258,7 @@ export default function ReportsPage() {
         </select>
 
         {isPending && (
-          <span className="text-xs text-slate-400 italic ml-auto animate-pulse">
+          <span className="text-xs text-[#777D77] font-bold italic ml-auto animate-pulse">
             Recalculating metrics...
           </span>
         )}
@@ -252,14 +267,14 @@ export default function ReportsPage() {
       {isLoading ? (
         <LoadingState message="Calculating server-side report aggregations..." />
       ) : errorMessage ? (
-        <div className="bg-rose-50 border border-rose-200 text-rose-800 rounded-xl p-4 text-sm flex items-center justify-between">
+        <div className="card-white p-4 border-2 border-red-500 bg-red-50 text-red-900 rounded-2xl text-xs flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
-            <span>{errorMessage}</span>
+            <AlertCircle className="w-4 h-4 text-red-600 shrink-0" />
+            <span className="font-bold">{errorMessage}</span>
           </div>
           <button
             onClick={() => loadData(filters)}
-            className="text-rose-600 hover:text-rose-800 text-xs font-semibold"
+            className="text-red-700 hover:text-red-900 font-bold underline ml-2"
           >
             Retry
           </button>
@@ -277,46 +292,46 @@ export default function ReportsPage() {
         <>
           {/* Executive KPI Stat Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs space-y-1">
-              <div className="flex items-center justify-between text-xs text-slate-500 font-medium">
+            <div className="card-white p-6 space-y-2">
+              <div className="flex items-center justify-between text-xs text-[#777D77] font-bold uppercase tracking-wider">
                 <span>Contact Rate</span>
-                <Clock className="w-4 h-4 text-blue-600" />
+                <Clock className="w-4 h-4 text-[#101113]" />
               </div>
-              <div className="text-2xl font-bold text-slate-900">{summary.contactRate}%</div>
-              <p className="text-[11px] text-slate-500">
-                {summary.contactedLeads} of {summary.totalLeads} leads reached first touchpoint
+              <div className="text-3xl font-black text-[#101113] tabular-nums">{summary.contactRate}%</div>
+              <p className="text-[11px] text-[#777D77] font-medium">
+                {summary.contactedLeads} of {summary.totalLeads} reached first touchpoint
               </p>
             </div>
 
-            <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs space-y-1">
-              <div className="flex items-center justify-between text-xs text-slate-500 font-medium">
+            <div className="card-lime p-6 space-y-2">
+              <div className="flex items-center justify-between text-xs text-[#101113] font-black uppercase tracking-wider">
                 <span>Qualification Rate</span>
-                <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                <CheckCircle2 className="w-4 h-4 text-[#101113]" />
               </div>
-              <div className="text-2xl font-bold text-slate-900">{summary.qualificationRate}%</div>
-              <p className="text-[11px] text-slate-500">
-                {summary.qualifiedLeads} of {summary.totalLeads} prospects verified as qualified
+              <div className="text-3xl font-black text-[#101113] tabular-nums">{summary.qualificationRate}%</div>
+              <p className="text-[11px] text-[#101113] font-bold">
+                {summary.qualifiedLeads} of {summary.totalLeads} verified qualified
               </p>
             </div>
 
-            <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs space-y-1">
-              <div className="flex items-center justify-between text-xs text-slate-500 font-medium">
+            <div className="card-white p-6 space-y-2">
+              <div className="flex items-center justify-between text-xs text-[#777D77] font-bold uppercase tracking-wider">
                 <span>Follow-Up Completion</span>
-                <TrendingUp className="w-4 h-4 text-violet-600" />
+                <TrendingUp className="w-4 h-4 text-[#101113]" />
               </div>
-              <div className="text-2xl font-bold text-slate-900">{summary.followUpCompletionRate}%</div>
-              <p className="text-[11px] text-slate-500">
-                {summary.completedTasks} of {summary.totalTasksDue} eligible scheduled tasks completed
+              <div className="text-3xl font-black text-[#101113] tabular-nums">{summary.followUpCompletionRate}%</div>
+              <p className="text-[11px] text-[#777D77] font-medium">
+                {summary.completedTasks} of {summary.totalTasksDue} scheduled tasks completed
               </p>
             </div>
 
-            <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs space-y-1">
-              <div className="flex items-center justify-between text-xs text-slate-500 font-medium">
-                <span>Won Conversion Rate</span>
-                <Award className="w-4 h-4 text-amber-600" />
+            <div className="card-charcoal p-6 space-y-2 text-white">
+              <div className="flex items-center justify-between text-xs text-[#B7FF3C] font-black uppercase tracking-wider">
+                <span>Won Conversion</span>
+                <Award className="w-4 h-4 text-[#B7FF3C]" />
               </div>
-              <div className="text-2xl font-bold text-slate-900">{summary.wonRate}%</div>
-              <p className="text-[11px] text-emerald-700 font-semibold">
+              <div className="text-3xl font-black text-white tabular-nums">{summary.wonRate}%</div>
+              <p className="text-[11px] text-[#B7FF3C] font-mono font-bold">
                 PKR {summary.totalWonValuePKR.toLocaleString()} closed revenue
               </p>
             </div>
@@ -325,35 +340,38 @@ export default function ReportsPage() {
           {/* Section 1: Inbound Source Performance & Lost Reasons */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
             {/* Inbound Source Table (7 Cols) */}
-            <div className="lg:col-span-7 bg-white border border-slate-200 rounded-xl p-5 shadow-xs space-y-4">
-              <div className="flex items-center justify-between">
+            <div className="lg:col-span-7 card-white p-6 space-y-5">
+              <div className="flex items-center justify-between pb-3 border-b-2 border-[#DCDDDA]">
                 <div>
-                  <h3 className="text-sm font-bold text-slate-900">Inbound Channel Attribution</h3>
-                  <p className="text-xs text-slate-500">Performance, qualification, and closing volume by lead source.</p>
+                  <h3 className="text-sm font-black text-[#101113] uppercase tracking-wider">
+                    Inbound Channel Attribution
+                  </h3>
+                  <p className="text-xs text-[#777D77] font-medium">Performance, qualification, and closing volume by lead source.</p>
                 </div>
+                <span className="badge-lime text-[10px]">ROI Attributed</span>
               </div>
 
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs">
                   <thead>
-                    <tr className="border-b border-slate-200 text-slate-500 font-semibold uppercase tracking-wider text-[11px]">
-                      <th className="pb-2.5">Source</th>
-                      <th className="pb-2.5 text-right">Inquiries</th>
-                      <th className="pb-2.5 text-right">Qualified</th>
-                      <th className="pb-2.5 text-right">Won</th>
-                      <th className="pb-2.5 text-right">Win Rate</th>
-                      <th className="pb-2.5 text-right">Won Volume (PKR)</th>
+                    <tr className="border-b-2 border-[#101113] text-[#101113] font-black uppercase tracking-wider text-[11px]">
+                      <th className="pb-3">Source</th>
+                      <th className="pb-3 text-right">Inquiries</th>
+                      <th className="pb-3 text-right">Qualified</th>
+                      <th className="pb-3 text-right">Won</th>
+                      <th className="pb-3 text-right">Win Rate</th>
+                      <th className="pb-3 text-right">Won Volume</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100">
+                  <tbody className="divide-y divide-[#DCDDDA]">
                     {sources.map((src) => (
-                      <tr key={src.source} className="hover:bg-slate-50/50">
-                        <td className="py-2.5 font-medium text-slate-800">{src.source}</td>
-                        <td className="py-2.5 text-right font-mono text-slate-600">{src.totalLeads}</td>
-                        <td className="py-2.5 text-right font-mono text-slate-600">{src.qualifiedLeads}</td>
-                        <td className="py-2.5 text-right font-mono text-emerald-700 font-semibold">{src.wonLeads}</td>
-                        <td className="py-2.5 text-right font-mono text-slate-700">{src.winRate}%</td>
-                        <td className="py-2.5 text-right font-mono text-slate-900 font-semibold">
+                      <tr key={src.source} className="hover:bg-[#F3F4F2] transition-colors">
+                        <td className="py-3 font-bold text-[#101113]">{src.source}</td>
+                        <td className="py-3 text-right font-mono font-bold text-[#777D77]">{src.totalLeads}</td>
+                        <td className="py-3 text-right font-mono font-bold text-[#777D77]">{src.qualifiedLeads}</td>
+                        <td className="py-3 text-right font-mono font-black text-[#101113]">{src.wonLeads}</td>
+                        <td className="py-3 text-right font-mono font-bold text-[#101113]">{src.winRate}%</td>
+                        <td className="py-3 text-right font-mono font-black text-[#101113]">
                           {src.wonValuePKR > 0 ? `PKR ${src.wonValuePKR.toLocaleString()}` : "—"}
                         </td>
                       </tr>
@@ -364,29 +382,31 @@ export default function ReportsPage() {
             </div>
 
             {/* Lost Opportunity Root Cause Analysis (5 Cols) */}
-            <div className="lg:col-span-5 bg-white border border-slate-200 rounded-xl p-5 shadow-xs space-y-4">
-              <div>
-                <h3 className="text-sm font-bold text-slate-900">Lost Opportunity Root Causes</h3>
-                <p className="text-xs text-slate-500">Categorized loss reasons logged during stage transitions.</p>
+            <div className="lg:col-span-5 card-charcoal p-6 rounded-3xl border-2 border-[#101113] text-white space-y-4">
+              <div className="pb-3 border-b border-[#282B30]">
+                <h3 className="text-sm font-black text-white uppercase tracking-wider">
+                  Lost Opportunity Root Causes
+                </h3>
+                <p className="text-xs text-slate-400 font-medium">Categorized loss reasons logged during stage transitions.</p>
               </div>
 
               {lostReasons.length === 0 ? (
-                <div className="text-center py-8 text-xs text-slate-500">
+                <div className="text-center py-8 text-xs text-slate-400 font-medium">
                   No lost opportunities recorded for this cohort.
                 </div>
               ) : (
-                <div className="space-y-3 pt-1">
+                <div className="space-y-4 pt-1">
                   {lostReasons.map((lr) => (
-                    <div key={lr.reason} className="space-y-1">
+                    <div key={lr.reason} className="space-y-1.5">
                       <div className="flex items-center justify-between text-xs">
-                        <span className="font-medium text-slate-700">{lr.reason}</span>
-                        <span className="font-mono text-slate-500 text-[11px]">
+                        <span className="font-bold text-white">{lr.reason}</span>
+                        <span className="font-mono text-[#B7FF3C] text-[11px] font-bold">
                           {lr.count} leads ({lr.percentage}%)
                         </span>
                       </div>
-                      <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+                      <div className="w-full bg-[#282B30] rounded-full h-2.5 overflow-hidden border border-[#3A3F47]">
                         <div
-                          className="bg-rose-500 h-full rounded-full"
+                          className="bg-[#B7FF3C] h-full rounded-full"
                           style={{ width: `${lr.percentage}%` }}
                         />
                       </div>
@@ -398,38 +418,43 @@ export default function ReportsPage() {
           </div>
 
           {/* Section 2: Client Workspace Comparison */}
-          <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs space-y-4">
-            <div>
-              <h3 className="text-sm font-bold text-slate-900">Client Workspace Comparison</h3>
-              <p className="text-xs text-slate-500">
-                Comparative lead volume, response velocity, and pipeline closing across active agency clients.
-              </p>
+          <div className="card-white p-6 space-y-5">
+            <div className="flex items-center justify-between pb-3 border-b-2 border-[#DCDDDA]">
+              <div>
+                <h3 className="text-sm font-black text-[#101113] uppercase tracking-wider">
+                  Client Workspace Comparison
+                </h3>
+                <p className="text-xs text-[#777D77] font-medium">
+                  Comparative lead volume, response velocity, and pipeline closing across active agency clients.
+                </p>
+              </div>
+              <span className="badge-dark text-[10px]">Multi-Tenant Overview</span>
             </div>
 
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
                 <thead>
-                  <tr className="border-b border-slate-200 text-slate-500 font-semibold uppercase tracking-wider text-[11px]">
-                    <th className="pb-2.5">Client Workspace</th>
-                    <th className="pb-2.5 text-right">Total Leads</th>
-                    <th className="pb-2.5 text-right">Contact Rate</th>
-                    <th className="pb-2.5 text-right">Qualification Rate</th>
-                    <th className="pb-2.5 text-right">Won Deals</th>
-                    <th className="pb-2.5 text-right">Won Revenue (PKR)</th>
+                  <tr className="border-b-2 border-[#101113] text-[#101113] font-black uppercase tracking-wider text-[11px]">
+                    <th className="pb-3">Client Workspace</th>
+                    <th className="pb-3 text-right">Total Leads</th>
+                    <th className="pb-3 text-right">Contact Rate</th>
+                    <th className="pb-3 text-right">Qualification Rate</th>
+                    <th className="pb-3 text-right">Won Deals</th>
+                    <th className="pb-3 text-right">Won Revenue (PKR)</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-[#DCDDDA]">
                   {clients.map((cl) => (
-                    <tr key={cl.clientId} className="hover:bg-slate-50/50">
-                      <td className="py-3 font-semibold text-slate-900 flex items-center gap-2">
-                        <Building className="w-3.5 h-3.5 text-slate-400" />
+                    <tr key={cl.clientId} className="hover:bg-[#F3F4F2] transition-colors">
+                      <td className="py-3.5 font-bold text-[#101113] flex items-center gap-2">
+                        <Building className="w-3.5 h-3.5 text-[#101113]" />
                         {cl.clientName}
                       </td>
-                      <td className="py-3 text-right font-mono text-slate-700">{cl.totalLeads}</td>
-                      <td className="py-3 text-right font-mono text-blue-700 font-medium">{cl.contactRate}%</td>
-                      <td className="py-3 text-right font-mono text-violet-700 font-medium">{cl.qualificationRate}%</td>
-                      <td className="py-3 text-right font-mono text-emerald-700 font-semibold">{cl.wonLeads}</td>
-                      <td className="py-3 text-right font-mono text-slate-900 font-bold">
+                      <td className="py-3.5 text-right font-mono font-bold text-[#777D77]">{cl.totalLeads}</td>
+                      <td className="py-3.5 text-right font-mono font-bold text-[#101113]">{cl.contactRate}%</td>
+                      <td className="py-3.5 text-right font-mono font-bold text-[#101113]">{cl.qualificationRate}%</td>
+                      <td className="py-3.5 text-right font-mono font-black text-[#101113]">{cl.wonLeads}</td>
+                      <td className="py-3.5 text-right font-mono font-black text-[#101113]">
                         {cl.wonValuePKR > 0 ? `PKR ${cl.wonValuePKR.toLocaleString()}` : "PKR 0"}
                       </td>
                     </tr>

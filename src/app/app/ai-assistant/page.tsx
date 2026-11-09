@@ -42,6 +42,7 @@ import {
   AlertTriangle,
   FileText,
   RotateCcw,
+  Zap,
 } from "lucide-react";
 
 export default function AiAssistantPage() {
@@ -99,27 +100,23 @@ export default function AiAssistantPage() {
   // Update lead context when selector changes
   const handleLeadChange = async (leadId: string) => {
     setSelectedLeadId(leadId);
-    setErrorMessage(null);
     try {
       const res = await getLeadContextSnapshotAction(leadId);
       if (res.success && res.lead) {
         setLeadContext(res.lead);
       }
-    } catch (err: any) {
-      setErrorMessage(err.message || "Failed to switch lead");
+    } catch (err) {
+      console.error(err);
     }
   };
 
+  // Generate action
   const handleGenerate = async (
     intent: AssistantIntent,
-    promptText?: string,
-    objectionCat?: ObjectionCategory
+    prompt?: string,
+    objection?: ObjectionCategory
   ) => {
-    if (!selectedLeadId) {
-      setErrorMessage("Please select a lead first.");
-      return;
-    }
-
+    if (!selectedLeadId) return;
     setIsGenerating(true);
     setErrorMessage(null);
 
@@ -129,24 +126,27 @@ export default function AiAssistantPage() {
         intent,
         language,
         tone,
-        customPrompt: promptText,
-        objectionType: objectionCat,
+        customPrompt: prompt,
+        objectionType: objection,
       });
 
-      if (!res.success || !res.data) {
-        setErrorMessage(res.error || "Generation failed. Please try again.");
-      } else {
+      if (res.success && res.data) {
         setResponses((prev) => [res.data!, ...prev]);
         setEditableDrafts((prev) => ({
           ...prev,
           [res.data!.id]: res.data!.content,
         }));
-        if (res.quota) setQuota(res.quota);
-        setCustomPrompt("");
-        setShowObjectionSelect(false);
+        if (intent === "custom_prompt") {
+          setCustomPrompt("");
+        }
+        // Refresh quota
+        const updatedQuota = await getAssistantQuotaAction();
+        setQuota(updatedQuota);
+      } else {
+        setErrorMessage(res.error || "Failed to generate AI response.");
       }
     } catch (err: any) {
-      setErrorMessage(err.message || "An unexpected error occurred during generation.");
+      setErrorMessage(err.message || "Failed to generate AI response.");
     } finally {
       setIsGenerating(false);
     }
@@ -155,21 +155,14 @@ export default function AiAssistantPage() {
   const copyToClipboard = (id: string, text: string) => {
     navigator.clipboard.writeText(text);
     setCopiedId(id);
-    setTimeout(() => setCopiedId(null), 2500);
+    setTimeout(() => setCopiedId(null), 2000);
   };
 
-  const openWhatsAppUrl = (phone?: string | null, text?: string) => {
-    if (!phone) {
-      alert("No phone number recorded for this lead.");
-      return;
-    }
+  const openWhatsAppUrl = (phone: string, text: string) => {
     const cleanPhone = phone.replace(/[^0-9]/g, "");
-    // Extract blockquote or raw text
-    const cleanText = text
-      ? text.replace(/###.*?\n/g, "").replace(/> /g, "").trim()
-      : "";
-    const url = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(cleanText)}`;
-    window.open(url, "_blank", "noopener,noreferrer");
+    const encodedText = encodeURIComponent(text);
+    const url = `https://wa.me/${cleanPhone}?text=${encodedText}`;
+    window.open(url, "_blank");
   };
 
   if (isLoading) {
@@ -191,24 +184,27 @@ export default function AiAssistantPage() {
         <PageHeader
           title="AI Sales Assistant"
           description="Grounded lead intelligence, English & Urdu follow-up drafting, and objection handling."
+          badge={<span className="badge-lime text-[11px] font-bold">Grounded Sales Studio</span>}
         />
 
         {quota && (
-          <div className="flex items-center gap-3 bg-white border border-slate-200 rounded-xl px-4 py-2.5 shadow-xs">
-            <Sparkles className="w-4 h-4 text-violet-600 shrink-0" />
+          <div className="card-charcoal px-5 py-3 rounded-2xl flex items-center gap-4 text-white">
+            <div className="w-8 h-8 rounded-xl bg-[#B7FF3C] text-[#101113] flex items-center justify-center shrink-0 font-bold border border-[#101113]">
+              <Sparkles className="w-4 h-4" />
+            </div>
             <div className="text-xs">
-              <div className="flex items-center gap-1.5 font-medium text-slate-800">
-                <span>{quota.planTier}</span>
+              <div className="flex items-center gap-1.5 font-bold">
+                <span className="text-[#B7FF3C] uppercase text-[10px] tracking-wider">{quota.planTier}</span>
                 <span className="text-slate-400">•</span>
-                <span className="text-violet-700 font-semibold">
-                  {quota.requestsUsed} / {quota.requestLimit} requests
+                <span className="font-mono text-white">
+                  {quota.requestsUsed} / {quota.requestLimit} reqs
                 </span>
               </div>
-              <p className="text-slate-500 text-[11px]">Resets on {quota.resetDate}</p>
+              <p className="text-slate-400 text-[11px] font-medium">Resets on {quota.resetDate}</p>
             </div>
-            <div className="w-16 bg-slate-100 rounded-full h-1.5 overflow-hidden ml-1">
+            <div className="w-20 bg-[#282B30] rounded-full h-2 overflow-hidden border border-[#3A3F47] ml-1">
               <div
-                className="bg-violet-600 h-full rounded-full"
+                className="bg-[#B7FF3C] h-full rounded-full"
                 style={{ width: `${Math.min(100, (quota.requestsUsed / quota.requestLimit) * 100)}%` }}
               />
             </div>
@@ -217,28 +213,30 @@ export default function AiAssistantPage() {
       </div>
 
       {isDemo && (
-        <div className="bg-amber-50 border border-amber-200 text-amber-900 rounded-xl p-3.5 text-xs flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Info className="w-4 h-4 text-amber-600 shrink-0" />
-            <span>
-              <strong>Demo Workspace Mode:</strong> Using local grounded test data. AI generations run through strict local deterministic synthesizer with zero API cost.
+        <div className="card-white p-4 bg-[#F3F4F2] flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+          <div className="flex items-center gap-2.5">
+            <div className="w-6 h-6 rounded-lg bg-[#17191C] text-[#B7FF3C] flex items-center justify-center shrink-0">
+              <Info className="w-3.5 h-3.5" />
+            </div>
+            <span className="text-[#101113] font-medium">
+              <strong className="font-bold">Demo Workspace Mode:</strong> Using local grounded test data. AI generations run through strict local deterministic synthesizer with zero API cost.
             </span>
           </div>
-          <span className="bg-amber-200 text-amber-900 text-[11px] px-2 py-0.5 rounded font-mono">
+          <span className="badge-dark text-[10px] shrink-0 font-mono">
             GROUNDED LOCAL ENGINE
           </span>
         </div>
       )}
 
       {errorMessage && (
-        <div className="bg-rose-50 border border-rose-200 text-rose-800 rounded-xl p-4 text-sm flex items-center justify-between">
+        <div className="card-white p-4 border-2 border-red-500 bg-red-50 text-red-900 rounded-2xl text-xs flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <AlertTriangle className="w-4 h-4 text-rose-600 shrink-0" />
-            <span>{errorMessage}</span>
+            <AlertTriangle className="w-4 h-4 text-red-600 shrink-0" />
+            <span className="font-bold">{errorMessage}</span>
           </div>
           <button
             onClick={() => setErrorMessage(null)}
-            className="text-rose-600 hover:text-rose-800 text-xs font-semibold"
+            className="text-red-700 hover:text-red-900 font-bold underline ml-2"
           >
             Dismiss
           </button>
@@ -249,21 +247,23 @@ export default function AiAssistantPage() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* Left Column: Context Selector & Grounding Inspector (4 Cols) */}
         <div className="lg:col-span-4 space-y-4">
-          <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-              <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
-                <Building className="w-3.5 h-3.5 text-slate-400" />
-                Target Lead
+          <div className="card-white p-6 space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b-2 border-[#DCDDDA]">
+              <span className="text-xs font-black text-[#101113] uppercase tracking-wider flex items-center gap-1.5">
+                <Building className="w-3.5 h-3.5 text-[#101113]" />
+                Target Lead Record
               </span>
-              <span className="text-[11px] font-mono text-slate-400">Context Boundary</span>
+              <span className="badge-lime text-[10px]">Context Safe</span>
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-700 mb-1.5">Select Active Lead</label>
+              <label className="block text-xs font-black uppercase tracking-wider text-[#101113] mb-1.5">
+                Select Active Lead
+              </label>
               <select
                 value={selectedLeadId}
                 onChange={(e) => handleLeadChange(e.target.value)}
-                className="w-full text-sm border border-slate-200 rounded-lg p-2.5 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all font-medium text-slate-900"
+                className="w-full text-xs font-bold border-2 border-[#101113] rounded-xl p-2.5 bg-[#F3F4F2] focus:bg-white focus:outline-none transition-all text-[#101113]"
               >
                 {leads.map((l) => (
                   <option key={l.id} value={l.id}>
@@ -275,9 +275,9 @@ export default function AiAssistantPage() {
 
             {leadContext && (
               <div className="space-y-3 pt-2">
-                <div className="bg-slate-50 rounded-lg p-3 border border-slate-100 space-y-2 text-xs">
+                <div className="bg-[#F3F4F2] rounded-2xl p-4 border-2 border-[#101113] space-y-2 text-xs">
                   <div className="flex items-center justify-between">
-                    <span className="text-slate-500">Pipeline Status:</span>
+                    <span className="text-[#777D77] font-bold">Pipeline Status:</span>
                     <StatusBadge
                       label={leadContext.status.replace(/_/g, " ").toUpperCase()}
                       variant={
@@ -293,96 +293,102 @@ export default function AiAssistantPage() {
                     />
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-slate-500">Priority:</span>
-                    <span className="font-semibold text-slate-800 uppercase">{leadContext.priority}</span>
+                    <span className="text-[#777D77] font-bold">Priority:</span>
+                    <span className="font-black text-[#101113] uppercase">{leadContext.priority}</span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-slate-500">Inbound Channel:</span>
-                    <span className="font-medium text-slate-800">{leadContext.source}</span>
+                    <span className="text-[#777D77] font-bold">Inbound Channel:</span>
+                    <span className="badge-dark text-[10px]">{leadContext.source}</span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-slate-500">Est. Deal Value:</span>
-                    <span className="font-semibold text-emerald-700">
+                    <span className="text-[#777D77] font-bold">Est. Deal Value:</span>
+                    <span className="font-mono font-black text-[#101113]">
                       {leadContext.dealValue > 0 ? `PKR ${leadContext.dealValue.toLocaleString()}` : "Not logged"}
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-slate-500">Phone:</span>
-                    <span className="font-mono text-slate-700">{leadContext.phone || "Missing"}</span>
+                    <span className="text-[#777D77] font-bold">Phone Number:</span>
+                    <span className="font-mono font-bold text-[#101113]">{leadContext.phone || "Missing"}</span>
                   </div>
                 </div>
 
                 {/* Grounded Notes */}
                 <div>
-                  <span className="text-xs font-medium text-slate-600 block mb-1">Lead Notes on File:</span>
-                  <div className="bg-slate-50 border border-slate-200/80 rounded-lg p-2.5 text-xs text-slate-600 italic leading-relaxed max-h-24 overflow-y-auto">
+                  <span className="text-xs font-black uppercase tracking-wider text-[#101113] block mb-1">
+                    Grounded Lead Notes:
+                  </span>
+                  <div className="bg-[#F3F4F2] border-2 border-[#101113] rounded-xl p-3 text-xs text-[#101113] italic font-medium leading-relaxed max-h-24 overflow-y-auto">
                     {leadContext.notes ? `"${leadContext.notes}"` : "No qualitative notes on file."}
                   </div>
                 </div>
 
                 {/* Grounding Safety Box */}
-                <div className="bg-blue-50/70 border border-blue-100 rounded-lg p-3 text-[11px] text-blue-900 space-y-1">
-                  <div className="flex items-center gap-1.5 font-semibold text-blue-950">
-                    <ShieldAlert className="w-3.5 h-3.5 text-blue-600" />
+                <div className="card-charcoal p-3.5 rounded-2xl text-[11px] text-white space-y-1">
+                  <div className="flex items-center gap-1.5 font-bold text-[#B7FF3C]">
+                    <ShieldAlert className="w-3.5 h-3.5" />
                     Strict Grounding Active
                   </div>
-                  <p className="text-blue-800/90 leading-normal">
-                    This assistant will only use verified lead attributes. Missing values (e.g. unknown budget or timeline) will be flagged instead of fabricated.
+                  <p className="text-slate-300 leading-normal font-medium">
+                    This assistant strictly uses verified lead attributes. Missing values (e.g. unknown budget or timeline) will be flagged instead of fabricated.
                   </p>
                 </div>
               </div>
             )}
           </div>
 
-            {/* Language & Tone Preferences */}
-          <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs space-y-4">
-            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider flex items-center gap-1.5 pb-2 border-b border-slate-100">
-              <SlidersHorizontal className="w-3.5 h-3.5 text-slate-400" />
+          {/* Language & Tone Preferences */}
+          <div className="card-white p-6 space-y-4">
+            <span className="text-xs font-black text-[#101113] uppercase tracking-wider flex items-center gap-1.5 pb-2 border-b-2 border-[#DCDDDA]">
+              <SlidersHorizontal className="w-3.5 h-3.5 text-[#101113]" />
               Generation Controls
             </span>
 
             {/* Language Selector */}
             <div>
-              <label className="block text-xs font-medium text-slate-700 mb-1.5">Output Language</label>
+              <label className="block text-xs font-black uppercase tracking-wider text-[#101113] mb-1.5">
+                Output Language
+              </label>
               <div className="grid grid-cols-2 gap-2">
                 <button
                   type="button"
                   onClick={() => setLanguage("en")}
-                  className={`py-2 px-3 text-xs font-medium rounded-lg border text-center transition-all ${
+                  className={`py-2 px-3 text-xs rounded-xl font-bold text-center transition-all border-2 ${
                     language === "en"
-                      ? "bg-blue-50 border-blue-600 text-blue-700 font-semibold"
-                      : "bg-white border-slate-200 text-slate-600 hover:bg-slate-50"
+                      ? "bg-[#17191C] text-[#B7FF3C] border-[#101113] shadow-xs"
+                      : "bg-white text-[#777D77] border-[#DCDDDA] hover:border-[#101113]"
                   }`}
                 >
-                  English
+                  English (LTR)
                 </button>
                 <button
                   type="button"
                   onClick={() => setLanguage("ur")}
-                  className={`py-2 px-3 text-xs font-medium rounded-lg border text-center transition-all ${
+                  className={`py-2 px-3 text-xs rounded-xl font-bold text-center transition-all border-2 ${
                     language === "ur"
-                      ? "bg-blue-50 border-blue-600 text-blue-700 font-semibold"
-                      : "bg-white border-slate-200 text-slate-600 hover:bg-slate-50"
+                      ? "bg-[#17191C] text-[#B7FF3C] border-[#101113] shadow-xs"
+                      : "bg-white text-[#777D77] border-[#DCDDDA] hover:border-[#101113]"
                   }`}
                 >
-                  اردو (Urdu)
+                  اردو (Urdu RTL)
                 </button>
               </div>
             </div>
 
             {/* Tone Selector */}
             <div>
-              <label className="block text-xs font-medium text-slate-700 mb-1.5">Tone of Voice</label>
+              <label className="block text-xs font-black uppercase tracking-wider text-[#101113] mb-1.5">
+                Tone of Voice
+              </label>
               <div className="grid grid-cols-3 gap-1.5">
                 {(["professional", "friendly", "concise"] as AssistantTone[]).map((t) => (
                   <button
                     key={t}
                     type="button"
                     onClick={() => setTone(t)}
-                    className={`py-1.5 px-2 text-[11px] font-medium rounded-lg border capitalize text-center transition-all ${
+                    className={`py-2 px-2 text-[11px] font-bold rounded-xl border-2 capitalize text-center transition-all ${
                       tone === t
-                        ? "bg-violet-50 border-violet-600 text-violet-700 font-semibold"
-                        : "bg-white border-slate-200 text-slate-600 hover:bg-slate-50"
+                        ? "bg-[#B7FF3C] text-[#101113] border-[#101113] shadow-xs"
+                        : "bg-white text-[#777D77] border-[#DCDDDA] hover:border-[#101113]"
                     }`}
                   >
                     {t}
@@ -396,9 +402,9 @@ export default function AiAssistantPage() {
         {/* Right Column: Interaction Thread & Composer (8 Cols) */}
         <div className="lg:col-span-8 space-y-5">
           {/* Action Chips Bar */}
-          <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-xs space-y-3">
-            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider block">
-              Suggested AI Actions
+          <div className="card-white p-5 space-y-3">
+            <span className="text-xs font-black text-[#101113] uppercase tracking-wider block">
+              Grounded AI Prompt Actions
             </span>
 
             <div className="flex flex-wrap gap-2">
@@ -406,9 +412,9 @@ export default function AiAssistantPage() {
                 type="button"
                 disabled={isGenerating}
                 onClick={() => handleGenerate("summarize_history")}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-medium rounded-lg transition-colors disabled:opacity-50"
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-[#F3F4F2] hover:bg-[#17191C] hover:text-[#B7FF3C] text-[#101113] text-xs font-bold rounded-xl border-2 border-[#101113] transition-colors disabled:opacity-50"
               >
-                <FileText className="w-3.5 h-3.5 text-blue-600" />
+                <FileText className="w-3.5 h-3.5" />
                 Summarize Lead History
               </button>
 
@@ -416,9 +422,9 @@ export default function AiAssistantPage() {
                 type="button"
                 disabled={isGenerating}
                 onClick={() => handleGenerate("draft_whatsapp")}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs font-medium rounded-lg transition-colors border border-emerald-200/60 disabled:opacity-50"
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-[#B7FF3C] hover:bg-[#a6ec34] text-[#101113] text-xs font-black rounded-xl border-2 border-[#101113] transition-colors disabled:opacity-50"
               >
-                <MessageSquare className="w-3.5 h-3.5 text-emerald-600" />
+                <MessageSquare className="w-3.5 h-3.5" />
                 Draft WhatsApp Message
               </button>
 
@@ -426,9 +432,9 @@ export default function AiAssistantPage() {
                 type="button"
                 disabled={isGenerating}
                 onClick={() => handleGenerate("draft_email")}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-800 text-xs font-medium rounded-lg transition-colors border border-blue-200/60 disabled:opacity-50"
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-[#F3F4F2] hover:bg-[#17191C] hover:text-white text-[#101113] text-xs font-bold rounded-xl border-2 border-[#101113] transition-colors disabled:opacity-50"
               >
-                <Send className="w-3.5 h-3.5 text-blue-600" />
+                <Send className="w-3.5 h-3.5" />
                 Draft Email Outreach
               </button>
 
@@ -436,19 +442,19 @@ export default function AiAssistantPage() {
                 type="button"
                 disabled={isGenerating}
                 onClick={() => handleGenerate("suggest_questions")}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-violet-50 hover:bg-violet-100 text-violet-800 text-xs font-medium rounded-lg transition-colors border border-violet-200/60 disabled:opacity-50"
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-[#F3F4F2] hover:bg-[#17191C] hover:text-white text-[#101113] text-xs font-bold rounded-xl border-2 border-[#101113] transition-colors disabled:opacity-50"
               >
-                <HelpCircle className="w-3.5 h-3.5 text-violet-600" />
-                Qualification Questions
+                <HelpCircle className="w-3.5 h-3.5" />
+                Qualification Framework
               </button>
 
               <button
                 type="button"
                 disabled={isGenerating}
                 onClick={() => handleGenerate("suggest_next_action")}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-800 text-xs font-medium rounded-lg transition-colors border border-amber-200/60 disabled:opacity-50"
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-[#F3F4F2] hover:bg-[#17191C] hover:text-white text-[#101113] text-xs font-bold rounded-xl border-2 border-[#101113] transition-colors disabled:opacity-50"
               >
-                <ArrowRight className="w-3.5 h-3.5 text-amber-600" />
+                <ArrowRight className="w-3.5 h-3.5" />
                 Next-Best Action
               </button>
 
@@ -456,25 +462,25 @@ export default function AiAssistantPage() {
                 type="button"
                 disabled={isGenerating}
                 onClick={() => setShowObjectionSelect(!showObjectionSelect)}
-                className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg transition-colors border disabled:opacity-50 ${
+                className={`inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold rounded-xl transition-colors border-2 border-[#101113] disabled:opacity-50 ${
                   showObjectionSelect
-                    ? "bg-rose-100 border-rose-300 text-rose-900"
-                    : "bg-rose-50 hover:bg-rose-100 border-rose-200/60 text-rose-800"
+                    ? "bg-[#17191C] text-white"
+                    : "bg-[#F3F4F2] text-[#101113] hover:bg-[#17191C] hover:text-white"
                 }`}
               >
-                <ShieldAlert className="w-3.5 h-3.5 text-rose-600" />
+                <ShieldAlert className="w-3.5 h-3.5" />
                 Handle Objection...
               </button>
             </div>
 
             {/* Objection Selection Dropdown */}
             {showObjectionSelect && (
-              <div className="bg-slate-50 border border-slate-200 rounded-lg p-3 text-xs flex flex-col md:flex-row md:items-center gap-3">
-                <span className="font-semibold text-slate-700 shrink-0">Select Prospect Objection:</span>
+              <div className="bg-[#F3F4F2] border-2 border-[#101113] rounded-2xl p-3.5 text-xs flex flex-col md:flex-row md:items-center gap-3">
+                <span className="font-black text-[#101113] shrink-0">Select Prospect Objection:</span>
                 <select
                   value={selectedObjection}
                   onChange={(e) => setSelectedObjection(e.target.value as ObjectionCategory)}
-                  className="bg-white border border-slate-300 rounded px-2.5 py-1.5 text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-blue-500 grow"
+                  className="bg-white border-2 border-[#101113] rounded-xl px-3 py-2 text-xs font-bold text-[#101113] focus:outline-none grow"
                 >
                   <option value="price_too_high">"Price is too high / Out of budget"</option>
                   <option value="send_proposal_first">"Just send me a proposal first, don't call"</option>
@@ -486,7 +492,7 @@ export default function AiAssistantPage() {
                   type="button"
                   disabled={isGenerating}
                   onClick={() => handleGenerate("handle_objection", undefined, selectedObjection)}
-                  className="px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white font-medium rounded text-xs transition-colors shrink-0 disabled:opacity-50"
+                  className="btn-primary text-xs px-4 py-2 shrink-0 disabled:opacity-50"
                 >
                   Generate Rebuttal
                 </button>
@@ -495,7 +501,7 @@ export default function AiAssistantPage() {
           </div>
 
           {/* Prompt Composer Box */}
-          <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-xs">
+          <div className="card-white p-4">
             <form
               onSubmit={(e) => {
                 e.preventDefault();
@@ -509,25 +515,25 @@ export default function AiAssistantPage() {
                 <textarea
                   value={customPrompt}
                   onChange={(e) => setCustomPrompt(e.target.value)}
-                  placeholder={`Ask anything about ${leadContext?.name || "this lead"} (e.g. "Draft a polite follow-up acknowledging they run an e-commerce brand")...`}
+                  placeholder={`Ask anything about ${leadContext?.name || "this lead"} (e.g. "Draft a polite follow-up acknowledging they run an e-commerce brand in Lahore")...`}
                   rows={2}
                   disabled={isGenerating}
-                  className="w-full text-xs border border-slate-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50/50 focus:bg-white resize-none text-slate-900 placeholder:text-slate-400"
+                  className="w-full text-xs font-medium border-2 border-[#101113] rounded-2xl p-3.5 focus:outline-none bg-[#F3F4F2] focus:bg-white resize-none text-[#101113] placeholder:text-[#777D77]"
                 />
                 <button
                   type="submit"
                   disabled={isGenerating || !customPrompt.trim()}
-                  className="absolute right-2.5 bottom-3 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-300 text-white text-xs font-semibold rounded-md shadow-xs transition-colors flex items-center gap-1.5"
+                  className="absolute right-3 bottom-4 px-4 py-2 bg-[#17191C] hover:bg-[#101113] disabled:bg-[#DCDDDA] text-[#B7FF3C] text-xs font-black rounded-xl border border-[#101113] transition-colors flex items-center gap-1.5"
                 >
                   {isGenerating ? (
                     <>
                       <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                      Synthesizing...
+                      <span>Synthesizing...</span>
                     </>
                   ) : (
                     <>
                       <Send className="w-3.5 h-3.5" />
-                      Send
+                      <span>Send</span>
                     </>
                   )}
                 </button>
@@ -538,19 +544,21 @@ export default function AiAssistantPage() {
           {/* Response Thread */}
           <div className="space-y-4">
             {responses.length === 0 && !isGenerating && (
-              <div className="bg-slate-50 border border-dashed border-slate-200 rounded-xl p-8 text-center space-y-2">
-                <Bot className="w-8 h-8 text-slate-400 mx-auto" />
-                <h4 className="text-sm font-semibold text-slate-700">No Drafts Generated Yet</h4>
-                <p className="text-xs text-slate-500 max-w-sm mx-auto">
-                  Click any of the suggested prompt chips above or type a custom question to generate grounded sales guidance.
+              <div className="card-white p-8 text-center space-y-3">
+                <div className="w-12 h-12 rounded-2xl bg-[#17191C] text-[#B7FF3C] flex items-center justify-center mx-auto border-2 border-[#101113]">
+                  <Bot className="w-6 h-6" />
+                </div>
+                <h4 className="text-sm font-black text-[#101113]">No Drafts Generated Yet</h4>
+                <p className="text-xs text-[#777D77] max-w-sm mx-auto font-medium">
+                  Click any suggested prompt button above or type a custom query to generate grounded, client-safe sales communications.
                 </p>
               </div>
             )}
 
             {isGenerating && (
-              <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-xs flex items-center justify-center gap-3 text-slate-600">
-                <RefreshCw className="w-5 h-5 text-violet-600 animate-spin" />
-                <span className="text-xs font-medium">
+              <div className="card-white p-6 flex items-center justify-center gap-3 text-[#101113]">
+                <RefreshCw className="w-5 h-5 animate-spin text-[#101113]" />
+                <span className="text-xs font-bold">
                   Reviewing verified lead records & compiling grounded {language === "ur" ? "Urdu" : "English"} response...
                 </span>
               </div>
@@ -559,15 +567,15 @@ export default function AiAssistantPage() {
             {responses.map((resp) => (
               <div
                 key={resp.id}
-                className="bg-white border border-slate-200 rounded-xl shadow-xs overflow-hidden transition-all"
+                className="card-white overflow-hidden space-y-0"
               >
                 {/* Response Meta Header */}
-                <div className="bg-slate-50 px-5 py-3 border-b border-slate-200 flex flex-wrap items-center justify-between gap-2 text-xs">
+                <div className="bg-[#17191C] px-5 py-3.5 border-b-2 border-[#101113] flex flex-wrap items-center justify-between gap-2 text-xs text-white">
                   <div className="flex items-center gap-2">
-                    <span className="p-1 bg-violet-100 text-violet-700 rounded">
+                    <span className="p-1 bg-[#B7FF3C] text-[#101113] rounded-md font-bold">
                       <Sparkles className="w-3.5 h-3.5" />
                     </span>
-                    <span className="font-semibold text-slate-800">
+                    <span className="font-black text-white">
                       {resp.intent === "draft_whatsapp"
                         ? "WhatsApp Follow-up Draft"
                         : resp.intent === "draft_email"
@@ -579,25 +587,26 @@ export default function AiAssistantPage() {
                         : "Lead Intelligence Summary"}
                     </span>
                     <span className="text-slate-400">•</span>
-                    <span className="font-medium text-slate-600">{resp.leadName}</span>
+                    <span className="font-bold text-[#B7FF3C]">{resp.leadName}</span>
                   </div>
 
                   <div className="flex items-center gap-2">
-                    <span className="bg-slate-200/80 text-slate-700 text-[10px] px-2 py-0.5 rounded font-mono uppercase">
+                    <span className="badge-dark text-[10px] font-mono uppercase bg-[#282B30] text-white border border-[#3A3F47]">
                       {resp.language === "ur" ? "اردو (UR)" : "EN"} • {resp.tone}
                     </span>
-                    <span className="bg-amber-100 text-amber-800 text-[10px] px-2 py-0.5 rounded font-semibold flex items-center gap-1">
-                      <ShieldAlert className="w-3 h-3 text-amber-600" />
-                      Review Required
+                    <span className="badge-lime text-[10px] font-bold">
+                      Grounded Draft
                     </span>
                   </div>
                 </div>
 
                 {/* Grounded Facts & Missing Information Tabs */}
-                <div className="px-5 py-2.5 bg-slate-50/50 border-b border-slate-100 grid grid-cols-1 md:grid-cols-2 gap-2 text-[11px]">
+                <div className="px-5 py-3 bg-[#F3F4F2] border-b-2 border-[#DCDDDA] grid grid-cols-1 md:grid-cols-2 gap-3 text-[11px]">
                   <div>
-                    <span className="font-semibold text-slate-700 block mb-0.5">Verified Facts Used:</span>
-                    <ul className="text-slate-600 space-y-0.5 list-disc list-inside">
+                    <span className="font-black text-[#101113] block mb-1 uppercase text-[10px] tracking-wider">
+                      Verified Facts Used:
+                    </span>
+                    <ul className="text-[#101113] space-y-0.5 list-disc list-inside font-medium">
                       {resp.groundedFacts.slice(0, 3).map((f, i) => (
                         <li key={i}>{f}</li>
                       ))}
@@ -606,8 +615,10 @@ export default function AiAssistantPage() {
 
                   {resp.missingFacts.length > 0 && (
                     <div>
-                      <span className="font-semibold text-amber-800 block mb-0.5">Missing Context (Not Inferred):</span>
-                      <ul className="text-amber-700 space-y-0.5 list-disc list-inside">
+                      <span className="font-black text-amber-800 block mb-1 uppercase text-[10px] tracking-wider">
+                        Missing Context (Not Inferred):
+                      </span>
+                      <ul className="text-amber-900 space-y-0.5 list-disc list-inside font-medium">
                         {resp.missingFacts.slice(0, 2).map((m, i) => (
                           <li key={i}>{m}</li>
                         ))}
@@ -619,7 +630,7 @@ export default function AiAssistantPage() {
                 {/* Response Body / Editable Draft */}
                 <div className="p-5 space-y-3">
                   <div
-                    className={`prose prose-xs max-w-none text-slate-800 leading-relaxed font-sans ${
+                    className={`prose prose-xs max-w-none text-[#101113] leading-relaxed font-sans ${
                       resp.language === "ur" ? "text-right font-serif text-base" : ""
                     }`}
                   >
@@ -632,15 +643,17 @@ export default function AiAssistantPage() {
                           [resp.id]: e.target.value,
                         }))
                       }
-                      className="w-full text-xs font-mono bg-slate-50 border border-slate-200 rounded-lg p-3 focus:outline-none focus:ring-1 focus:ring-blue-500 leading-relaxed text-slate-900"
+                      className="w-full text-xs font-mono bg-[#F3F4F2] border-2 border-[#101113] rounded-2xl p-4 focus:outline-none focus:bg-white leading-relaxed text-[#101113] font-bold"
                     />
                   </div>
 
                   {/* Operational Next Steps */}
                   {resp.suggestedNextSteps.length > 0 && (
-                    <div className="bg-slate-50 rounded-lg p-3 text-xs space-y-1">
-                      <span className="font-semibold text-slate-700">Recommended Next Steps:</span>
-                      <ul className="space-y-1 text-slate-600 list-disc list-inside">
+                    <div className="bg-[#F3F4F2] rounded-2xl p-3.5 border-2 border-[#101113] text-xs space-y-1">
+                      <span className="font-black text-[#101113] uppercase text-[10px] tracking-wider">
+                        Recommended Next Steps:
+                      </span>
+                      <ul className="space-y-1 text-[#101113] list-disc list-inside font-medium">
                         {resp.suggestedNextSteps.map((step, idx) => (
                           <li key={idx}>{step}</li>
                         ))}
@@ -650,9 +663,9 @@ export default function AiAssistantPage() {
                 </div>
 
                 {/* Footer Controls: Copy, WhatsApp Web Launch, Regenerate */}
-                <div className="bg-slate-50 px-5 py-3 border-t border-slate-200 flex flex-wrap items-center justify-between gap-3 text-xs">
-                  <div className="text-[11px] text-slate-500 flex items-center gap-1.5">
-                    <Info className="w-3.5 h-3.5 text-slate-400" />
+                <div className="bg-[#F3F4F2] px-5 py-3 border-t-2 border-[#DCDDDA] flex flex-wrap items-center justify-between gap-3 text-xs">
+                  <div className="text-[11px] text-[#777D77] flex items-center gap-1.5 font-medium">
+                    <Info className="w-3.5 h-3.5 text-[#101113]" />
                     Human-in-the-loop: No automatic messages are sent without user review.
                   </div>
 
@@ -660,16 +673,16 @@ export default function AiAssistantPage() {
                     <button
                       type="button"
                       onClick={() => copyToClipboard(resp.id, editableDrafts[resp.id] ?? resp.content)}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-medium rounded-lg shadow-2xs transition-colors"
+                      className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-white border-2 border-[#101113] hover:bg-[#F3F4F2] text-[#101113] font-bold rounded-xl transition-colors"
                     >
                       {copiedId === resp.id ? (
                         <>
                           <Check className="w-3.5 h-3.5 text-emerald-600" />
-                          <span className="text-emerald-700 font-semibold">Copied</span>
+                          <span className="text-emerald-700 font-black">Copied</span>
                         </>
                       ) : (
                         <>
-                          <Copy className="w-3.5 h-3.5 text-slate-500" />
+                          <Copy className="w-3.5 h-3.5 text-[#101113]" />
                           <span>Copy Draft</span>
                         </>
                       )}
@@ -678,18 +691,18 @@ export default function AiAssistantPage() {
                     {leadContext?.phone && (resp.intent === "draft_whatsapp" || resp.intent === "custom_prompt") && (
                       <button
                         type="button"
-                        onClick={() => openWhatsAppUrl(leadContext.phone, editableDrafts[resp.id] ?? resp.content)}
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg shadow-2xs transition-colors"
+                        onClick={() => openWhatsAppUrl(leadContext.phone!, editableDrafts[resp.id] ?? resp.content)}
+                        className="btn-lime text-xs py-1.5 px-3.5 flex items-center gap-1.5"
                       >
                         <ExternalLink className="w-3.5 h-3.5" />
-                        <span>Open in WhatsApp</span>
+                        <span>Open WhatsApp</span>
                       </button>
                     )}
 
                     <button
                       type="button"
                       onClick={() => handleGenerate(resp.intent, customPrompt, selectedObjection)}
-                      className="p-1.5 text-slate-500 hover:text-slate-800 rounded-lg hover:bg-slate-100 transition-colors"
+                      className="p-2 text-[#101113] hover:bg-white rounded-xl border border-transparent hover:border-[#101113] transition-colors"
                       title="Regenerate draft"
                     >
                       <RotateCcw className="w-3.5 h-3.5" />

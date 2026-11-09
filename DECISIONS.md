@@ -38,3 +38,8 @@
 * **Date:** 2026-11-10
 * **Decision:** All database queries are scoped to the active agency via database Row-Level Security (RLS) policies relying on `is_agency_member(agency_id)` and `is_agency_admin(agency_id)` functions. Server code verifies identity through `verifyAgencyAccess` rather than trusting client-submitted parameters.
 * **Rationale:** Multi-tenancy in B2B agency software cannot rely on application-level filtering alone. Enforcing isolation at the database layer eliminates cross-tenant data leaks.
+
+## ADR-007: Server-Aggregated Dashboard KPIs & Explicit Demo Labeling
+* **Date:** 2026-11-10
+* **Decision:** Dashboard queries are aggregated on the server scoped by active agency, client workspace, and timeframe filters. When running in preview or unconfigured environments, an explicit "Demo Workspace Mode" badge is surfaced to avoid misrepresenting simulated data as live customer metrics.
+* **Rationale:** Agencies require trustworthy metrics to assess lead response velocity. Transparent labeling prevents accidental confusion during pilots.

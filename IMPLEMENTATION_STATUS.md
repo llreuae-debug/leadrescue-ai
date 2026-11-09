@@ -15,8 +15,8 @@
 | **Stage 1** | Project foundation & design system | **Completed** | Tokens, shared components, responsive shell, preview route built. |
 | **Stage 2** | Marketing website & authentication | **Completed** | 10 public marketing routes, Pakistani launch plans, Supabase Auth flows, middleware protection. |
 | **Stage 3** | Agency onboarding & multi-tenant foundation | **Completed** | Multi-tenant migration with RLS, 5 RBAC roles, permission helpers, automated test suite, 5-step onboarding wizard. |
-| **Stage 4** | Agency dashboard | Pending | Next stage: persisted KPI calculations, acquisition trend, follow-up accountability alerts. |
-| **Stage 5** | Clients and lead management | Pending | Client workspaces, lead CRUD, CSV import/mapping, duplicate check. |
+| **Stage 4** | Agency dashboard | **Completed** | Real-time KPI cards (Total, New, Qualified, Follow-ups Due, Won), lead acquisition trend, source breakdown, urgent follow-up action triggers, client & date range filters. |
+| **Stage 5** | Clients and lead management | Pending | Next stage: Client workspaces, lead CRUD, CSV import/mapping, duplicate check. |
 | **Stage 6** | Sales pipeline | Pending | Responsive Kanban, stage changes, accessible keyboard alternative. |
 | **Stage 7** | Follow-up task management | Pending | Timezone-aware date calculations, overdue status, WhatsApp draft flow. |
 | **Stage 8** | AI sales assistant | Pending | Server-side grounded generation, English & Urdu support, human review. |
@@ -32,28 +32,33 @@
 
 ---
 
-## Stage 3 Deliverables Summary
+## Stage 4 Deliverables Summary
 
-### Multi-Tenant Database Architecture
-* [`supabase/migrations/20261109000000_stage3_multitenant_foundation.sql`](file:///Users/dilnawaz/LeadRescue%20AI/supabase/migrations/20261109000000_stage3_multitenant_foundation.sql):
-  * `profiles`: User identity linked to `auth.users(id)` via automated trigger `on_auth_user_created`.
-  * `agencies`: Agency workspaces with Pakistan regional defaults (`Asia/Karachi`, `Pakistan`, English/Urdu preferences).
-  * `agency_members`: Tenant membership mapping users to agencies with custom roles (`owner`, `admin`, `manager`, `sales_representative`, `viewer`) and membership status (`active`, `invited`, `suspended`).
-  * `clients`: Client workspaces isolated per agency.
-  * Comprehensive indexes on `agency_id`, `user_id`, and `role`.
-  * PostgreSQL Row-Level Security (RLS) on all 4 tables with helper functions `is_agency_member` and `is_agency_admin`.
+### Database Migration for Leads & Dashboard
+* [`supabase/migrations/20261110000000_stage4_leads_and_dashboard.sql`](file:///Users/dilnawaz/LeadRescue%20AI/supabase/migrations/20261110000000_stage4_leads_and_dashboard.sql):
+  * **`leads`:** Inbound enquiries with agency/client ownership, contact details, source, status, priority, deal value, assigned user, and follow-up timestamps.
+  * **`follow_up_tasks`:** Follow-up tasks with due dates, task types (`call`, `whatsapp`, `email`, `meeting`), status (`pending`, `completed`, `snoozed`, `cancelled`).
+  * **`lead_activities`:** Audit logs recording state transitions and actor timestamps.
+  * **Indexes & RLS:** Performance indexes on `status`, `due_at`, `client_id`, `agency_id`, and strict tenant RLS policies.
 
-### Central RBAC & Server Security
-* [`src/types/database.ts`](file:///Users/dilnawaz/LeadRescue%20AI/src/types/database.ts): Database interfaces, enums, and context definitions.
-* [`src/lib/rbac.ts`](file:///Users/dilnawaz/LeadRescue%20AI/src/lib/rbac.ts): Pure role-permission evaluation function `hasPermission`.
-* [`src/lib/permissions.ts`](file:///Users/dilnawaz/LeadRescue%20AI/src/lib/permissions.ts): Server-side helper `verifyAgencyAccess` verifying active session and membership before mutation.
-* [`tests/multi-tenant-isolation.test.ts`](file:///Users/dilnawaz/LeadRescue%20AI/tests/multi-tenant-isolation.test.ts): Automated test suite verifying role restrictions and preventing cross-agency tenant spoofing. (7/7 tests passing).
+### Server Aggregation & Metrics
+* [`src/app/actions/dashboard.ts`](file:///Users/dilnawaz/LeadRescue%20AI/src/app/actions/dashboard.ts): Server Action `getDashboardDataAction` executing agency-scoped queries with client workspace and date-range filters. Includes explicit Demo Workspace labeling for preview environments.
 
-### Agency Onboarding Experience
-* [`src/app/actions/onboarding.ts`](file:///Users/dilnawaz/LeadRescue%20AI/src/app/actions/onboarding.ts): Server action `completeOnboardingAction` handling profile update, agency insertion, owner assignment, and client workspace setup.
-* [`src/app/app/onboarding/page.tsx`](file:///Users/dilnawaz/LeadRescue%20AI/src/app/app/onboarding/page.tsx): 5-step onboarding wizard:
-  1. Agency Identity & Profile
-  2. Regional Settings (Timezone, Language, Size, Focus)
-  3. First Client Workspace
-  4. Optional CSV Lead Ingestion
-  5. Summary & Workspace Launch
+### Dashboard User Interface ([`/app/dashboard`](file:///Users/dilnawaz/LeadRescue%20AI/src/app/app/dashboard))
+* [`src/app/app/dashboard/page.tsx`](file:///Users/dilnawaz/LeadRescue%20AI/src/app/app/dashboard/page.tsx):
+  * **KPI Cards:** Total Leads, New Enquiries, Qualified Leads, Follow-ups Due (with Overdue indicator), and Won Opportunities (with closed PKR revenue).
+  * **Lead Acquisition Trend:** Daily inbound enquiry volume visualization.
+  * **Enquiry Source Breakdown:** Multi-channel distribution (Meta Ads, Google Ads, WhatsApp, CSV).
+  * **Urgent Follow-ups:** Instant WhatsApp and completion actions for overdue/today tasks.
+  * **AI Pipeline Recommendations:** Grounded objection and SLA alerts.
+  * **Recent Lead Activity Timeline:** Chronological agency events.
+  * **Workspace & Date Filters:** Client workspace switcher and date ranges (7d, 30d, 90d, All Time).
+  * **Quick Actions:** Add Lead, Import CSV, Add Client modal triggers.
+
+### Automated Test Suite
+* [`tests/dashboard-metrics.test.ts`](file:///Users/dilnawaz/LeadRescue%20AI/tests/dashboard-metrics.test.ts):
+  * KPI metrics calculation validation without double-counting.
+  * Client workspace filter isolation.
+  * Empty dataset handling.
+  * Strict cross-agency tenant isolation.
+  * **12 / 12 tests passing across all test suites.**
